@@ -1,0 +1,110 @@
+{
+  "name": "@openapi-typescript-infra/service",
+  "version": "1.0.0",
+  "description": "An opinionated framework for building configuration driven services - web, api, or job. Uses OpenAPI, pino logging, express, confit, Typescript and Jest.",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "build": "tsc -p tsconfig.build.json && yarn dlx chmodx build/bin/*",
+    "watch": "tsc -p tsconfig.json -w --preserveWatchOutput",
+    "clean": "npx rimraf ./build",
+    "prepublishOnly": "yarn build",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable",
+    "postinstall": "husky install && coconfig"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openapi-typescript-infra/service.git"
+  },
+  "bin": {
+    "start-service": "./build/bin/start-service.js"
+  },
+  "config": {
+    "coconfig": "@openapi-typescript-infra/coconfig"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "yarn eslint --cache --fix"
+  },
+  "keywords": [
+    "service",
+    "openapi",
+    "express",
+    "confit",
+    "babel",
+    "typescript",
+    "jest"
+  ],
+  "author": "developers@pyralis.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/openapi-typescript-infra/service/issues"
+  },
+  "homepage": "https://github.com/openapi-typescript-infra/service#readme",
+  "dependencies": {
+    "@gasbuddy/confit": "^3.0.0",
+    "@godaddy/terminus": "^4.12.0",
+    "@opentelemetry/api": "^1.4.1",
+    "@opentelemetry/api-metrics": "^0.33.0",
+    "@opentelemetry/exporter-prometheus": "^0.39.1",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.39.1",
+    "@opentelemetry/instrumentation": "^0.39.1",
+    "@opentelemetry/instrumentation-aws-sdk": "^0.34.2",
+    "@opentelemetry/instrumentation-dns": "^0.31.4",
+    "@opentelemetry/instrumentation-express": "^0.32.3",
+    "@opentelemetry/instrumentation-generic-pool": "^0.31.3",
+    "@opentelemetry/instrumentation-graphql": "^0.34.2",
+    "@opentelemetry/instrumentation-http": "^0.39.1",
+    "@opentelemetry/instrumentation-ioredis": "^0.34.2",
+    "@opentelemetry/instrumentation-net": "^0.31.3",
+    "@opentelemetry/instrumentation-pg": "^0.35.2",
+    "@opentelemetry/instrumentation-pino": "^0.33.3",
+    "@opentelemetry/sdk-metrics": "^1.13.0",
+    "@opentelemetry/sdk-node": "^0.39.1",
+    "@opentelemetry/semantic-conventions": "^1.13.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "eventsource": "^1.1.2",
+    "express": "next",
+    "express-openapi-validator": "^5.0.4",
+    "glob": "^8.1.0",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.8",
+    "pino": "^8.14.1",
+    "read-pkg-up": "^7.0.1",
+    "rest-api-support": "^1.16.3",
+    "shortstop-dns": "^1.1.0",
+    "shortstop-handlers": "^1.1.1",
+    "shortstop-yaml": "^1.0.0"
+  },
+  "devDependencies": {
+    "@openapi-typescript-infra/coconfig": "^1.0.0",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/eventsource": "1.1.11",
+    "@types/express": "^4.17.17",
+    "@types/glob": "^8.1.0",
+    "@types/jest": "^29.5.1",
+    "@types/lodash": "^4.14.194",
+    "@types/minimist": "^1.2.2",
+    "@types/node": "^18.16.14",
+    "@types/supertest": "^2.0.12",
+    "coconfig": "^0.10.1",
+    "eslint": "^8.41.0",
+    "eslint-config-gasbuddy": "^7.2.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-jest": "^27.2.1",
+    "husky": "^8.0.3",
+    "jest": "^29.5.0",
+    "lint-staged": "^13.2.2",
+    "pino-pretty": "^10.0.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "packageManager": "yarn@3.2.3"
+}

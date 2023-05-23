@@ -1,0 +1,11 @@
+{
+  "logging": {
+    "level": "debug"
+  },
+  "port": 0,
+  "connections": {
+    "default": {
+      "proxy": "http://localhost:9990"
+    }
+  }
+}

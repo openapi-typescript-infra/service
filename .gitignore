@@ -1,0 +1,30 @@
+test_output.log
+.idea
+node_modules
+build
+coverage
+.nyc_output
+*.log
+.tap_output
+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+.node_repl_history
+
+# TypeScript incremental compilation cache
+*.tsbuildinfo
+.eslintcache
+
+# Added by coconfig
+.eslintignore
+.npmignore
+tsconfig.json
+tsconfig.build.json
+jest.config.js
+.prettierrc.js
+.eslintrc.js
