@@ -978,6 +978,7 @@ __metadata:
     minimist: ^1.2.8
     pino: ^8.14.1
     pino-pretty: ^10.0.0
+    pinst: ^3.0.0
     read-pkg-up: ^7.0.1
     rest-api-support: ^1.16.3
     shortstop-dns: ^1.1.0
@@ -6450,6 +6451,15 @@ __metadata:
   bin:
     pino: bin.js
   checksum: 72dcae8f550d375695bb8745f11b30c42aaa20d0bcab8f546ca5af0684d784453850949fe1b244206793e813a46d72cbbf0dda8aed2cee86e9491ba44a643e3e
+  languageName: node
+  linkType: hard
+
+"pinst@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "pinst@npm:3.0.0"
+  bin:
+    pinst: bin.js
+  checksum: 4ae48a6a60f79c37071233af51b4d91bfc85cfa3c12b66ccda60cdb642b4d14a4ab0cb3587afc55b1f6192cea1772a5e4822026a0d0d3528296edef00cc2d61f
   languageName: node
   linkType: hard
 
