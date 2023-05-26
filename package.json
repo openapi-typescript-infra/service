@@ -44,6 +44,11 @@
   "bugs": {
     "url": "https://github.com/openapi-typescript-infra/service/issues"
   },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
   "homepage": "https://github.com/openapi-typescript-infra/service#readme",
   "dependencies": {
     "@gasbuddy/confit": "^3.0.0",
