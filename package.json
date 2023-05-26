@@ -1,6 +1,6 @@
 {
   "name": "@openapi-typescript-infra/service",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "An opinionated framework for building configuration driven services - web, api, or job. Uses OpenAPI, pino logging, express, confit, Typescript and Jest.",
   "main": "build/index.js",
   "scripts": {
@@ -82,15 +82,17 @@
     "shortstop-yaml": "^1.0.0"
   },
   "devDependencies": {
-    "@openapi-typescript-infra/coconfig": "^1.0.0",
+    "@commitlint/cli": "^17.6.3",
+    "@commitlint/config-conventional": "^17.6.3",
+    "@openapi-typescript-infra/coconfig": "^3.0.1",
     "@types/cookie-parser": "^1.4.3",
     "@types/eventsource": "1.1.11",
     "@types/express": "^4.17.17",
     "@types/glob": "^8.1.0",
     "@types/jest": "^29.5.1",
-    "@types/lodash": "^4.14.194",
+    "@types/lodash": "^4.14.195",
     "@types/minimist": "^1.2.2",
-    "@types/node": "^18.16.14",
+    "@types/node": "^18.16.15",
     "@types/supertest": "^2.0.12",
     "coconfig": "^0.10.1",
     "eslint": "^8.41.0",

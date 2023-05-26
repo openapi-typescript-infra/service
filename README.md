@@ -1,7 +1,6 @@
-@gasbuddy/service
-=================
+# @openapi-typescript-infra/service
 
-[![Node CI](https://github.com/openapi-typescript-infra/openapi-typescript-service/actions/workflows/nodejs.yml/badge.svg)](https://github.com/openapi-typescript-infra/openapi-typescript-service/actions/workflows/nodejs.yml)
+[![Node CI](https://github.com/openapi-typescript-infra/service/actions/workflows/nodejs.yml/badge.svg)](https://github.com/openapi-typescript-infra/service/actions/workflows/nodejs.yml)
 
 An opinionated framework for building high scale services - web, api, or job. Uses OpenAPI, pino, express, confit, Typescript and jest.
 
