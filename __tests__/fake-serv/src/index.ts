@@ -1,6 +1,6 @@
 import { RestApiErrorResponse, RestApiSuccessResponse } from 'rest-api-support';
 
-import type { Service, ServiceLocals } from '../../../src/types';
+import type { Service, ServiceLocals } from '../../../src/types.js';
 
 export interface FakeServLocals extends ServiceLocals {
   services: {

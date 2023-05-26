@@ -4,7 +4,7 @@ import _ from 'lodash';
 import * as OpenApiValidator from 'express-openapi-validator';
 import type { Handler } from 'express';
 
-import type { ServiceExpress } from './types';
+import type { ServiceExpress } from './types.js';
 
 const notImplementedHandler: Handler = (req, res) => {
   res.status(501).json({
@@ -34,13 +34,12 @@ export function openApi(
     },
     operationHandlers: {
       basePath: path.resolve(rootDirectory, `${codepath}/handlers`),
-      resolver(basePath: string, route: Parameters<typeof OpenApiValidator.resolvers.defaultResolver>[1]) {
+      async resolver(basePath: string, route: Parameters<typeof OpenApiValidator.resolvers.defaultResolver>[1]) {
         const pathKey = route.openApiRoute.substring(route.basePath.length);
         const modulePath = path.join(basePath, pathKey);
 
         try {
-          // eslint-disable-next-line import/no-dynamic-require, global-require, @typescript-eslint/no-var-requires
-          const module = require(modulePath);
+          const module = await import(modulePath);
           const method = Object.keys(module).find((m) => m.toUpperCase() === route.method);
           if (!method) {
             throw new Error(

@@ -2,9 +2,9 @@ import type {
   RequestHandler, Request, Response, ErrorRequestHandler,
 } from 'express';
 
-import { ServiceError } from '../error';
-import type { RequestWithApp, ServiceExpress, ServiceLocals } from '../types';
-import type { ServiceHandler } from '../express-app/types';
+import { ServiceError } from '../error.js';
+import type { RequestWithApp, ServiceExpress, ServiceLocals } from '../types.js';
+import type { ServiceHandler } from '../express-app/types.js';
 
 const LOG_PREFS = Symbol('Logging information');
 

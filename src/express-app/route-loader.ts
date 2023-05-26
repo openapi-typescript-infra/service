@@ -3,19 +3,12 @@ import path from 'path';
 import { glob } from 'glob';
 import express from 'express';
 
-import type { ServiceExpress } from '../types';
+import type { ServiceExpress } from '../types.js';
 
 export async function loadRoutes(app: ServiceExpress, routingDir: string, pattern: string) {
-  const files: string[] = await new Promise((accept, reject) => {
-    glob(
-      pattern,
-      {
-        nodir: true,
-        strict: true,
-        cwd: routingDir,
-      },
-      (error, matches) => (error ? reject(error) : accept(matches)),
-    );
+  const files = await glob(pattern, {
+    nodir: true,
+    cwd: routingDir,
   });
 
   await Promise.all(

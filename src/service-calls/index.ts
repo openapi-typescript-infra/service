@@ -3,13 +3,13 @@ import { URL } from 'node:url';
 import type { FetchConfig, FetchRequest, RestApiResponse } from 'rest-api-support';
 import EventSource from 'eventsource';
 
-import { ServiceError, ServiceErrorSpec } from '../error';
+import { ServiceError, ServiceErrorSpec } from '../error.js';
 import type {
   ServiceExpress,
   ServiceLike,
   ServiceLocals,
-} from '../types';
-import type { ServiceConfiguration } from '../config/schema';
+} from '../types.js';
+import type { ServiceConfiguration } from '../config/schema.js';
 
 type UntypedEventSourceHandler = Parameters<EventSource['addEventListener']>[1];
 

@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Application } from 'express-serve-static-core';
 
-import { InternalLocals, ServiceExpress } from '../types';
+import { InternalLocals, ServiceExpress } from '../types.js';
 
 export async function startInternalApp(mainApp: ServiceExpress, port: number) {
   const app = express() as unknown as Application<InternalLocals>;

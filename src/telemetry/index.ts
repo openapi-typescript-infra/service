@@ -7,9 +7,9 @@ import type {
   RequestLocals,
   ServiceLocals,
   ServiceStartOptions,
-} from '../types';
+} from '../types.js';
 
-import { getAutoInstrumentations } from './instrumentations';
+import { getAutoInstrumentations } from './instrumentations.js';
 
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG

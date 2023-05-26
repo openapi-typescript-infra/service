@@ -1,12 +1,12 @@
 import path from 'path';
 
 import dotenv from 'dotenv';
-import readPackageUp from 'read-pkg-up';
+import { readPackageUp } from 'read-pkg-up';
 import type { NormalizedPackageJson } from 'read-pkg-up';
 
-import type { RequestLocals, ServiceLocals, ServiceStartOptions } from './types';
-import { isDev } from './env';
-import { startWithTelemetry } from './telemetry/index';
+import type { RequestLocals, ServiceLocals, ServiceStartOptions } from './types.js';
+import { isDev } from './env.js';
+import { startWithTelemetry } from './telemetry/index.js';
 
 interface BootstrapArguments {
   // The name of the service, else discovered via read-pkg-up
@@ -95,9 +95,8 @@ export async function bootstrap<
     });
   }
 
-  // This needs to be required for TS on-the-fly to work
-  // eslint-disable-next-line global-require, import/no-dynamic-require, @typescript-eslint/no-var-requires
-  const impl = require(absoluteEntrypoint);
+  // This needs to be imported for TS on-the-fly to work
+  const impl = await import(absoluteEntrypoint);
   const opts: ServiceStartOptions<SLocals, RLocals> = {
     name,
     rootDirectory,

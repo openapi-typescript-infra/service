@@ -4,9 +4,9 @@ import request from 'supertest';
 
 import {
   listen, ServiceStartOptions, shutdownApp, startApp,
-} from '../src/index';
+} from '../src/index.js';
 
-import { FakeServLocals, service } from './fake-serv/src/index';
+import { FakeServLocals, service } from './fake-serv/src/index.js';
 
 describe('fake-serv', () => {
   test('basic service functionality', async () => {

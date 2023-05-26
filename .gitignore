@@ -25,6 +25,7 @@ coverage
 .npmignore
 tsconfig.json
 tsconfig.build.json
-jest.config.js
-.prettierrc.js
-.eslintrc.js
+jest.config.cjs
+.prettierrc.cjs
+.eslintrc.cjs
+.commitlintrc.json

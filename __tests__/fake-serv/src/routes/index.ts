@@ -1,5 +1,5 @@
-import type { ServiceExpress, ServiceRouter } from '../../../../src';
-import { FakeServLocals } from '../index';
+import type { ServiceExpress, ServiceRouter } from '../../../../src/index.js';
+import { FakeServLocals } from '../index.js';
 
 export function route(
   router: ServiceRouter<FakeServLocals>,

@@ -11,14 +11,14 @@ import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 import { createTerminus } from '@godaddy/terminus';
 import type { RequestHandler, Response } from 'express';
 
-import { loadConfiguration } from '../config/index';
-import { findPort } from '../development/port-finder';
-import { openApi } from '../openapi';
+import { loadConfiguration } from '../config/index.js';
+import { findPort } from '../development/port-finder.js';
+import { openApi } from '../openapi.js';
 import {
   errorHandlerMiddleware,
   loggerMiddleware,
   notFoundMiddleware,
-} from '../telemetry/requestLogger';
+} from '../telemetry/requestLogger.js';
 import type {
   RequestLocals,
   RequestWithApp,
@@ -26,12 +26,12 @@ import type {
   ServiceLocals,
   ServiceOptions,
   ServiceStartOptions,
-} from '../types';
-import { ConfigurationItemEnabled, ConfigurationSchema } from '../config/schema';
-import { isDev } from '../env';
+} from '../types.js';
+import { ConfigurationItemEnabled, ConfigurationSchema } from '../config/schema.js';
+import { isDev } from '../env.js';
 
-import { loadRoutes } from './route-loader';
-import { startInternalApp } from './internal-server';
+import { loadRoutes } from './route-loader.js';
+import { startInternalApp } from './internal-server.js';
 
 const METRICS_KEY = Symbol('PrometheusMetricsInfo');
 

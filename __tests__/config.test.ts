@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { insertConfigurationBefore, loadConfiguration } from '../src/config';
+import { insertConfigurationBefore, loadConfiguration } from '../src/config/index.js';
 
 describe('configuration loader', () => {
   test('overrides and shortstops', async () => {

@@ -1,6 +1,6 @@
 import type { NextFunction, Response } from 'express';
 
-import type { RequestLocals, RequestWithApp, ServiceLocals } from '../types';
+import type { RequestLocals, RequestWithApp, ServiceLocals } from '../types.js';
 
 export type ServiceHandler<
   SLocals extends ServiceLocals = ServiceLocals,

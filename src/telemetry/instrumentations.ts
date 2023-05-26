@@ -9,7 +9,7 @@ import { NetInstrumentation } from '@opentelemetry/instrumentation-net';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
 import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
 
-import { FetchInstrumentation } from './fetchInstrumentation';
+import { FetchInstrumentation } from './fetchInstrumentation.js';
 
 const InstrumentationMap = {
   // Disable this for now because it logs a stupid message

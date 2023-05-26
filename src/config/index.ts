@@ -3,8 +3,8 @@ import path from 'path';
 
 import confit from '@gasbuddy/confit';
 
-import { shortstops } from './shortstops';
-import type { ConfigStore } from './types';
+import { shortstops } from './shortstops.js';
+import type { ConfigStore } from './types.js';
 
 // Order matters here.
 const ENVIRONMENTS = ['production', 'staging', 'test', 'development'];
@@ -111,5 +111,5 @@ export function insertConfigurationBefore(
   return copy;
 }
 
-export * from './schema';
-export * from './types';
+export * from './schema.js';
+export * from './types.js';

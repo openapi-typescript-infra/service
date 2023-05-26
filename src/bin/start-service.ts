@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import minimist from 'minimist';
 
-import { serviceRepl } from '../development/repl';
-import { isDev } from '../env';
-import { bootstrap } from '../bootstrap';
+import { serviceRepl } from '../development/repl.js';
+import { isDev } from '../env.js';
+import { bootstrap } from '../bootstrap.js';
 
 /**
  * built - forces the use of the build directory. Defaults to true in stage/prod, not in dev

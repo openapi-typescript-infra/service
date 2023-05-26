@@ -1,4 +1,4 @@
-import type { ServiceLike, ServiceLocals } from './types';
+import type { ServiceLike, ServiceLocals } from './types.js';
 
 export interface ServiceErrorSpec {
   status?: number;

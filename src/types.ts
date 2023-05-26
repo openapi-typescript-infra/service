@@ -6,7 +6,7 @@ import type { Application } from 'express-serve-static-core';
 import type { middleware } from 'express-openapi-validator';
 import type { Meter, MeterProvider } from '@opentelemetry/api-metrics';
 
-import type { ConfigStore } from './config/types';
+import type { ConfigStore } from './config/types.js';
 
 export interface InternalLocals extends Record<string, unknown> {
   server?: Server;
