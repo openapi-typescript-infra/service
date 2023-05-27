@@ -285,6 +285,11 @@ export async function startApp<
   return app;
 }
 
+export type StartAppFn<
+  SLocals extends ServiceLocals = ServiceLocals,
+  RLocals extends RequestLocals = RequestLocals,
+> = typeof startApp<SLocals, RLocals>;
+
 export async function shutdownApp(app: ServiceExpress) {
   const { logger } = app.locals;
   try {
@@ -397,3 +402,5 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
   await listenPromise;
   return server;
 }
+
+export type ListenFn<SLocals extends ServiceLocals = ServiceLocals> = typeof listen<SLocals>;

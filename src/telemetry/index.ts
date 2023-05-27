@@ -8,9 +8,9 @@ import type {
   ServiceLocals,
   ServiceStartOptions,
 } from '../types';
+import type { ListenFn, StartAppFn } from '../express-app/index';
 
 import { getAutoInstrumentations } from './instrumentations';
-
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
@@ -32,33 +32,24 @@ export async function startWithTelemetry<
     serviceName: options.name,
     autoDetectResources: true,
     traceExporter: getExporter(),
-    instrumentations: [getAutoInstrumentations({
-      'opentelemetry-instrumentation-node-18-fetch': {
-        onRequest({ request, span, additionalHeaders }) {
-          // This particular line is "GasBuddy" specific, in that we have a number
-          // of services not yet on OpenTelemetry that look for this header instead.
-          // Putting traceId gives us a "shot in heck" of useful searches.
-          if (!/^correlationid:/m.test(request.headers)) {
-            const ctx = span.spanContext();
-            additionalHeaders.correlationid = ctx.traceId;
-            additionalHeaders.span = ctx.spanId;
-          }
-        },
-      },
-    })],
+    instrumentations: [getAutoInstrumentations()],
   });
   await sdk.start();
 
-  // eslint-disable-next-line import/no-unresolved
-  const { startApp, listen } = await import('../express-app/app.js');
+  // eslint-disable-next-line import/no-unresolved, @typescript-eslint/no-var-requires
+  const { startApp, listen } = require('../express-app/app.js') as {
+    startApp: StartAppFn<SLocals, RLocals>;
+    listen: ListenFn<SLocals>;
+  };
   // eslint-disable-next-line import/no-dynamic-require, global-require, @typescript-eslint/no-var-requires
-  const { default: service } = require(options.service);
+  const serviceModule = require(options.service);
+  const service = serviceModule.default || serviceModule.service;
   const startOptions: ServiceStartOptions<SLocals> = {
     ...options,
     service,
     locals: { ...options.locals } as Partial<SLocals>,
   };
-  const app = await startApp<SLocals, RLocals>(startOptions);
+  const app = await startApp(startOptions);
   app.locals.logger.info('OpenTelemetry enabled');
 
   const server = await listen(app, async () => {
