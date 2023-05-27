@@ -91,7 +91,7 @@ export interface ServiceStartOptions<
   rootDirectory: string;
 
   // Defaults to "build", but can be set to "src" to run off non-built source
-  codepath?: 'build' | 'src';
+  codepath?: 'build' | 'src' | 'dist';
 
   // NOTE: if you use this, you need to cast it because of a Typescript error:
   // https://github.com/microsoft/TypeScript/issues/22229

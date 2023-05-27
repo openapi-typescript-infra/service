@@ -1,4 +1,5 @@
-import path from 'path';
+import path from 'node:path';
+import assert from 'node:assert';
 
 import dotenv from 'dotenv';
 import readPackageUp from 'read-pkg-up';
@@ -56,6 +57,12 @@ async function getServiceDetails(argv: BootstrapArguments = {}) {
   };
 }
 
+function getBuildDir(main: string): 'build' | 'dist' {
+  const dir = /^(?:\.?\/?)(build|dist)\//.exec(main);
+  assert(dir, 'Could not determine build directory - should be dist or build');
+  return dir[1] as 'build' | 'dist';
+}
+
 // Automagically start your app by using common patterns
 // to find your implementation and settings. This is most useful
 // for jobs or other scripts that need service infra but are
@@ -67,18 +74,19 @@ export async function bootstrap<
   const { main, rootDirectory, name } = await getServiceDetails(argv);
 
   let entrypoint: string;
-  let codepath: 'build' | 'src' = 'build';
+  let codepath: 'build' | 'dist' | 'src' = 'build';
   if (isDev() && argv?.built !== true) {
     // eslint-disable-next-line import/no-extraneous-dependencies
     const { register } = await import('ts-node');
     register();
     if (main) {
-      entrypoint = main.replace(/^(\.?\/?)build\//, '$1src/').replace(/\.js$/, '.ts');
+      entrypoint = main.replace(/^(\.?\/?)(build|dist)\//, '$1src/').replace(/\.js$/, '.ts');
     } else {
       entrypoint = './src/index.ts';
     }
     codepath = 'src';
   } else if (main) {
+    codepath = getBuildDir(main);
     entrypoint = main;
   } else {
     entrypoint = './build/index.js';
