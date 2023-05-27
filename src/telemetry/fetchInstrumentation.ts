@@ -96,7 +96,7 @@ export class FetchInstrumentation implements Instrumentation {
 
   constructor(config: FetchInstrumentationConfig) {
     // Force load fetch API (since it's lazy loaded in Node 18)
-    fetch('').catch(Promise.resolve);
+    fetch('').catch(() => Promise.resolve());
     this.channelSubs = [];
     this.meter = metrics.getMeter(this.instrumentationName, this.instrumentationVersion);
     this.tracer = trace.getTracer(this.instrumentationName, this.instrumentationVersion);
