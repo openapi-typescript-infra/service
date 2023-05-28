@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
-    "build": "tsc -p tsconfig.build.json && yarn dlx chmodx build/bin/*",
+    "build": "tsc -p tsconfig.build.json && yarn dlx glob-chmod 755 build/bin/*",
     "watch": "tsc -p tsconfig.json -w --preserveWatchOutput",
     "clean": "npx rimraf ./build",
     "prepublishOnly": "yarn build",
