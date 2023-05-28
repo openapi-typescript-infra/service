@@ -38,3 +38,4 @@ This module has the following core functionality:
 7. Setup infrastructure for interservice calls with tracing.
 8. Provide a central service runner that handles loading your service and getting to a running state in both development and production environments.
 
+Please see the plop-based [project builder](../create) for an easy way to build an example project.
