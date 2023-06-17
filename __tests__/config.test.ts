@@ -18,6 +18,7 @@ describe('configuration loader', () => {
     expect(config.get('envswitchon')).toBeTruthy();
 
     expect(config.get('servicetype')).toBeTruthy();
+    expect(config.get('oservicetype')).toBeTruthy();
     expect(config.get('notservicetype')).toBeFalsy();
 
     const orig = ['a', 'b', 'd'];

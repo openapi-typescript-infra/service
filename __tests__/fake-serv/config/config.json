@@ -6,6 +6,7 @@
   "envswitchoff": "env_switch:ENV_VAR_DOESNT_EXIST",
   "envswitchon": "env_switch:!ENV_VAR_DOESNT_EXIST",
   "servicetype": "servicetype:serv",
+  "oservicetype": "servicetype:internal",
   "notservicetype": "servicetype:api",
   "server": {
     "metrics": {

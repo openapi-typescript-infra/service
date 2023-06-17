@@ -29,9 +29,16 @@ function betterRequire(basepath: string) {
   };
 }
 
+function canonicalizeServiceSuffix(suffix?: string) {
+  if (!suffix) {
+    return 'internal';
+  }
+  return { serv: 'internal' }[suffix] || suffix;
+}
+
 /**
  * Our convention is that service names end with:
- *  -serv - a back end service not callable by the outside world and where no authorization occurs
+ *  -serv or -internal - a back end service not callable by the outside world and where no authorization occurs (canonicalized to internal)
  *  -api - a non-UI front end service that exposes swagger and sometimes non-swagger APIs
  *  -web - a UI front end service
  *  -worker - a scheduled job or queue processor
@@ -41,7 +48,7 @@ function betterRequire(basepath: string) {
  * whether it's NOT of any of the specified types
  */
 function serviceTypeFactory(name: string) {
-  const type = name.split('-').pop();
+  const type = canonicalizeServiceSuffix(name.split('-').pop());
 
   return function serviceType(v: string) {
     let checkValue = v;
@@ -50,7 +57,7 @@ function serviceTypeFactory(name: string) {
       matchIsGood = false;
       checkValue = checkValue.substring(1);
     }
-    const values = checkValue.split(',');
+    const values = checkValue.split(',').map(canonicalizeServiceSuffix);
     // Welp, there's no XOR so here we are.
     return type && values.includes(type) ? matchIsGood : !matchIsGood;
   };
