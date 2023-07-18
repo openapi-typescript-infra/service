@@ -20,7 +20,7 @@
 # all: service dbi ts
 #
 
-build_dir := $(node -e "console.log(require('./package.json').main.replace(/^.\//, '').split('/')[0])")
+build_dir := $(shell node -e "console.log(require('./package.json').main.replace(/^.\//, '').split('/')[0])")
 src_files := $(shell find src -name '*.ts')
 build_files := $(patsubst src/%.ts,$(build_dir)/%.js,$(src_files))
 
