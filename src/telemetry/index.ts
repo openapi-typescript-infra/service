@@ -16,7 +16,10 @@ import { getAutoInstrumentations } from './instrumentations';
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
 
 function getExporter() {
-  if (['production', 'staging'].includes(process.env.APP_ENV || process.env.NODE_ENV || '')) {
+  if (
+    !process.env.DISABLE_OLTP_EXPORTER &&
+    ['production', 'staging'].includes(process.env.APP_ENV || process.env.NODE_ENV || '')
+  ) {
     return new OTLPTraceExporter({
       url: process.env.OTLP_EXPORTER || 'http://otlp-exporter:4318/v1/traces',
     });
