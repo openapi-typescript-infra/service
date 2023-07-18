@@ -264,7 +264,7 @@ export async function startApp<
     await loadRoutes(
       app,
       path.resolve(rootDirectory, codepath, config.get<string>('routing:routes') || 'routes'),
-      codepath === 'build' ? '**/*.js' : '**/*.ts',
+      codepath === 'src' ? '**/*.ts' : '**/*.js',
     );
   }
   if (routing?.openapi) {

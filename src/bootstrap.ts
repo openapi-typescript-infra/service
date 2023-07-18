@@ -100,6 +100,7 @@ export async function bootstrap<
       name,
       rootDirectory,
       service: absoluteEntrypoint,
+      codepath,
     });
   }
 
