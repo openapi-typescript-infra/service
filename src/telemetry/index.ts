@@ -24,7 +24,9 @@ function getExporter() {
       url: process.env.OTLP_EXPORTER || 'http://otlp-exporter:4318/v1/traces',
     });
   }
-  return new opentelemetry.tracing.ConsoleSpanExporter();
+  if (process.env.ENABLE_CONSOLE_OLTP_EXPORTER) {
+    return new opentelemetry.tracing.ConsoleSpanExporter();
+  }
 }
 
 export async function startWithTelemetry<
