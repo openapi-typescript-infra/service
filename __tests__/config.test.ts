@@ -1,5 +1,7 @@
 import path from 'path';
 
+import { describe, expect, test } from 'vitest';
+
 import { insertConfigurationBefore, loadConfiguration } from '../src/config';
 
 describe('configuration loader', () => {

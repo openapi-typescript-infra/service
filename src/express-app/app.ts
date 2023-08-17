@@ -40,7 +40,9 @@ interface InternalMetricsInfo {
   exporter?: PrometheusExporter;
 }
 
-interface AppWithMetrics { [METRICS_KEY]?: InternalMetricsInfo; }
+interface AppWithMetrics {
+  [METRICS_KEY]?: InternalMetricsInfo;
+}
 
 async function enableMetrics<SLocals extends ServiceLocals = ServiceLocals>(
   app: ServiceExpress<SLocals>,
@@ -89,9 +91,7 @@ export async function startApp<
   SLocals extends ServiceLocals = ServiceLocals,
   RLocals extends RequestLocals = RequestLocals,
 >(startOptions: ServiceStartOptions<SLocals, RLocals>): Promise<ServiceExpress<SLocals>> {
-  const {
-    service, rootDirectory, codepath = 'build', name,
-  } = startOptions;
+  const { service, rootDirectory, codepath = 'build', name } = startOptions;
   const shouldPrettyPrint = isDev() && !process.env.NO_PRETTY_LOGS;
   const destination = pino.destination({
     dest: process.env.LOG_TO_FILE || process.stdout.fd,
@@ -99,24 +99,24 @@ export async function startApp<
   });
   const logger = shouldPrettyPrint
     ? pino({
-      transport: {
-        destination,
-        target: 'pino-pretty',
-        options: {
-          colorize: true,
-        },
-      },
-    })
-    : pino(
-      {
-        formatters: {
-          level(label) {
-            return { level: label };
+        transport: {
+          destination,
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
           },
         },
-      },
-      destination,
-    );
+      })
+    : pino(
+        {
+          formatters: {
+            level(label) {
+              return { level: label };
+            },
+          },
+        },
+        destination,
+      );
 
   const serviceImpl = service();
   assert(serviceImpl?.start, 'Service function did not return a conforming object');
@@ -260,15 +260,16 @@ export async function startApp<
     });
   }
 
+  const codePattern = codepath === 'src' ? '**/*.ts' : '**/*.js';
   if (routing?.routes) {
     await loadRoutes(
       app,
       path.resolve(rootDirectory, codepath, config.get<string>('routing:routes') || 'routes'),
-      codepath === 'src' ? '**/*.ts' : '**/*.js',
+      codePattern,
     );
   }
   if (routing?.openapi) {
-    app.use(openApi(app, rootDirectory, codepath, options.openApiOptions));
+    app.use(await openApi(app, rootDirectory, codepath, codePattern, options.openApiOptions));
   }
 
   // Putting this here allows more flexible middleware insertion
