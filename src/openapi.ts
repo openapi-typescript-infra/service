@@ -17,6 +17,10 @@ const notImplementedHandler: Handler = (req, res) => {
 
 type OAPIOpts = Parameters<typeof OpenApiValidator.middleware>[0];
 
+function stripExtension(filename: string) {
+  return filename.slice(0, filename.lastIndexOf('.'));
+}
+
 export async function openApi(
   app: ServiceExpress,
   rootDirectory: string,
@@ -50,7 +54,7 @@ export async function openApi(
     (acc, file, index) => {
       const m = preloadedModules[index];
       if (m) {
-        acc[`/${path.basename(file, path.extname(file))}`] = m;
+        acc[`/${stripExtension(file)}`] = m;
       }
       return acc;
     },
