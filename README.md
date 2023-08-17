@@ -2,7 +2,7 @@
 
 [![Node CI](https://github.com/openapi-typescript-infra/service/actions/workflows/nodejs.yml/badge.svg)](https://github.com/openapi-typescript-infra/service/actions/workflows/nodejs.yml)
 
-An opinionated framework for building high scale services - web, api, or job. Uses OpenAPI, pino, express, confit, Typescript and jest.
+An opinionated framework for building high scale services - web, api, or job. Uses OpenAPI, pino, express, confit, Typescript and vitest.
 
 This module creates an environment that makes it simpler to host a REST service
 (less repetition, more enterprise grade features). Wherever possible, we use off
@@ -12,18 +12,18 @@ microservice environment.
 
 The module takes care of configuration-driven:
 
-* body logging
-* json parsing
-* error handling
-* hosted OpenAPI documents/handlers
-* traditional routing
-* graceful shutdown
-* health checks
-* Telemetry and instrumentation
+- body logging
+- json parsing
+- error handling
+- hosted OpenAPI documents/handlers
+- traditional routing
+- graceful shutdown
+- health checks
+- Telemetry and instrumentation
 
 services built with this module use Typescript with Node 18, which involves transpilation.
 This module takes that into account across the development and production experience. It does
-not currently use ESM for the most part, because between OpenTelemetry, Jest, eslint and the
+not currently use ESM for the most part, because between OpenTelemetry, eslint and the
 package ecosystem, that is currently a pipe dream, or at least something that requires incredibly
 precise configuration, which is not the intent.
 

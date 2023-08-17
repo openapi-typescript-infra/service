@@ -1,10 +1,9 @@
 import path from 'path';
 
+import { describe, expect, test } from 'vitest';
 import request from 'supertest';
 
-import {
-  listen, ServiceStartOptions, shutdownApp, startApp,
-} from '../src/index';
+import { listen, ServiceStartOptions, shutdownApp, startApp } from '../src/index';
 
 import { FakeServLocals, service } from './fake-serv/src/index';
 
@@ -28,11 +27,17 @@ describe('fake-serv', () => {
     ({ body } = await request(app).get('/other/world').timeout(500).expect(200));
     expect(body.hello).toEqual('jupiter');
 
-    ({ body } = await request(app).get('/hello').query({ greeting: 'Hello Pluto!', number: '6', break_things: true }).expect(200));
+    ({ body } = await request(app)
+      .get('/hello')
+      .query({ greeting: 'Hello Pluto!', number: '6', break_things: true })
+      .expect(200));
     expect(body.greeting).toEqual('Hello Pluto!');
 
     // Can't convert green to a number
-    await request(app).get('/hello').query({ greeting: 'Hello Pluto!', number: 'green' }).expect(400);
+    await request(app)
+      .get('/hello')
+      .query({ greeting: 'Hello Pluto!', number: 'green' })
+      .expect(400);
 
     // Make sure body paramater conversion works
     await request(app).post('/hello').send({ number: 'green' }).expect(400);
@@ -57,7 +62,8 @@ describe('fake-serv', () => {
 
     // Call metrics
     await request(secondApp).get('/world').expect(200);
-    await request(secondApp.locals.internalApp).get('/metrics')
+    await request(secondApp.locals.internalApp)
+      .get('/metrics')
       .expect(200)
       .expect((res) => expect(res.text).toMatch(/world_requests_total{method="get"} 1/));
 
