@@ -79,6 +79,11 @@ export async function bootstrap<
     // eslint-disable-next-line import/no-extraneous-dependencies
     const { register } = await import('ts-node');
     register();
+    try {
+      require('tsconfig-paths/register');
+    } catch (error) {
+      // No action needed
+    }
     if (main) {
       entrypoint = main.replace(/^(\.?\/?)(build|dist)\//, '$1src/').replace(/\.js$/, '.ts');
     } else {
