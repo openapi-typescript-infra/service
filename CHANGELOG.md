@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/openapi-typescript-infra/service/compare/v2.0.1...v2.0.2) (2023-08-26)
+
+
+### Bug Fixes
+
+* **paths:** include tsconfig-paths during dev ([b1a5c14](https://github.com/openapi-typescript-infra/service/commit/b1a5c1450bc3736a397731602453473c6ad5df8f))
+
 ## [2.0.1](https://github.com/openapi-typescript-infra/service/compare/v2.0.0...v2.0.1) (2023-08-17)
 
 
