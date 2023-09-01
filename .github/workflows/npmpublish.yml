@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: read-all
+  contents: read
 
 jobs:
   build:
