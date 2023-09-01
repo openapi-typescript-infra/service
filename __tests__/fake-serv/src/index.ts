@@ -7,8 +7,8 @@ export interface FakeServLocals extends ServiceLocals {
   services: {
     fakeServ: {
       get_something(): RestApiSuccessResponse<{ things: string[] }> | RestApiErrorResponse;
-    }
-  }
+    };
+  };
 }
 
 export function service(): Service<FakeServLocals> {
@@ -18,7 +18,9 @@ export function service(): Service<FakeServLocals> {
     async start(app) {
       await base.start(app);
       app.locals.services.fakeServ = {
-        get_something() { throw new Error('Should not be called.'); },
+        get_something() {
+          throw new Error('Should not be called.');
+        },
       };
     },
     async onRequest(req, res) {

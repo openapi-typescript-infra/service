@@ -7,7 +7,10 @@ export function route(router: ServiceRouter) {
   });
 
   router.get('/async', async (req) => {
-    await new Promise((accept) => { setTimeout(accept, 100); })
-      .then(() => { throw new ServiceError(req.app, 'Async error', { code: 'AsyncError' }); });
+    await new Promise((accept) => {
+      setTimeout(accept, 100);
+    }).then(() => {
+      throw new ServiceError(req.app, 'Async error', { code: 'AsyncError' });
+    });
   });
 }

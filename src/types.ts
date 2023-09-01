@@ -71,11 +71,17 @@ export interface Service<
   onRequest?(req: RequestWithApp<SLocals>, res: Response<unknown, RLocals>): void | Promise<void>;
 
   // This runs after body parsing but before routing
-  authorize?(req: RequestWithApp<SLocals>, res: Response<unknown, RLocals>): boolean | Promise<boolean>;
+  authorize?(
+    req: RequestWithApp<SLocals>,
+    res: Response<unknown, RLocals>,
+  ): boolean | Promise<boolean>;
 
   // Add or redact any fields for logging. Note this will be called twice per request,
   // once at the start and once at the end. Modify the values directly.
-  getLogFields?(req: RequestWithApp<SLocals>, values: Record<string, string | string[] | number | undefined>): void;
+  getLogFields?(
+    req: RequestWithApp<SLocals>,
+    values: Record<string, string | string[] | number | undefined>,
+  ): void;
 }
 
 export type ServiceFactory<

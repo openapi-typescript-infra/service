@@ -1,6 +1,4 @@
-import type {
-  RequestHandler, Request, Response, ErrorRequestHandler,
-} from 'express';
+import type { RequestHandler, Request, Response, ErrorRequestHandler } from 'express';
 
 import { ServiceError } from '../error';
 import type { RequestWithApp, ServiceExpress, ServiceLocals } from '../types';
@@ -25,7 +23,9 @@ interface WithIdentifiedSession {
   };
 }
 
-interface ErrorWithStatus extends Error { status?: number; }
+interface ErrorWithStatus extends Error {
+  status?: number;
+}
 
 function getBasicInfo(req: Request) {
   const url = req.originalUrl || req.url;
@@ -113,20 +113,18 @@ export function loggerMiddleware<SLocals extends ServiceLocals = ServiceLocals>(
       // data is to monkey-patch.
       const oldWrite = res.write;
       const oldEnd = res.end;
-      res.write = ((...args: Parameters<typeof res['write']>) => {
+      res.write = ((...args: Parameters<(typeof res)['write']>) => {
         if (prefs.chunks) {
           prefs.chunks.push(Buffer.isBuffer(args[0]) ? args[0] : Buffer.from(args[0]));
         }
-        return (oldWrite as typeof res['write']).apply(res, args);
-      }) as typeof res['write'];
-      res.end = ((
-        ...args: Parameters<typeof res['end']>
-      ) => {
+        return (oldWrite as (typeof res)['write']).apply(res, args);
+      }) as (typeof res)['write'];
+      res.end = ((...args: Parameters<(typeof res)['end']>) => {
         if (args[0] && prefs.chunks) {
           prefs.chunks.push(Buffer.isBuffer(args[0]) ? args[0] : Buffer.from(args[0]));
         }
         return oldEnd.apply(res, args);
-      }) as typeof res['end'];
+      }) as (typeof res)['end'];
     }
 
     const preLog: Record<string, string | string[] | number | undefined> = {

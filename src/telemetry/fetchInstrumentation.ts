@@ -33,7 +33,7 @@ interface FetchRequestArguments {
   error?: Error;
 }
 
-type ErrorFetchRequestArguments = FetchRequestArguments & { error: Error; };
+type ErrorFetchRequestArguments = FetchRequestArguments & { error: Error };
 type ResponseFetchRequestArguments = FetchRequestArguments & {
   response: {
     statusCode: number;
@@ -82,7 +82,8 @@ export class FetchInstrumentation implements Instrumentation {
 
   public readonly instrumentationVersion = '1.0.0';
 
-  public readonly instrumentationDescription = 'Instrumentation for Node 18 fetch via diagnostics_channel';
+  public readonly instrumentationDescription =
+    'Instrumentation for Node 18 fetch via diagnostics_channel';
 
   private subscribeToChannel(diagnosticChannel: string, onMessage: diagch.ChannelListener) {
     const channel = diagch.channel(diagnosticChannel);
@@ -108,24 +109,26 @@ export class FetchInstrumentation implements Instrumentation {
   }
 
   enable(): void {
-    this.subscribeToChannel('undici:request:create', (args) => this.onRequest(args as FetchRequestArguments));
-    this.subscribeToChannel('undici:request:headers', (args) => this.onHeaders(args as ResponseFetchRequestArguments));
-    this.subscribeToChannel('undici:request:trailers', (args) => this.onDone(args as FetchRequestArguments));
-    this.subscribeToChannel('undici:request:error', (args) => this.onError(args as ErrorFetchRequestArguments));
+    this.subscribeToChannel('undici:request:create', (args) =>
+      this.onRequest(args as FetchRequestArguments),
+    );
+    this.subscribeToChannel('undici:request:headers', (args) =>
+      this.onHeaders(args as ResponseFetchRequestArguments),
+    );
+    this.subscribeToChannel('undici:request:trailers', (args) =>
+      this.onDone(args as FetchRequestArguments),
+    );
+    this.subscribeToChannel('undici:request:error', (args) =>
+      this.onError(args as ErrorFetchRequestArguments),
+    );
   }
 
   setTracerProvider(tracerProvider: TracerProvider): void {
-    this.tracer = tracerProvider.getTracer(
-      this.instrumentationName,
-      this.instrumentationVersion,
-    );
+    this.tracer = tracerProvider.getTracer(this.instrumentationName, this.instrumentationVersion);
   }
 
   public setMeterProvider(meterProvider: MeterProvider): void {
-    this.meter = meterProvider.getMeter(
-      this.instrumentationName,
-      this.instrumentationVersion,
-    );
+    this.meter = meterProvider.getMeter(this.instrumentationName, this.instrumentationVersion);
   }
 
   setConfig(config: InstrumentationConfig): void {

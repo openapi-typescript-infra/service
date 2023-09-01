@@ -32,11 +32,7 @@ export class ServiceError extends Error {
   // take up the valuable mental space of an error log.
   public expected_error?: boolean;
 
-  constructor(
-    app: ServiceLike<ServiceLocals>,
-    message: string,
-    spec?: ServiceErrorSpec,
-  ) {
+  constructor(app: ServiceLike<ServiceLocals>, message: string, spec?: ServiceErrorSpec) {
     super(message);
     this.domain = app.locals.name;
     Object.assign(this, spec);

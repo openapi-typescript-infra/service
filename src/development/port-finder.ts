@@ -19,7 +19,7 @@ async function isAvailable(port: number) {
     server.once('error', (err) => {
       clearTimeout(timeoutRef);
 
-      if ((err as { code?: string; }).code === 'EADDRINUSE') {
+      if ((err as { code?: string }).code === 'EADDRINUSE') {
         accept(false);
         return;
       }

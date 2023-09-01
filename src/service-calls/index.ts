@@ -4,11 +4,7 @@ import type { FetchConfig, FetchRequest, RestApiResponse } from 'rest-api-suppor
 import EventSource from 'eventsource';
 
 import { ServiceError, ServiceErrorSpec } from '../error';
-import type {
-  ServiceExpress,
-  ServiceLike,
-  ServiceLocals,
-} from '../types';
+import type { ServiceExpress, ServiceLike, ServiceLocals } from '../types';
 import type { ServiceConfiguration } from '../config/schema';
 
 type UntypedEventSourceHandler = Parameters<EventSource['addEventListener']>[1];
@@ -104,14 +100,10 @@ function readResponse<
     return response as Extract<ResType, { responseType: 'response' }>;
   }
   const { message, ...spec } = errorSpec || {};
-  throw new ServiceError(
-    app,
-    message || (response.body as Error).message || 'Internal Error',
-    {
-      status: response.status,
-      ...spec,
-    },
-  );
+  throw new ServiceError(app, message || (response.body as Error).message || 'Internal Error', {
+    status: response.status,
+    ...spec,
+  });
 }
 
 export async function throwOrGetResponse<

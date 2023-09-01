@@ -29,7 +29,7 @@ const InstrumentationMap = {
 // Config types inferred automatically from the first argument of the constructor
 type ConfigArg<T> = T extends new (...args: infer U) => unknown ? U[0] : never;
 export type InstrumentationConfigMap = {
-  [Name in keyof typeof InstrumentationMap]?: ConfigArg<typeof InstrumentationMap[Name]>;
+  [Name in keyof typeof InstrumentationMap]?: ConfigArg<(typeof InstrumentationMap)[Name]>;
 };
 
 export function getAutoInstrumentations(
