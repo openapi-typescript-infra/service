@@ -304,10 +304,14 @@ export async function shutdownApp(app: ServiceExpress) {
   (logger as pino.Logger).flush?.();
 }
 
-function tlsServer<SLocals extends ServiceLocals = ServiceLocals>(
+function httpServer<SLocals extends ServiceLocals = ServiceLocals>(
   app: ServiceExpress<SLocals>,
   config: ConfigurationSchema['server'],
 ) {
+  if (!config.certificate) {
+    return http.createServer(app);
+  }
+
   return https.createServer(
     {
       key: config.key,
@@ -315,6 +319,13 @@ function tlsServer<SLocals extends ServiceLocals = ServiceLocals>(
     },
     app,
   );
+}
+
+function url(config: ConfigurationSchema['server']) {
+  if (config.certificate) {
+    return `https://${config.hostname}${config.port === 443 ? '' : `:${config.port}`}`;
+  }
+  return `http://${config.hostname}${config.port === 80 ? '' : `:${config.port}`}`;
 }
 
 export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
@@ -329,7 +340,7 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
   }
 
   const { service, logger } = app.locals;
-  const server = config.certificate ? tlsServer(app, config) : http.createServer(app);
+  const server = httpServer(app, config);
   let shutdownInProgress = false;
   createTerminus(server, {
     timeout: 15000,
@@ -384,7 +395,7 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
   const listenPromise = new Promise<void>((accept) => {
     server.listen(port, () => {
       const { locals } = app;
-      locals.logger.info({ port, service: locals.name }, 'express listening');
+      locals.logger.info({ url: url(config), service: locals.name }, 'express listening');
 
       const serverConfig = locals.config.get('server') as ConfigurationSchema['server'];
       // Ok now start the internal port if we have one.

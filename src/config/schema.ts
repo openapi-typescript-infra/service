@@ -67,6 +67,9 @@ export interface ConfigurationSchema extends Record<string, unknown> {
     // but this is useful for dev.
     key?: string;
     certificate?: string;
+    // If you have an alternate host name (other than localhost) that
+    // should be used when referring to this service, set it here.
+    hostname?: string;
   };
   connections: Record<string, ServiceConfiguration>;
 }
