@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/openapi-typescript-infra/service/compare/v2.1.0...v2.2.0) (2023-09-01)
+
+
+### Features
+
+* **config:** handle tilde for homedir in path and file shortstops ([3c4abdc](https://github.com/openapi-typescript-infra/service/commit/3c4abdc9bfa3657a5fe9cbeae4cb8f50e990e9df))
+
 # [2.1.0](https://github.com/openapi-typescript-infra/service/compare/v2.0.2...v2.1.0) (2023-09-01)
 
 
