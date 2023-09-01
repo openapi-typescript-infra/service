@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/openapi-typescript-infra/service/compare/v2.0.2...v2.1.0) (2023-09-01)
+
+
+### Features
+
+* **tls:** allow TLS listeners, handle errors better ([005e79a](https://github.com/openapi-typescript-infra/service/commit/005e79a76cdc6fe2c73006f8931b0085bce4a895))
+
 ## [2.0.2](https://github.com/openapi-typescript-infra/service/compare/v2.0.1...v2.0.2) (2023-08-26)
 
 
