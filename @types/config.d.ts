@@ -4,7 +4,12 @@ declare module 'shortstop-handlers' {
   export function env(): (envVarName: string) => string | undefined;
   export function base64(): (blob: string) => Buffer;
   export function path(baseDir?: string): (relativePath: string) => string;
-  export function file(baseDir?: string): (relativePath: string) => Buffer | string;
+  export function file(
+    baseDir?: string,
+  ): (
+    relativePath: string,
+    cb: (err: Error | null, result?: Buffer | string | undefined) => void,
+  ) => void;
 }
 
 declare module 'shortstop-yaml' {
@@ -21,9 +26,12 @@ declare module 'shortstop-dns' {
 }
 
 declare module '@gasbuddy/confit' {
-  type Json = ReturnType<typeof JSON.parse>
+  type Json = ReturnType<typeof JSON.parse>;
 
-  export type ProtocolFn<CallbackType> = (value: Json, callback?: (error?: Error, result?: CallbackType) => void) => void;
+  export type ProtocolFn<CallbackType> = (
+    value: Json,
+    callback?: (error: Error | null, result?: CallbackType) => void,
+  ) => void;
 
   interface ProtocolsSetPrivate<C> {
     [protocol: string]: ProtocolFn<C> | ProtocolFn<C>[];
@@ -49,7 +57,7 @@ declare module '@gasbuddy/confit' {
   function confit<C>(optionsOrBaseDir: Options<C> | string): ConfigFactory;
 
   namespace confit {
-    export type ProtocolsSet<C> = ProtocolsSetPrivate<C>
+    export type ProtocolsSet<C> = ProtocolsSetPrivate<C>;
   }
 
   export default confit;

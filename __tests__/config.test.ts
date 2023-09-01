@@ -1,3 +1,4 @@
+import os from 'os';
 import path from 'path';
 
 import { describe, expect, test } from 'vitest';
@@ -22,6 +23,8 @@ describe('configuration loader', () => {
     expect(config.get('servicetype')).toBeTruthy();
     expect(config.get('oservicetype')).toBeTruthy();
     expect(config.get('notservicetype')).toBeFalsy();
+
+    expect(config.get('bash_profile')).toEqual(path.join(os.homedir(), '.bash_profile'));
 
     const orig = ['a', 'b', 'd'];
     const withC = insertConfigurationBefore(orig, 'c', 'd');

@@ -3,6 +3,7 @@
     "level": "debug"
   },
   "google": "dns:google.com",
+  "bash_profile": "path:~/.bash_profile",
   "envswitchoff": "env_switch:ENV_VAR_DOESNT_EXIST",
   "envswitchon": "env_switch:!ENV_VAR_DOESNT_EXIST",
   "servicetype": "servicetype:serv",

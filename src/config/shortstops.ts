@@ -29,6 +29,38 @@ function betterRequire(basepath: string) {
   };
 }
 
+/**
+ * Just like path, but resolve ~/ to the home directory
+ */
+function betterPath(basepath: string) {
+  const basePath = shortstop.path(basepath);
+  return function pathWithHomeDir(v: string) {
+    if (v.startsWith('~/')) {
+      return basePath(path.join(os.homedir(), v.slice(2)));
+    }
+    return basePath(v);
+  };
+}
+
+/**
+ * Just like file, but resolve ~/ to the home directory
+ */
+function betterFile(basepath: string) {
+  const baseFile = shortstop.file(basepath);
+  return function fileWithHomeDir(
+    v: string,
+    callback: ((error: Error | null, result?: Buffer | string | undefined) => void) | undefined,
+  ) {
+    if (!callback) {
+      return undefined;
+    }
+    if (v.startsWith('~/')) {
+      return baseFile(path.join(os.homedir(), v.slice(2)), callback);
+    }
+    return baseFile(v, callback);
+  };
+}
+
 function canonicalizeServiceSuffix(suffix?: string) {
   if (!suffix) {
     return 'internal';
@@ -70,10 +102,7 @@ const osMethods = {
   version: os.version,
 };
 
-export function shortstops(
-  service: { name: string; },
-  sourcedir: string,
-) {
+export function shortstops(service: { name: string }, sourcedir: string) {
   /**
    * Since we use transpiled sources a lot,
    * basedir and sourcedir are meaningfully different reference points.
@@ -99,10 +128,10 @@ export function shortstops(
     },
 
     // handle source and base directory intelligently
-    path: shortstop.path(basedir),
+    path: betterPath(basedir),
     sourcepath: shortstop.path(sourcedir),
-    file: shortstop.file(basedir),
-    sourcefile: shortstop.file(sourcedir),
+    file: betterFile(basedir),
+    sourcefile: shortstop.file(sourcedir) as ProtocolFn<Buffer | string | undefined>,
     require: betterRequire(basedir),
     sourcerequire: betterRequire(sourcedir),
 
