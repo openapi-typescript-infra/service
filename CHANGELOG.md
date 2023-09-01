@@ -1,3 +1,16 @@
+# [2.3.0](https://github.com/openapi-typescript-infra/service/compare/v2.2.0...v2.3.0) (2023-09-01)
+
+
+### Bug Fixes
+
+* **ci:** update default permissions ([7d4b1ce](https://github.com/openapi-typescript-infra/service/commit/7d4b1ce383eb403706798599586fcf54ca533a50))
+* **ci:** update semantic release job permissions ([5fe90c8](https://github.com/openapi-typescript-infra/service/commit/5fe90c893ea682c77b4d896b1964a9e4b7fe6624))
+
+
+### Features
+
+* **logs:** better startup logging including URL ([a3f7146](https://github.com/openapi-typescript-infra/service/commit/a3f7146d10cb530999fb027d9f9769343eda1039))
+
 # [2.2.0](https://github.com/openapi-typescript-infra/service/compare/v2.1.0...v2.2.0) (2023-09-01)
 
 
