@@ -1,8 +1,12 @@
 {
+  "$schema": "tsschema://../src/config/schema#ConfigurationSchema",
   "logging": {
     "level": "debug"
   },
-  "port": 0,
+  "server": {
+    "port": 0,
+    "internalPort": 0
+  },
   "connections": {
     "default": {
       "proxy": "http://localhost:9990"

@@ -2,10 +2,13 @@ import express from 'express';
 import type { Application } from 'express-serve-static-core';
 
 import { InternalLocals, ServiceExpress } from '../types';
+import { findPort } from '../development/port-finder';
 
 export async function startInternalApp(mainApp: ServiceExpress, port: number) {
   const app = express() as unknown as Application<InternalLocals>;
   app.locals.mainApp = mainApp;
+
+  const finalPort = port === 0 ? await findPort(3001) : port;
 
   app.get('/health', async (req, res) => {
     if (mainApp.locals.service?.healthy) {
@@ -21,8 +24,11 @@ export async function startInternalApp(mainApp: ServiceExpress, port: number) {
   });
 
   const listenPromise = new Promise<void>((accept) => {
-    app.locals.server = app.listen(port, () => {
+    app.locals.server = app.listen(finalPort, () => {
       accept();
+    });
+    app.locals.server.on('error', (error) => {
+      mainApp.locals.logger.error(error, 'Internal app server error');
     });
   });
 

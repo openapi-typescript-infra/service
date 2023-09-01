@@ -1,5 +1,6 @@
 import assert from 'assert';
 import http from 'http';
+import https from 'https';
 import path from 'path';
 
 import express from 'express';
@@ -303,18 +304,32 @@ export async function shutdownApp(app: ServiceExpress) {
   (logger as pino.Logger).flush?.();
 }
 
+function tlsServer<SLocals extends ServiceLocals = ServiceLocals>(
+  app: ServiceExpress<SLocals>,
+  config: ConfigurationSchema['server'],
+) {
+  return https.createServer(
+    {
+      key: config.key,
+      cert: config.certificate,
+    },
+    app,
+  );
+}
+
 export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
   app: ServiceExpress<SLocals>,
   shutdownHandler?: () => Promise<void>,
 ) {
-  let port = app.locals.config.get('server:port');
+  const config = app.locals.config.get('server') as Required<ConfigurationSchema['server']>;
+  let { port } = config;
 
   if (port === 0) {
-    port = await findPort(8001);
+    port = (await findPort(8001)) as number;
   }
 
   const { service, logger } = app.locals;
-  const server = http.createServer(app);
+  const server = config.certificate ? tlsServer(app, config) : http.createServer(app);
   let shutdownInProgress = false;
   createTerminus(server, {
     timeout: 15000,
@@ -356,6 +371,10 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
       }
       shutdownApp(app);
     }
+  });
+
+  server.on('error', (error) => {
+    logger.error(error, 'Main service listener error');
   });
 
   const metricInfo = (app.locals as AppWithMetrics)[METRICS_KEY] as InternalMetricsInfo;

@@ -19,7 +19,7 @@ export interface ConfigurationSchema extends Record<string, unknown> {
     logHttpRequests?: boolean;
     logRequestBody?: boolean;
     logResponseBody?: boolean;
-  },
+  };
   routing?: {
     openapi?: boolean;
     // Relative to the *root directory* of the app
@@ -34,14 +34,14 @@ export interface ConfigurationSchema extends Record<string, unknown> {
     bodyParsers?: {
       json?: boolean;
       form?: boolean;
-    },
+    };
     // Set static.enabled to true to enable static assets to be served
     static?: ConfigurationItemEnabled & {
       // The path relative to the root directory of the app
       path?: string;
       // The path on which to mount the static assets (defaults to /)
       mountPath?: string;
-    },
+    };
     finalHandlers: {
       // Whether to create and return errors for unhandled routes
       notFound?: boolean;
@@ -55,12 +55,18 @@ export interface ConfigurationSchema extends Record<string, unknown> {
         // information.
         unnest: boolean;
       };
-    },
-  },
-  server?: {
-    internalPort?: number,
-    port?: number,
-    metrics: ConfigurationItemEnabled,
-  },
+    };
+  };
+  server: {
+    internalPort?: number;
+    port?: number;
+    metrics: ConfigurationItemEnabled;
+    // To enable HTTPS on the main service, set the key and cert to the
+    // actual key material (not the path). Use shortstop file: handler.
+    // Note that generally it's better to offload tls termination,
+    // but this is useful for dev.
+    key?: string;
+    certificate?: string;
+  };
   connections: Record<string, ServiceConfiguration>;
 }
