@@ -152,6 +152,10 @@ export async function startApp<
     name,
   });
 
+  if (serviceImpl.attach) {
+    await serviceImpl.attach(app);
+  }
+
   try {
     await enableMetrics(app, name);
   } catch (error) {

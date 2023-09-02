@@ -59,7 +59,13 @@ export interface Service<
     options: ServiceOptions,
   ) => ServiceOptions;
 
+  // Run after configuration but before routes are loaded,
+  // which is often a good place to add elements to the app locals
+  // that are needed during route setup
+  attach?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
+
   start(app: ServiceExpress<SLocals>): void | Promise<void>;
+
   stop?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
 
   healthy?: (app: ServiceExpress<SLocals>) => boolean | Promise<boolean>;
