@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/openapi-typescript-infra/service/compare/v2.3.0...v2.4.0) (2023-09-02)
+
+
+### Features
+
+* **lifecycle:** add a method pre-route loading to attach locals ([e20da8b](https://github.com/openapi-typescript-infra/service/commit/e20da8b13957436c149a4eeb0794a8560243c876))
+
 # [2.3.0](https://github.com/openapi-typescript-infra/service/compare/v2.2.0...v2.3.0) (2023-09-01)
 
 
