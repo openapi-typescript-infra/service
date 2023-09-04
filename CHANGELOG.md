@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/openapi-typescript-infra/service/compare/v2.4.0...v2.4.1) (2023-09-04)
+
+
+### Bug Fixes
+
+* **server:** log proper port on startup ([7fa4ba5](https://github.com/openapi-typescript-infra/service/commit/7fa4ba59c38b8e534c80f061ef0f8660ac07ee09))
+
 # [2.4.0](https://github.com/openapi-typescript-infra/service/compare/v2.3.0...v2.4.0) (2023-09-02)
 
 
