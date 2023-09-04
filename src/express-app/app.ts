@@ -325,11 +325,11 @@ function httpServer<SLocals extends ServiceLocals = ServiceLocals>(
   );
 }
 
-function url(config: ConfigurationSchema['server']) {
+function url(config: ConfigurationSchema['server'], port: number) {
   if (config.certificate) {
-    return `https://${config.hostname}${config.port === 443 ? '' : `:${config.port}`}`;
+    return `https://${config.hostname}${port === 443 ? '' : `:${port}`}`;
   }
-  return `http://${config.hostname}${config.port === 80 ? '' : `:${config.port}`}`;
+  return `http://${config.hostname}${port === 80 ? '' : `:${port}`}`;
 }
 
 export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
@@ -399,7 +399,7 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
   const listenPromise = new Promise<void>((accept) => {
     server.listen(port, () => {
       const { locals } = app;
-      locals.logger.info({ url: url(config), service: locals.name }, 'express listening');
+      locals.logger.info({ url: url(config, port), service: locals.name }, 'express listening');
 
       const serverConfig = locals.config.get('server') as ConfigurationSchema['server'];
       // Ok now start the internal port if we have one.
