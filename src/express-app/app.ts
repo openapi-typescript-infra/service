@@ -13,7 +13,6 @@ import { createTerminus } from '@godaddy/terminus';
 import type { RequestHandler, Response } from 'express';
 
 import { loadConfiguration } from '../config/index';
-import { findPort } from '../development/port-finder';
 import { openApi } from '../openapi';
 import {
   errorHandlerMiddleware,
@@ -337,11 +336,7 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
   shutdownHandler?: () => Promise<void>,
 ) {
   const config = app.locals.config.get('server') as Required<ConfigurationSchema['server']>;
-  let { port } = config;
-
-  if (port === 0) {
-    port = (await findPort(8001)) as number;
-  }
+  const { port } = config;
 
   const { service, logger } = app.locals;
   const server = httpServer(app, config);

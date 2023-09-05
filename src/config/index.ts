@@ -3,8 +3,11 @@ import path from 'path';
 
 import confit from '@gasbuddy/confit';
 
+import { findPort } from '../development/port-finder';
+
 import { shortstops } from './shortstops';
 import type { ConfigStore } from './types';
+import type { ConfigurationSchema } from './schema';
 
 // Order matters here.
 const ENVIRONMENTS = ['production', 'staging', 'test', 'development'];
@@ -89,6 +92,14 @@ export async function loadConfiguration({
   const loaded: ConfigStore = await new Promise((accept, reject) => {
     configFactory.create((err, config) => (err ? reject(err) : accept(config)));
   });
+
+  // Because other things need to know the port we choose, we pick it here if it's
+  // configured to auto-select
+  const serverConfig = loaded.get('server') as Required<ConfigurationSchema['server']>;
+  if (serverConfig.port === 0) {
+    const port = (await findPort(8001)) as number;
+    loaded.set('server:port', port);
+  }
 
   // TODO init other stuff based on config here, such as key management or
   // other cloud-aware shortstop handlers

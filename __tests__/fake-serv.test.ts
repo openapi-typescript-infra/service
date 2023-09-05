@@ -19,6 +19,7 @@ describe('fake-serv', () => {
       console.error(error);
       throw error;
     });
+    expect(app.locals.config.get('server:port')).not.toEqual(0);
     expect(app).toBeTruthy();
 
     let { body } = await request(app).get('/world').timeout(500).expect(200);
