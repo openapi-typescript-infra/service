@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/openapi-typescript-infra/service/compare/v2.4.1...v2.5.0) (2023-09-05)
+
+
+### Features
+
+* **port:** determine service port earlier - before service starts ([c593f27](https://github.com/openapi-typescript-infra/service/commit/c593f27dae20ea19fdd8f79611b16c2b179d7a4d))
+
 ## [2.4.1](https://github.com/openapi-typescript-infra/service/compare/v2.4.0...v2.4.1) (2023-09-04)
 
 
