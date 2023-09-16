@@ -1,3 +1,15 @@
+# [2.6.0](https://github.com/openapi-typescript-infra/service/compare/v2.5.0...v2.6.0) (2023-09-16)
+
+
+### Bug Fixes
+
+* **openapi:** bundle the service definition before type generation ([18ba0b4](https://github.com/openapi-typescript-infra/service/commit/18ba0b48289d18fd12b35bdb0275efa0d7edafd4))
+
+
+### Features
+
+* **otlp:** update opentelemetry and other deps ([330e7d1](https://github.com/openapi-typescript-infra/service/commit/330e7d169a03dbeda873186012167834711d8923))
+
 # [2.5.0](https://github.com/openapi-typescript-infra/service/compare/v2.4.1...v2.5.0) (2023-09-05)
 
 
