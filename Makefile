@@ -39,7 +39,7 @@ service: src/generated/service/index.ts
 src/generated/service/index.ts: $(shell find api -type f)
 	echo "Building service interface"
 	$(eval TMP := $(shell mktemp -d))
-	yarn dlx @redocly/openapi-cli@latest bundle ./api/${SERVICE_NAME}.yaml -o $(TMP)/api.yaml
+	npx --yes @redocly/cli@latest bundle ./api/${SERVICE_NAME}.yaml -o $(TMP)/api.yaml
 	yarn dlx openapi-typescript-express $(TMP)/api.yaml \
 		--output ./src/generated/service/index.ts
 	./node_modules/.bin/prettier ./src/generated/service/index.ts --write
