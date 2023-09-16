@@ -38,9 +38,12 @@ service: src/generated/service/index.ts
 
 src/generated/service/index.ts: api/${SERVICE_NAME}.yaml
 	echo "Building service interface"
-	yarn dlx openapi-typescript-express ./api/${SERVICE_NAME}.yaml \
+	$(eval TMP := $(shell mktemp -d))
+	yarn dlx @redocly/openapi-cli@latest bundle ./api/${SERVICE_NAME}.yaml -o $(TMP)/api.yaml
+	yarn dlx openapi-typescript-express $(TMP)/api.yaml \
 		--output ./src/generated/service/index.ts
 	./node_modules/.bin/prettier ./src/generated/service/index.ts --write
+	rm -rf $(TMP)
 
 # Postgres database things
 export PGUSER ?= postgres
