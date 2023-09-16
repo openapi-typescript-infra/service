@@ -1,3 +1,10 @@
+## [2.6.2](https://github.com/openapi-typescript-infra/service/compare/v2.6.1...v2.6.2) (2023-09-16)
+
+
+### Bug Fixes
+
+* **openapi:** depend on all files in subdirs ([d4eaa2c](https://github.com/openapi-typescript-infra/service/commit/d4eaa2cdbaa791bb250f41ce6703c32f8c90b192))
+
 ## [2.6.1](https://github.com/openapi-typescript-infra/service/compare/v2.6.0...v2.6.1) (2023-09-16)
 
 
