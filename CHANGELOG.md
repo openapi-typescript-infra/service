@@ -1,3 +1,10 @@
+## [2.6.1](https://github.com/openapi-typescript-infra/service/compare/v2.6.0...v2.6.1) (2023-09-16)
+
+
+### Bug Fixes
+
+* **openapi:** proper dependency for split spec files ([cc82772](https://github.com/openapi-typescript-infra/service/commit/cc827722939113faf5e03d7b5685dc38e6ceeb52))
+
 # [2.6.0](https://github.com/openapi-typescript-infra/service/compare/v2.5.0...v2.6.0) (2023-09-16)
 
 
