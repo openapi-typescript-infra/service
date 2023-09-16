@@ -1,3 +1,10 @@
+## [2.6.3](https://github.com/openapi-typescript-infra/service/compare/v2.6.2...v2.6.3) (2023-09-16)
+
+
+### Bug Fixes
+
+* **openapi:** use latest cli ([2cf2fa2](https://github.com/openapi-typescript-infra/service/commit/2cf2fa222b56ac607c1d9eed0313d6efcd1cf738))
+
 ## [2.6.2](https://github.com/openapi-typescript-infra/service/compare/v2.6.1...v2.6.2) (2023-09-16)
 
 
