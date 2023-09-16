@@ -36,7 +36,7 @@ $(word 1, $(build_files)): $(src_files)
 
 service: src/generated/service/index.ts
 
-src/generated/service/index.ts: api/${SERVICE_NAME}.yaml
+src/generated/service/index.ts: api/**
 	echo "Building service interface"
 	$(eval TMP := $(shell mktemp -d))
 	yarn dlx @redocly/openapi-cli@latest bundle ./api/${SERVICE_NAME}.yaml -o $(TMP)/api.yaml
