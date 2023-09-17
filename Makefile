@@ -33,6 +33,9 @@ ts: $(word 1, $(build_files))
 
 $(word 1, $(build_files)): $(src_files)
 	./node_modules/.bin/tsc -p tsconfig.build.json
+	@if [ -d "node_modules/tsconfig-replace-paths" ]; then \
+		yarn tsconfig-replace-paths --project tsconfig.build.json; \
+	fi
 
 service: src/generated/service/index.ts
 
