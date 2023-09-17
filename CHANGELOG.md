@@ -1,3 +1,10 @@
+## [2.6.5](https://github.com/openapi-typescript-infra/service/compare/v2.6.4...v2.6.5) (2023-09-17)
+
+
+### Bug Fixes
+
+* **glob:** ignore spec, fixture and test files when loading routes ([350ccd6](https://github.com/openapi-typescript-infra/service/commit/350ccd66f439830ef976df02d312e4bae0ac567d))
+
 ## [2.6.4](https://github.com/openapi-typescript-infra/service/compare/v2.6.3...v2.6.4) (2023-09-17)
 
 
