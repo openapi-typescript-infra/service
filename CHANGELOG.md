@@ -1,3 +1,10 @@
+## [2.6.4](https://github.com/openapi-typescript-infra/service/compare/v2.6.3...v2.6.4) (2023-09-17)
+
+
+### Bug Fixes
+
+* **make:** allow bundling of spec to deterministic path ([16ff04e](https://github.com/openapi-typescript-infra/service/commit/16ff04ee7c55868cf65f0b686ca99db416b78eff))
+
 ## [2.6.3](https://github.com/openapi-typescript-infra/service/compare/v2.6.2...v2.6.3) (2023-09-16)
 
 
