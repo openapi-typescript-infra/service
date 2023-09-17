@@ -1,3 +1,10 @@
+## [2.6.6](https://github.com/openapi-typescript-infra/service/compare/v2.6.5...v2.6.6) (2023-09-17)
+
+
+### Bug Fixes
+
+* **ts:** automatically run tsconfig-replace-paths if it exists ([cf89107](https://github.com/openapi-typescript-infra/service/commit/cf89107065df3da5d920e8032bdf00feea0f64c1))
+
 ## [2.6.5](https://github.com/openapi-typescript-infra/service/compare/v2.6.4...v2.6.5) (2023-09-17)
 
 
