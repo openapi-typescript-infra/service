@@ -19,6 +19,7 @@ export async function getFilesInDir(pattern: string, dir: string) {
         nodir: true,
         strict: true,
         cwd: dir,
+        ignore: ['**/*.spec.@(js|ts)', '**/*.test.@(js|ts)', '**/*.fixtures.@(js|ts)'],
       },
       (error, matches) => (error ? reject(error) : accept(matches)),
     );
