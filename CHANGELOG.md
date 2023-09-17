@@ -1,3 +1,10 @@
+## [2.6.7](https://github.com/openapi-typescript-infra/service/compare/v2.6.6...v2.6.7) (2023-09-17)
+
+
+### Bug Fixes
+
+* **ts:** switch to tsc-alias ([4fd845d](https://github.com/openapi-typescript-infra/service/commit/4fd845dd5795aec14af2ea59aa97eb8a0b6aeef1))
+
 ## [2.6.6](https://github.com/openapi-typescript-infra/service/compare/v2.6.5...v2.6.6) (2023-09-17)
 
 
