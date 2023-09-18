@@ -1,3 +1,10 @@
+## [2.7.1](https://github.com/openapi-typescript-infra/service/compare/v2.7.0...v2.7.1) (2023-09-18)
+
+
+### Bug Fixes
+
+* **otlp:** dummy exporter needs to flush records ([8d6d1a3](https://github.com/openapi-typescript-infra/service/commit/8d6d1a3cd42531f4ad0f8678eec66dab1b9e45a0))
+
 # [2.7.0](https://github.com/openapi-typescript-infra/service/compare/v2.6.7...v2.7.0) (2023-09-18)
 
 
