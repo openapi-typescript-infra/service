@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/openapi-typescript-infra/service/compare/v2.6.7...v2.7.0) (2023-09-18)
+
+
+### Features
+
+* **otlp:** cleanup OTLP setup, though still sketchy ([5ee63ac](https://github.com/openapi-typescript-infra/service/commit/5ee63ac6d3d519fb8d6a9d321d0bf59991e7db40))
+
 ## [2.6.7](https://github.com/openapi-typescript-infra/service/compare/v2.6.6...v2.6.7) (2023-09-17)
 
 
