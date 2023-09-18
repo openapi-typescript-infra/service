@@ -6,6 +6,9 @@ import {
   Attributes,
   context,
   propagation,
+  metrics,
+  Meter,
+  MeterProvider,
   Span,
   SpanKind,
   SpanStatusCode,
@@ -13,7 +16,6 @@ import {
   Tracer,
   TracerProvider,
 } from '@opentelemetry/api';
-import { Meter, MeterProvider, metrics } from '@opentelemetry/api-metrics';
 
 interface ListenerRecord {
   name: string;

@@ -11,6 +11,7 @@ import type {
 import type { ListenFn, StartAppFn } from '../express-app/index';
 
 import { getAutoInstrumentations } from './instrumentations';
+import { DummySpanExporter } from './DummyExporter';
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
@@ -27,6 +28,7 @@ function getExporter() {
   if (process.env.ENABLE_CONSOLE_OLTP_EXPORTER) {
     return new opentelemetry.tracing.ConsoleSpanExporter();
   }
+  return new DummySpanExporter();
 }
 
 export async function startWithTelemetry<

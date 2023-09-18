@@ -4,7 +4,7 @@ import type pino from 'pino';
 import type { Request, Response } from 'express';
 import type { Application } from 'express-serve-static-core';
 import type { middleware } from 'express-openapi-validator';
-import type { Meter, MeterProvider } from '@opentelemetry/api-metrics';
+import type { Meter, MeterProvider } from '@opentelemetry/api';
 
 import type { ConfigStore } from './config/types';
 

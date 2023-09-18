@@ -1,5 +1,4 @@
 import type { Instrumentation } from '@opentelemetry/instrumentation';
-import { AwsInstrumentation } from '@opentelemetry/instrumentation-aws-sdk';
 import { DnsInstrumentation } from '@opentelemetry/instrumentation-dns';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { GenericPoolInstrumentation } from '@opentelemetry/instrumentation-generic-pool';
@@ -12,11 +11,8 @@ import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
 import { FetchInstrumentation } from './fetchInstrumentation';
 
 const InstrumentationMap = {
-  // Disable this for now because it logs a stupid message
-  // '@opentelemetry/instrumentation-aws-lambda': AwsLambdaInstrumentation,
   '@opentelemetry/instrumentation-http': HttpInstrumentation,
   'opentelemetry-instrumentation-node-18-fetch': FetchInstrumentation,
-  '@opentelemetry/instrumentation-aws-sdk': AwsInstrumentation,
   '@opentelemetry/instrumentation-dns': DnsInstrumentation,
   '@opentelemetry/instrumentation-express': ExpressInstrumentation,
   '@opentelemetry/instrumentation-generic-pool': GenericPoolInstrumentation,

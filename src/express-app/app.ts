@@ -7,7 +7,9 @@ import express from 'express';
 import { pino } from 'pino';
 import cookieParser from 'cookie-parser';
 import { MeterProvider } from '@opentelemetry/sdk-metrics';
-import { metrics } from '@opentelemetry/api-metrics';
+import { Resource } from '@opentelemetry/resources';
+import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import { metrics } from '@opentelemetry/api';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 import { createTerminus } from '@godaddy/terminus';
 import type { RequestHandler, Response } from 'express';
@@ -48,7 +50,11 @@ async function enableMetrics<SLocals extends ServiceLocals = ServiceLocals>(
   app: ServiceExpress<SLocals>,
   name: string,
 ) {
-  const meterProvider = new MeterProvider();
+  const meterProvider = new MeterProvider({
+    resource: new Resource({
+      [SemanticResourceAttributes.SERVICE_NAME]: name,
+    }),
+  });
   metrics.setGlobalMeterProvider(meterProvider);
   app.locals.meter = meterProvider.getMeter(name);
 
