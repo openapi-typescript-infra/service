@@ -1,3 +1,10 @@
+## [2.7.4](https://github.com/openapi-typescript-infra/service/compare/v2.7.3...v2.7.4) (2023-09-19)
+
+
+### Bug Fixes
+
+* **types:** add raw types to utility type ([f607fba](https://github.com/openapi-typescript-infra/service/commit/f607fba897a76e88652472946f64d225da302c9e))
+
 ## [2.7.3](https://github.com/openapi-typescript-infra/service/compare/v2.7.2...v2.7.3) (2023-09-19)
 
 
