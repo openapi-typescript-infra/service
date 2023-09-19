@@ -149,3 +149,23 @@ export interface RequestLike<
     locals: RLocals;
   };
 }
+
+// Define some utility types to make it easier to put them all
+// in one export. This interface never actually is instantiated.
+// Typically you should export an interface that extends this one
+// and then access all your types through that.
+export interface ServiceTypes<
+  SLocals extends ServiceLocals = ServiceLocals,
+  RLocals extends RequestLocals = RequestLocals,
+  ResBody = unknown,
+> {
+  Service: Service<SLocals, RLocals>;
+  ServiceFactory: ServiceFactory<SLocals, RLocals>;
+  RequestLike: RequestLike<SLocals, RLocals>;
+  Request: RequestWithApp<SLocals>;
+  Response: ResponseFromApp<ResBody, RLocals>;
+  Handler: (
+    req: RequestWithApp<SLocals>,
+    res: ResponseFromApp<ResBody, RLocals>,
+  ) => void | Promise<void>;
+}
