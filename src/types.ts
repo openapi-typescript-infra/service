@@ -159,13 +159,14 @@ export interface ServiceTypes<
   RLocals extends RequestLocals = RequestLocals,
   ResBody = unknown,
 > {
-  Service: Service<SLocals, RLocals>;
-  ServiceFactory: ServiceFactory<SLocals, RLocals>;
-  RequestLike: RequestLike<SLocals, RLocals>;
-  Request: RequestWithApp<SLocals>;
-  Response: ResponseFromApp<ResBody, RLocals>;
+  App: ServiceExpress<SLocals>;
   Handler: (
     req: RequestWithApp<SLocals>,
     res: ResponseFromApp<ResBody, RLocals>,
   ) => void | Promise<void>;
+  Request: RequestWithApp<SLocals>;
+  RequestLike: RequestLike<SLocals, RLocals>;
+  Response: ResponseFromApp<ResBody, RLocals>;
+  Service: Service<SLocals, RLocals>;
+  ServiceFactory: ServiceFactory<SLocals, RLocals>;
 }
