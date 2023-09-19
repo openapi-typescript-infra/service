@@ -1,3 +1,10 @@
+## [2.7.2](https://github.com/openapi-typescript-infra/service/compare/v2.7.1...v2.7.2) (2023-09-19)
+
+
+### Bug Fixes
+
+* **types:** add a container type to make life easier ([a74ded1](https://github.com/openapi-typescript-infra/service/commit/a74ded1b784443375ee1e3fee32c60140759eb3a))
+
 ## [2.7.1](https://github.com/openapi-typescript-infra/service/compare/v2.7.0...v2.7.1) (2023-09-18)
 
 
