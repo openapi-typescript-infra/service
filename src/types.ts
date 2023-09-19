@@ -166,7 +166,9 @@ export interface ServiceTypes<
   ) => void | Promise<void>;
   Request: RequestWithApp<SLocals>;
   RequestLike: RequestLike<SLocals, RLocals>;
+  RequestLocals: RLocals;
   Response: ResponseFromApp<ResBody, RLocals>;
   Service: Service<SLocals, RLocals>;
   ServiceFactory: ServiceFactory<SLocals, RLocals>;
+  ServiceLocals: SLocals;
 }
