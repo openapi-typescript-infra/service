@@ -1,3 +1,10 @@
+## [2.7.3](https://github.com/openapi-typescript-infra/service/compare/v2.7.2...v2.7.3) (2023-09-19)
+
+
+### Bug Fixes
+
+* **types:** add express type ([79de1d4](https://github.com/openapi-typescript-infra/service/commit/79de1d4ac107454cf08623c3d837f5cb84b18c4a))
+
 ## [2.7.2](https://github.com/openapi-typescript-infra/service/compare/v2.7.1...v2.7.2) (2023-09-19)
 
 
