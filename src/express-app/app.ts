@@ -30,7 +30,7 @@ import type {
   ServiceStartOptions,
 } from '../types';
 import { ConfigurationItemEnabled, ConfigurationSchema } from '../config/schema';
-import { isDev } from '../env';
+import { getNodeEnv, isDev } from '../env';
 
 import { loadRoutes } from './route-loader';
 import { startInternalApp } from './internal-server';
@@ -93,6 +93,13 @@ async function endMetrics<SLocals extends ServiceLocals = ServiceLocals>(
   logger.info('Metrics shutdown');
 }
 
+function isSyncLogging() {
+  if (process.env.LOG_SYNC) {
+    return true;
+  }
+  return isDev() || getNodeEnv() === 'test';
+}
+
 export async function startApp<
   SLocals extends ServiceLocals = ServiceLocals,
   RLocals extends RequestLocals = RequestLocals,
@@ -100,6 +107,7 @@ export async function startApp<
   const { service, rootDirectory, codepath = 'build', name } = startOptions;
   const shouldPrettyPrint = isDev() && !process.env.NO_PRETTY_LOGS;
   const destination = pino.destination({
+    sync: isSyncLogging(),
     dest: process.env.LOG_TO_FILE || process.stdout.fd,
     minLength: process.env.LOG_BUFFER ? Number(process.env.LOG_BUFFER) : undefined,
   });
