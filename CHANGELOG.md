@@ -1,3 +1,10 @@
+## [2.7.5](https://github.com/openapi-typescript-infra/service/compare/v2.7.4...v2.7.5) (2023-09-22)
+
+
+### Bug Fixes
+
+* **log:** use sync logging for tests ([832cdfb](https://github.com/openapi-typescript-infra/service/commit/832cdfb8cb6c99af42740a714cf7c06dc2523538))
+
 ## [2.7.4](https://github.com/openapi-typescript-infra/service/compare/v2.7.3...v2.7.4) (2023-09-19)
 
 
