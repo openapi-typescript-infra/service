@@ -40,13 +40,13 @@ $(word 1, $(build_files)): $(src_files)
 service: src/generated/service/index.ts
 
 bundlespec:
-	npx --yes @redocly/cli@latest bundle ./api/${SERVICE_NAME}.yaml -o $(BUNDLE_OUTPUT)/spec.json
+	npx --yes @redocly/cli@latest bundle ./api/${SERVICE_NAME}.yaml -o $(BUNDLE_OUTPUT)/openapi-spec.json
 
 src/generated/service/index.ts: $(shell find api -type f)
 	echo "Building service interface"
 	$(eval BUNDLE_OUTPUT := $(shell mktemp -d))
 	$(MAKE) bundlespec SERVICE_NAME=$(SERVICE_NAME) BUNDLE_OUTPUT=$(BUNDLE_OUTPUT)
-	yarn dlx openapi-typescript-express $(BUNDLE_OUTPUT)/spec.json \
+	yarn dlx openapi-typescript-express $(BUNDLE_OUTPUT)/openapi-spec.json \
 		--output ./src/generated/service/index.ts
 	./node_modules/.bin/prettier ./src/generated/service/index.ts --write
 	rm -rf $(TMP)
