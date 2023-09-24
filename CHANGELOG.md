@@ -1,3 +1,10 @@
+## [2.7.6](https://github.com/openapi-typescript-infra/service/compare/v2.7.5...v2.7.6) (2023-09-24)
+
+
+### Bug Fixes
+
+* **openapi:** change filename of JSON spec for clarity ([3807027](https://github.com/openapi-typescript-infra/service/commit/3807027141073cefd8e3f29d692864b9b0007a07))
+
 ## [2.7.5](https://github.com/openapi-typescript-infra/service/compare/v2.7.4...v2.7.5) (2023-09-22)
 
 
