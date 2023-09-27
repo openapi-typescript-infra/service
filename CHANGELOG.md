@@ -1,3 +1,10 @@
+## [2.7.7](https://github.com/openapi-typescript-infra/service/compare/v2.7.6...v2.7.7) (2023-09-27)
+
+
+### Bug Fixes
+
+* **deps:** upgrade to avoid CVE-2022-24999 in qs ([fb85750](https://github.com/openapi-typescript-infra/service/commit/fb8575098ce876d71dd6898a8f70f0bf47e78b37))
+
 ## [2.7.6](https://github.com/openapi-typescript-infra/service/compare/v2.7.5...v2.7.6) (2023-09-24)
 
 
