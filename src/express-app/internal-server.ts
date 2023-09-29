@@ -33,5 +33,8 @@ export async function startInternalApp(mainApp: ServiceExpress, port: number) {
   });
 
   await listenPromise;
+
+  mainApp.locals.logger.info({ port: finalPort }, 'Internal metadata server started');
+
   return app;
 }

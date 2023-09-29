@@ -344,12 +344,6 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
         startInternalApp(app, serverConfig.internalPort)
           .then((internalApp) => {
             locals.internalApp = internalApp;
-            locals.logger.info(
-              { port: serverConfig.internalPort },
-              'Internal metadata server started',
-            );
-          })
-          .then(() => {
             const prometheusExporter = getGlobalPrometheusExporter();
             if (prometheusExporter) {
               locals.internalApp.get(
