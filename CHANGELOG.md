@@ -1,3 +1,10 @@
+## [2.8.2](https://github.com/openapi-typescript-infra/service/compare/v2.8.1...v2.8.2) (2023-09-29)
+
+
+### Bug Fixes
+
+* **otlp:** add resource detectors ([04ee92d](https://github.com/openapi-typescript-infra/service/commit/04ee92de9c9df63dda56e8a000d803af6b7801c3))
+
 ## [2.8.1](https://github.com/openapi-typescript-infra/service/compare/v2.8.0...v2.8.1) (2023-09-29)
 
 
