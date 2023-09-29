@@ -60,7 +60,6 @@ export interface ConfigurationSchema extends Record<string, unknown> {
   server: {
     internalPort?: number;
     port?: number;
-    metrics: ConfigurationItemEnabled;
     // To enable HTTPS on the main service, set the key and cert to the
     // actual key material (not the path). Use shortstop file: handler.
     // Note that generally it's better to offload tls termination,

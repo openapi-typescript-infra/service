@@ -1,13 +1,27 @@
 import path from 'path';
 
-import { describe, expect, test } from 'vitest';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import request from 'supertest';
 
-import { listen, ServiceStartOptions, shutdownApp, startApp } from '../src/index';
+import {
+  listen,
+  ServiceStartOptions,
+  shutdownGlobalTelemetry,
+  startApp,
+  startGlobalTelemetry,
+} from '../src/index';
 
 import { FakeServLocals, service } from './fake-serv/src/index';
 
 describe('fake-serv', () => {
+  beforeAll(() => {
+    startGlobalTelemetry('fake-serv');
+  });
+
+  afterAll(async () => {
+    await shutdownGlobalTelemetry();
+  });
+
   test('basic service functionality', async () => {
     const options: ServiceStartOptions<FakeServLocals> = {
       service,
@@ -15,6 +29,7 @@ describe('fake-serv', () => {
       rootDirectory: path.resolve(__dirname, './fake-serv'),
       codepath: 'src',
     };
+
     const app = await startApp(options).catch((error) => {
       console.error(error);
       throw error;
@@ -54,20 +69,15 @@ describe('fake-serv', () => {
     // Mocking
     await request(app).post('/world').expect(500);
 
-    // Clean shutdown
-    await expect(shutdownApp(app)).resolves.toBeUndefined();
-    const secondApp = await startApp(options);
-
-    // Make sure we can listen
-    const server = await listen(secondApp);
-
-    // Call metrics
-    await request(secondApp).get('/world').expect(200);
-    await request(secondApp.locals.internalApp)
+    const server = await listen(app);
+    await request(app.locals.internalApp)
       .get('/metrics')
       .expect(200)
-      .expect((res) => expect(res.text).toMatch(/world_requests_total{method="get"} 1/));
+      .expect((res) => {
+        expect(res.text).toMatch(/world_requests_total{method="get"} 1/);
+      });
 
+    // Clean shutdown
     await new Promise<void>((accept, reject) => {
       server.close((e) => {
         if (e) {

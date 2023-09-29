@@ -1,6 +1,7 @@
 import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
 import * as opentelemetry from '@opentelemetry/sdk-node';
+import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 
 import type {
   DelayLoadServiceStartOptions,
@@ -31,17 +32,47 @@ function getExporter() {
   return new DummySpanExporter();
 }
 
+let prometheusExporter: PrometheusExporter | undefined;
+let telemetrySdk: opentelemetry.NodeSDK | undefined;
+
+/**
+ * OpenTelemetry is not friendly to the idea of stopping
+ * and starting itself, it seems. So we can only keep a global
+ * instance of the infrastructure no matter how many times
+ * you start/stop your service (this is mostly only relevant for testing).
+ * In addition, since we have to load it right away before configuration
+ * is available, we can't use configuration to decide anything.
+ */
+export function startGlobalTelemetry(serviceName: string) {
+  if (!prometheusExporter) {
+    prometheusExporter = new PrometheusExporter({ preventServerStart: true });
+    telemetrySdk = new opentelemetry.NodeSDK({
+      serviceName,
+      autoDetectResources: true,
+      traceExporter: getExporter(),
+      metricReader: prometheusExporter,
+      instrumentations: [getAutoInstrumentations()],
+    });
+    telemetrySdk.start();
+  }
+}
+
+export function getGlobalPrometheusExporter() {
+  return prometheusExporter;
+}
+
+export async function shutdownGlobalTelemetry() {
+  await prometheusExporter?.shutdown();
+  await telemetrySdk?.shutdown();
+  telemetrySdk = undefined;
+  prometheusExporter = undefined;
+}
+
 export async function startWithTelemetry<
   SLocals extends ServiceLocals = ServiceLocals,
   RLocals extends RequestLocals = RequestLocals,
 >(options: DelayLoadServiceStartOptions) {
-  const sdk = new opentelemetry.NodeSDK({
-    serviceName: options.name,
-    autoDetectResources: true,
-    traceExporter: getExporter(),
-    instrumentations: [getAutoInstrumentations()],
-  });
-  await sdk.start();
+  startGlobalTelemetry(options.name);
 
   // eslint-disable-next-line import/no-unresolved, @typescript-eslint/no-var-requires
   const { startApp, listen } = require('../express-app/app.js') as {
@@ -60,7 +91,7 @@ export async function startWithTelemetry<
   app.locals.logger.info('OpenTelemetry enabled');
 
   const server = await listen(app, async () => {
-    await sdk.shutdown();
+    await shutdownGlobalTelemetry();
     app.locals.logger.info('OpenTelemetry shut down');
   });
   return { app, server };
