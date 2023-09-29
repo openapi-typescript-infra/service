@@ -1,3 +1,10 @@
+# [2.8.0](https://github.com/openapi-typescript-infra/service/compare/v2.7.7...v2.8.0) (2023-09-29)
+
+
+### Features
+
+* **otlp:** rework OpenTelemetry integration to deal with limitations… ([#10](https://github.com/openapi-typescript-infra/service/issues/10)) ([5ce6e42](https://github.com/openapi-typescript-infra/service/commit/5ce6e42d76041142c23aec5cd5738173197e9613))
+
 ## [2.7.7](https://github.com/openapi-typescript-infra/service/compare/v2.7.6...v2.7.7) (2023-09-27)
 
 
