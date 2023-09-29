@@ -74,6 +74,7 @@ describe('fake-serv', () => {
       .get('/metrics')
       .expect(200)
       .expect((res) => {
+        expect(res.text).toMatch(/# UNIT http_server_duration ms/);
         expect(res.text).toMatch(/world_requests_total{method="get"} 1/);
       });
 

@@ -9,9 +9,5 @@
   "servicetype": "servicetype:serv",
   "oservicetype": "servicetype:internal",
   "notservicetype": "servicetype:api",
-  "server": {
-    "metrics": {
-      "enabled": true
-    }
-  }
+  "server": {}
 }
