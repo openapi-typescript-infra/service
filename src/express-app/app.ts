@@ -6,11 +6,7 @@ import path from 'path';
 import express from 'express';
 import { pino } from 'pino';
 import cookieParser from 'cookie-parser';
-import { MeterProvider } from '@opentelemetry/sdk-metrics';
-import { Resource } from '@opentelemetry/resources';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { metrics } from '@opentelemetry/api';
-import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 import { createTerminus } from '@godaddy/terminus';
 import type { RequestHandler, Response } from 'express';
 
@@ -29,69 +25,12 @@ import type {
   ServiceOptions,
   ServiceStartOptions,
 } from '../types';
-import { ConfigurationItemEnabled, ConfigurationSchema } from '../config/schema';
+import { ConfigurationSchema } from '../config/schema';
 import { getNodeEnv, isDev } from '../env';
+import { getGlobalPrometheusExporter } from '../telemetry/index';
 
 import { loadRoutes } from './route-loader';
 import { startInternalApp } from './internal-server';
-
-const METRICS_KEY = Symbol('PrometheusMetricsInfo');
-
-interface InternalMetricsInfo {
-  meterProvider: MeterProvider;
-  exporter?: PrometheusExporter;
-}
-
-interface AppWithMetrics {
-  [METRICS_KEY]?: InternalMetricsInfo;
-}
-
-async function enableMetrics<SLocals extends ServiceLocals = ServiceLocals>(
-  app: ServiceExpress<SLocals>,
-  name: string,
-) {
-  const meterProvider = new MeterProvider({
-    resource: new Resource({
-      [SemanticResourceAttributes.SERVICE_NAME]: name,
-    }),
-  });
-  metrics.setGlobalMeterProvider(meterProvider);
-  app.locals.meter = meterProvider.getMeter(name);
-
-  const metricsConfig = app.locals.config.get<ConfigurationItemEnabled>('server:metrics');
-  const value: InternalMetricsInfo = { meterProvider };
-  if (metricsConfig?.enabled) {
-    const finalConfig = {
-      ...metricsConfig,
-      preventServerStart: true,
-    };
-    // There is what I would consider a bug in OpenTelemetry metrics
-    // wherein adding metrics BEFORE the metricReader is added results
-    // in those metrics screaming into the void. So, we need to add
-    // this up front and then just tie it to the internal express
-    // app if and when "listen" is called.
-    const exporter = new PrometheusExporter(finalConfig);
-    meterProvider.addMetricReader(exporter);
-    value.exporter = exporter;
-  } else {
-    app.locals.logger.info('No metrics will be exported');
-  }
-  // Squirrel it away for later
-  Object.defineProperty(app.locals, METRICS_KEY, {
-    value,
-    enumerable: false,
-    configurable: true,
-  });
-}
-
-async function endMetrics<SLocals extends ServiceLocals = ServiceLocals>(
-  app: ServiceExpress<SLocals>,
-) {
-  const { internalApp, logger } = app.locals;
-  const meterProvider = internalApp?.locals.meterProvider as MeterProvider | undefined;
-  await meterProvider?.shutdown();
-  logger.info('Metrics shutdown');
-}
 
 function isSyncLogging() {
   if (process.env.LOG_SYNC) {
@@ -169,13 +108,7 @@ export async function startApp<
     await serviceImpl.attach(app);
   }
 
-  try {
-    await enableMetrics(app, name);
-  } catch (error) {
-    logger.error(error, 'Could not enable metrics.');
-    throw error;
-  }
-
+  app.locals.meter = metrics.getMeterProvider().getMeter(name);
   if (config.get('trustProxy')) {
     app.set('trust proxy', config.get('trustProxy'));
   }
@@ -313,7 +246,6 @@ export async function shutdownApp(app: ServiceExpress) {
   const { logger } = app.locals;
   try {
     await app.locals.service.stop?.(app);
-    await endMetrics(app);
     logger.info('App shutdown complete');
   } catch (error) {
     logger.warn(error, 'Shutdown failed');
@@ -375,7 +307,6 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
     onShutdown() {
       return Promise.resolve()
         .then(() => service.stop?.(app))
-        .then(() => endMetrics(app))
         .then(shutdownHandler || Promise.resolve)
         .then(() => logger.info('Graceful shutdown complete'))
         .catch((error) => logger.error(error, 'Error terminating tracing'))
@@ -401,9 +332,6 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
     logger.error(error, 'Main service listener error');
   });
 
-  const metricInfo = (app.locals as AppWithMetrics)[METRICS_KEY] as InternalMetricsInfo;
-  delete (app.locals as AppWithMetrics)[METRICS_KEY];
-
   // TODO handle rejection/error?
   const listenPromise = new Promise<void>((accept) => {
     server.listen(port, () => {
@@ -412,21 +340,21 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
 
       const serverConfig = locals.config.get('server') as ConfigurationSchema['server'];
       // Ok now start the internal port if we have one.
-      if (serverConfig?.internalPort) {
+      if (serverConfig?.internalPort || serverConfig?.internalPort === 0) {
         startInternalApp(app, serverConfig.internalPort)
           .then((internalApp) => {
             locals.internalApp = internalApp;
-            internalApp.locals.meterProvider = metricInfo.meterProvider;
             locals.logger.info(
               { port: serverConfig.internalPort },
               'Internal metadata server started',
             );
           })
           .then(() => {
-            if (metricInfo.exporter) {
+            const prometheusExporter = getGlobalPrometheusExporter();
+            if (prometheusExporter) {
               locals.internalApp.get(
                 '/metrics',
-                metricInfo.exporter.getMetricsRequestHandler.bind(metricInfo.exporter),
+                prometheusExporter.getMetricsRequestHandler.bind(prometheusExporter),
               );
               locals.logger.info('Metrics exporter started');
             } else {

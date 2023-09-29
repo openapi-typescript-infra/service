@@ -24,9 +24,6 @@
   "server": {
     "port": 8000,
     "internalPort": 3000,
-    "hostname": "localhost",
-    "metrics": {
-      "enabled": true
-    }
+    "hostname": "localhost"
   }
 }
