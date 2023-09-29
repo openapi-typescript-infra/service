@@ -11,7 +11,7 @@ import type {
 } from '../types';
 import type { ListenFn, StartAppFn } from '../express-app/index';
 
-import { getAutoInstrumentations } from './instrumentations';
+import { getAutoInstrumentations, getResourceDetectors } from './instrumentations';
 import { DummySpanExporter } from './DummyExporter';
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
@@ -50,6 +50,7 @@ export function startGlobalTelemetry(serviceName: string) {
       serviceName,
       autoDetectResources: true,
       traceExporter: getExporter(),
+      resourceDetectors: getResourceDetectors(),
       metricReader: prometheusExporter,
       instrumentations: [getAutoInstrumentations()],
     });

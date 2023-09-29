@@ -7,6 +7,16 @@ import { IORedisInstrumentation } from '@opentelemetry/instrumentation-ioredis';
 import { NetInstrumentation } from '@opentelemetry/instrumentation-net';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
 import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
+import { containerDetector } from '@opentelemetry/resource-detector-container';
+import { gcpDetector } from '@opentelemetry/resource-detector-gcp';
+import {
+  Detector,
+  DetectorSync,
+  envDetectorSync,
+  hostDetectorSync,
+  osDetectorSync,
+  processDetectorSync,
+} from '@opentelemetry/resources';
 
 import { FetchInstrumentation } from './fetchInstrumentation';
 
@@ -47,4 +57,15 @@ export function getAutoInstrumentations(
       }
     })
     .filter((i) => !!i) as Instrumentation[];
+}
+
+export function getResourceDetectors(): (Detector | DetectorSync)[] {
+  return [
+    containerDetector,
+    envDetectorSync,
+    hostDetectorSync,
+    osDetectorSync,
+    processDetectorSync,
+    gcpDetector,
+  ];
 }
