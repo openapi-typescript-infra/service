@@ -1,3 +1,10 @@
+## [2.8.1](https://github.com/openapi-typescript-infra/service/compare/v2.8.0...v2.8.1) (2023-09-29)
+
+
+### Bug Fixes
+
+* **log:** log actual metrics port ([63ba066](https://github.com/openapi-typescript-infra/service/commit/63ba0668116b700340f47981a6ca29b7926a3c6e))
+
 # [2.8.0](https://github.com/openapi-typescript-infra/service/compare/v2.7.7...v2.8.0) (2023-09-29)
 
 
