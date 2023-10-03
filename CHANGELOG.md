@@ -1,3 +1,10 @@
+## [2.9.1](https://github.com/openapi-typescript-infra/service/compare/v2.9.0...v2.9.1) (2023-10-03)
+
+
+### Bug Fixes
+
+* **repl:** pass the app to the repl attachment function ([76d77de](https://github.com/openapi-typescript-infra/service/commit/76d77de2f77cf5fabacb12db295471f988cdc6d3))
+
 # [2.9.0](https://github.com/openapi-typescript-infra/service/compare/v2.8.2...v2.9.0) (2023-10-03)
 
 
