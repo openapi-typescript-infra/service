@@ -20,6 +20,6 @@ export function serviceRepl(app: ServiceExpress, onExit: () => void) {
       console.error('History setup failed', err);
     }
   });
-  app.locals.service.attachRepl?.(rl);
+  app.locals.service.attachRepl?.(app, rl);
   rl.on('exit', onExit);
 }

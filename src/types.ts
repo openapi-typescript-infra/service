@@ -92,7 +92,7 @@ export interface Service<
   // The repl is a useful tool for diagnosing issues in non-dev environments.
   // The attachRepl method provides a way to add custom functionality
   // (typically with top level variables) to the repl.
-  attachRepl?(repl: REPLServer): void;
+  attachRepl?(app: ServiceExpress<SLocals>, repl: REPLServer): void;
 }
 
 export type ServiceFactory<
