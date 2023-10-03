@@ -1,4 +1,5 @@
 import type { Server } from 'http';
+import type { REPLServer } from 'repl';
 
 import type pino from 'pino';
 import type { Request, Response } from 'express';
@@ -87,6 +88,11 @@ export interface Service<
     req: RequestWithApp<SLocals>,
     values: Record<string, string | string[] | number | undefined>,
   ): void;
+
+  // The repl is a useful tool for diagnosing issues in non-dev environments.
+  // The attachRepl method provides a way to add custom functionality
+  // (typically with top level variables) to the repl.
+  attachRepl?(repl: REPLServer): void;
 }
 
 export type ServiceFactory<
