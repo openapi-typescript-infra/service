@@ -1,3 +1,10 @@
+# [2.9.0](https://github.com/openapi-typescript-infra/service/compare/v2.8.2...v2.9.0) (2023-10-03)
+
+
+### Features
+
+* **repl:** allow extra setup on REPL ([b4d0a92](https://github.com/openapi-typescript-infra/service/commit/b4d0a920de07c8717ecb623af6d6b5316394659e))
+
 ## [2.8.2](https://github.com/openapi-typescript-infra/service/compare/v2.8.1...v2.8.2) (2023-09-29)
 
 
