@@ -53,7 +53,7 @@ async function addDefaultConfiguration(
 
 export interface ServiceConfigurationSpec {
   // Used for "sourcerequire" and other source-relative paths and for the package name
-  rootDirectory: string;
+  sourceDirectory: string;
   // The LAST configuration is the most "specific" - if a configuration value
   // exists in all directories, the last one wins
   configurationDirectories: string[];
@@ -63,9 +63,9 @@ export interface ServiceConfigurationSpec {
 export async function loadConfiguration({
   name,
   configurationDirectories: dirs,
-  rootDirectory,
+  sourceDirectory,
 }: ServiceConfigurationSpec): Promise<ConfigStore> {
-  const defaultProtocols = shortstops({ name }, rootDirectory);
+  const defaultProtocols = shortstops({ name }, sourceDirectory);
   const specificConfig = dirs[dirs.length - 1];
 
   // This confit version just gets us environment info

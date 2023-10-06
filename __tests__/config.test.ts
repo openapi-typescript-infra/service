@@ -10,7 +10,7 @@ describe('configuration loader', () => {
     const rootDirectory = path.resolve(__dirname, './fake-serv');
     const config = await loadConfiguration({
       name: 'fake-serv',
-      rootDirectory,
+      sourceDirectory: path.join(rootDirectory, 'src'),
       configurationDirectories: [path.resolve(rootDirectory, './config')],
     });
     expect(config.get('logging:level')).toEqual('debug');

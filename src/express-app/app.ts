@@ -82,7 +82,7 @@ export async function startApp<
   const config = await loadConfiguration({
     name,
     configurationDirectories: options.configurationDirectories,
-    rootDirectory,
+    sourceDirectory: path.join(rootDirectory, codepath),
   });
 
   const logging = config.get('logging') as ConfigurationSchema['logging'];
