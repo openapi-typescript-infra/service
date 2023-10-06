@@ -1,3 +1,10 @@
+## [2.9.2](https://github.com/openapi-typescript-infra/service/compare/v2.9.1...v2.9.2) (2023-10-06)
+
+
+### Bug Fixes
+
+* **config:** proper root directory for file and other path shortstops ([7a1b5bb](https://github.com/openapi-typescript-infra/service/commit/7a1b5bb2e3a6bfb5d343ec41adaf56e1c2f9f874))
+
 ## [2.9.1](https://github.com/openapi-typescript-infra/service/compare/v2.9.0...v2.9.1) (2023-10-03)
 
 
