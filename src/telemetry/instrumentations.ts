@@ -1,6 +1,7 @@
 import type { Instrumentation } from '@opentelemetry/instrumentation';
 import { DnsInstrumentation } from '@opentelemetry/instrumentation-dns';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
+import { FetchInstrumentation } from 'opentelemetry-instrumentation-fetch-node';
 import { GenericPoolInstrumentation } from '@opentelemetry/instrumentation-generic-pool';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { IORedisInstrumentation } from '@opentelemetry/instrumentation-ioredis';
@@ -18,13 +19,11 @@ import {
   processDetectorSync,
 } from '@opentelemetry/resources';
 
-import { FetchInstrumentation } from './fetchInstrumentation';
-
 const InstrumentationMap = {
   '@opentelemetry/instrumentation-http': HttpInstrumentation,
-  'opentelemetry-instrumentation-node-18-fetch': FetchInstrumentation,
   '@opentelemetry/instrumentation-dns': DnsInstrumentation,
   '@opentelemetry/instrumentation-express': ExpressInstrumentation,
+  'opentelemetry-instrumentation-fetch-node': FetchInstrumentation,
   '@opentelemetry/instrumentation-generic-pool': GenericPoolInstrumentation,
   '@opentelemetry/instrumentation-ioredis': IORedisInstrumentation,
   '@opentelemetry/instrumentation-net': NetInstrumentation,
