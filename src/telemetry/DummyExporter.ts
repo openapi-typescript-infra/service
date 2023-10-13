@@ -10,7 +10,7 @@ const noop: SpanExporter['export'] = (spans, resultCallback) => {
 };
 
 export class DummySpanExporter implements SpanExporter {
-  export = noop;
+  export: typeof noop = noop;
 
   async shutdown() {
     // Nothing to do
