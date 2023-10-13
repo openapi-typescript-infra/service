@@ -1,3 +1,16 @@
+# [2.10.0](https://github.com/openapi-typescript-infra/service/compare/v2.9.2...v2.10.0) (2023-10-13)
+
+
+### Bug Fixes
+
+* **fetch:** use shared fetch instrumentation library ([75cd946](https://github.com/openapi-typescript-infra/service/commit/75cd9465a9306e80e64b756a071bba231d5a1270))
+* **otel:** update opentelemetry deps that don't break ([8db35cb](https://github.com/openapi-typescript-infra/service/commit/8db35cbd2f41499e5b2c9474d61a529e5e9145c6))
+
+
+### Features
+
+* **metrics:** add node metrics ([ca5ebca](https://github.com/openapi-typescript-infra/service/commit/ca5ebca604e77b05968f0338f4fe7622ee3de91e))
+
 ## [2.9.2](https://github.com/openapi-typescript-infra/service/compare/v2.9.1...v2.9.2) (2023-10-06)
 
 
