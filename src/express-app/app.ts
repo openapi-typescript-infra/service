@@ -7,6 +7,7 @@ import express from 'express';
 import { pino } from 'pino';
 import cookieParser from 'cookie-parser';
 import { metrics } from '@opentelemetry/api';
+import { setupNodeMetrics } from '@sesamecare-oss/opentelemetry-node-metrics';
 import { createTerminus } from '@godaddy/terminus';
 import type { RequestHandler, Response } from 'express';
 
@@ -109,6 +110,8 @@ export async function startApp<
   }
 
   app.locals.meter = metrics.getMeterProvider().getMeter(name);
+  setupNodeMetrics(app.locals.meter, {});
+
   if (config.get('trustProxy')) {
     app.set('trust proxy', config.get('trustProxy'));
   }
