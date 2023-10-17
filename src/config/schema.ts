@@ -1,3 +1,4 @@
+import type { BaseConfitType } from '@sesamecare-oss/confit';
 import type { Level } from 'pino';
 
 export interface ServiceConfiguration {
@@ -12,7 +13,7 @@ export interface ConfigurationItemEnabled {
   enabled?: boolean;
 }
 
-export interface ConfigurationSchema {
+export interface ConfigurationSchema extends BaseConfitType {
   trustProxy?: string[];
   logging?: {
     level?: Level;
