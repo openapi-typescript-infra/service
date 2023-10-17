@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/openapi-typescript-infra/service/compare/v3.0.0...v3.0.1) (2023-10-17)
+
+
+### Bug Fixes
+
+* **types:** config derives from base config ([664c0d9](https://github.com/openapi-typescript-infra/service/commit/664c0d9ef3024ea18d9a830860b56b3a4c0a4f7f))
+
 # [3.0.0](https://github.com/openapi-typescript-infra/service/compare/v2.10.0...v3.0.0) (2023-10-17)
 
 
