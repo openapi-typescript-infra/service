@@ -1,10 +1,15 @@
 import os from 'os';
 import path from 'path';
 
-import shortstop from 'shortstop-handlers';
-import shortstopYaml from 'shortstop-yaml';
-import shortstopDns from 'shortstop-dns';
-import { ProtocolFn } from '@gasbuddy/confit';
+import {
+  base64Handler,
+  envHandler,
+  fileHandler,
+  pathHandler,
+  requireHandler,
+  yamlHandler,
+  type ShortstopHandler,
+} from '@sesamecare-oss/confit';
 
 /**
  * Default shortstop handlers for GasBuddy service configuration
@@ -15,7 +20,7 @@ import { ProtocolFn } from '@gasbuddy/confit';
  * with a url-like hash pattern
  */
 function betterRequire(basepath: string) {
-  const baseRequire = shortstop.require(basepath);
+  const baseRequire = requireHandler(basepath);
   return function hashRequire(v: string) {
     const [moduleName, func] = v.split('#');
     const module = baseRequire(moduleName);
@@ -33,7 +38,7 @@ function betterRequire(basepath: string) {
  * Just like path, but resolve ~/ to the home directory
  */
 function betterPath(basepath: string) {
-  const basePath = shortstop.path(basepath);
+  const basePath = pathHandler(basepath);
   return function pathWithHomeDir(v: string) {
     if (v.startsWith('~/')) {
       return basePath(path.join(os.homedir(), v.slice(2)));
@@ -46,18 +51,12 @@ function betterPath(basepath: string) {
  * Just like file, but resolve ~/ to the home directory
  */
 function betterFile(basepath: string) {
-  const baseFile = shortstop.file(basepath);
-  return function fileWithHomeDir(
-    v: string,
-    callback: ((error: Error | null, result?: Buffer | string | undefined) => void) | undefined,
-  ) {
-    if (!callback) {
-      return undefined;
-    }
+  const baseFile = fileHandler(basepath);
+  return function fileWithHomeDir(v: string) {
     if (v.startsWith('~/')) {
-      return baseFile(path.join(os.homedir(), v.slice(2)), callback);
+      return baseFile(path.join(os.homedir(), v.slice(2)));
     }
-    return baseFile(v, callback);
+    return baseFile(v);
   };
 }
 
@@ -109,7 +108,7 @@ export function shortstops(service: { name: string }, sourcedir: string) {
    */
   const basedir = path.join(sourcedir, '..');
 
-  const env = shortstop.env();
+  const env = envHandler();
 
   return {
     env,
@@ -121,7 +120,7 @@ export function shortstops(service: { name: string }, sourcedir: string) {
       }
       return !!env(v);
     },
-    base64: shortstop.base64(),
+    base64: base64Handler(),
     regex(v: string) {
       const [, pattern, flags] = v.match(/^\/(.*)\/([a-z]*)/) || [];
       return new RegExp(pattern, flags);
@@ -129,14 +128,14 @@ export function shortstops(service: { name: string }, sourcedir: string) {
 
     // handle source and base directory intelligently
     path: betterPath(basedir),
-    sourcepath: shortstop.path(sourcedir),
+    sourcepath: pathHandler(sourcedir),
     file: betterFile(basedir),
-    sourcefile: shortstop.file(sourcedir) as ProtocolFn<Buffer | string | undefined>,
+    sourcefile: fileHandler(sourcedir),
     require: betterRequire(basedir),
     sourcerequire: betterRequire(sourcedir),
 
     // Sometimes yaml is more pleasant for configuration
-    yaml: shortstopYaml(basedir) as ProtocolFn<ReturnType<typeof JSON.parse>>,
+    yaml: yamlHandler(basedir),
 
     // Switch on service type
     servicetype: serviceTypeFactory(service.name),
@@ -145,10 +144,9 @@ export function shortstops(service: { name: string }, sourcedir: string) {
     os(p: keyof typeof osMethods) {
       return osMethods[p]();
     },
-    dns: shortstopDns() as ProtocolFn<string>,
     // No-op in case you have values that start with a shortstop handler name (and colon)
     literal(v: string) {
       return v;
     },
-  };
+  } as Record<string, ShortstopHandler<string, unknown>>;
 }

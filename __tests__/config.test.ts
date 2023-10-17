@@ -13,6 +13,7 @@ describe('configuration loader', () => {
       sourceDirectory: path.join(rootDirectory, 'src'),
       configurationDirectories: [path.resolve(rootDirectory, './config')],
     });
+
     expect(config.get('logging:level')).toEqual('debug');
     expect(config.get('google')).toBeTruthy();
     expect(config.get('google')).not.toEqual('google.com');

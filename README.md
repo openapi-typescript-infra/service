@@ -29,7 +29,7 @@ precise configuration, which is not the intent.
 
 This module has the following core functionality:
 
-1. Loads multilevel environment aware configuration, merging configuration information as appropriate to yield a single hierarchical configuration store. We use [confit](https://github.com/krakenjs/confit).
+1. Loads multilevel environment aware configuration, merging configuration information as appropriate to yield a single hierarchical configuration store. We use a modern port of [confit](https://github.com/sesamecare/confit).
 2. Engage OpenTelemetry for tracing and metrics monitoring (via Prometheus-format metrics) and wire this into JSON-based pino logging.
 3. Setup an Express@5 application with common service hosting options such as body parsing, error handling and graceful shutdown.
 4. Find and load route handlers and static content serving, if desired.

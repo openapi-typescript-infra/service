@@ -6,8 +6,9 @@ import type { Request, Response } from 'express';
 import type { Application } from 'express-serve-static-core';
 import type { middleware } from 'express-openapi-validator';
 import type { Meter } from '@opentelemetry/api';
+import { Confit } from '@sesamecare-oss/confit';
 
-import type { ConfigStore } from './config/types';
+import { ConfigurationSchema } from './config/schema';
 
 export interface InternalLocals extends Record<string, unknown> {
   server?: Server;
@@ -19,11 +20,11 @@ export type ServiceLogger = pino.BaseLogger & Pick<pino.Logger, 'isLevelEnabled'
 // Vanilla express wants this to extend Record<string, any> but this is a mistake
 // because you lose type checking on it, even though I get that underneath it truly
 // is Record<string, any>
-export interface ServiceLocals {
+export interface ServiceLocals<Config extends ConfigurationSchema = ConfigurationSchema> {
   service: Service;
   name: string;
   logger: ServiceLogger;
-  config: ConfigStore;
+  config: Confit<Config>;
   meter: Meter;
   internalApp: Application<InternalLocals>;
 }

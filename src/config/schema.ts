@@ -12,7 +12,7 @@ export interface ConfigurationItemEnabled {
   enabled?: boolean;
 }
 
-export interface ConfigurationSchema extends Record<string, unknown> {
+export interface ConfigurationSchema {
   trustProxy?: string[];
   logging?: {
     level?: Level;

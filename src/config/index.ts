@@ -1,16 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 
-import confit from '@gasbuddy/confit';
+import { BaseConfitType, Confit, Factory, confit } from '@sesamecare-oss/confit';
 
 import { findPort } from '../development/port-finder';
 
 import { shortstops } from './shortstops';
-import type { ConfigStore } from './types';
 import type { ConfigurationSchema } from './schema';
 
 // Order matters here.
-const ENVIRONMENTS = ['production', 'staging', 'test', 'development'];
+const ENVIRONMENTS = ['production', 'staging', 'test', 'development'] as const;
 
 async function pathExists(f: string) {
   return new Promise((accept, reject) => {
@@ -26,12 +25,12 @@ async function pathExists(f: string) {
   });
 }
 
-async function addDefaultConfiguration(
-  configFactory: ReturnType<typeof confit>,
+async function addDefaultConfiguration<Config extends ConfigurationSchema = ConfigurationSchema>(
+  configFactory: Factory<Config>,
   directory: string,
-  envConfit: ConfigStore,
+  envConfit: Confit<BaseConfitType>,
 ) {
-  const addIfEnv = async (e: string) => {
+  const addIfEnv = async (e: (typeof ENVIRONMENTS)[number]) => {
     const c = path.join(directory, `${e}.json`);
     if (envConfit.get(`env:${e}`) && (await pathExists(c))) {
       configFactory.addDefault(c);
@@ -60,19 +59,17 @@ export interface ServiceConfigurationSpec {
   name: string;
 }
 
-export async function loadConfiguration({
+export async function loadConfiguration<Config extends ConfigurationSchema>({
   name,
   configurationDirectories: dirs,
   sourceDirectory,
-}: ServiceConfigurationSpec): Promise<ConfigStore> {
+}: ServiceConfigurationSpec): Promise<Confit<Config>> {
   const defaultProtocols = shortstops({ name }, sourceDirectory);
   const specificConfig = dirs[dirs.length - 1];
 
   // This confit version just gets us environment info
-  const envConfit: ConfigStore = await new Promise((accept, reject) => {
-    confit(specificConfig).create((err, config) => (err ? reject(err) : accept(config)));
-  });
-  const configFactory = confit({
+  const envConfit = await confit({ basedir: specificConfig }).create();
+  const configFactory = confit<ConfigurationSchema>({
     basedir: specificConfig,
     protocols: defaultProtocols,
   });
@@ -89,13 +86,11 @@ export async function loadConfiguration({
     Promise.resolve(),
   );
 
-  const loaded: ConfigStore = await new Promise((accept, reject) => {
-    configFactory.create((err, config) => (err ? reject(err) : accept(config)));
-  });
+  const loaded = await configFactory.create();
 
   // Because other things need to know the port we choose, we pick it here if it's
   // configured to auto-select
-  const serverConfig = loaded.get('server') as Required<ConfigurationSchema['server']>;
+  const serverConfig = loaded.get('server');
   if (serverConfig.port === 0) {
     const port = (await findPort(8001)) as number;
     loaded.set('server:port', port);
@@ -104,7 +99,8 @@ export async function loadConfiguration({
   // TODO init other stuff based on config here, such as key management or
   // other cloud-aware shortstop handlers
 
-  return loaded;
+  // Not sure why this is necessary, but it is
+  return loaded as unknown as Confit<Config>;
 }
 
 export function insertConfigurationBefore(
@@ -123,4 +119,3 @@ export function insertConfigurationBefore(
 }
 
 export * from './schema';
-export * from './types';
