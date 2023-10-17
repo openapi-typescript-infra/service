@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/openapi-typescript-infra/service/compare/v2.10.0...v3.0.0) (2023-10-17)
+
+
+### Features
+
+* **config:** move to a typed confit library ([9ff56b3](https://github.com/openapi-typescript-infra/service/commit/9ff56b3c666a0fa0f099f5a4d24365e6772ad83a))
+
+
+### BREAKING CHANGES
+
+* **config:** ServiceLocals now need a config schema
+
 # [2.10.0](https://github.com/openapi-typescript-infra/service/compare/v2.9.2...v2.10.0) (2023-10-13)
 
 
