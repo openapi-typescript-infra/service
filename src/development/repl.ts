@@ -1,9 +1,13 @@
 import repl from 'repl';
 import path from 'path';
 
-import { ServiceExpress } from '../types';
+import { ServiceExpress, ServiceLocals } from '../types';
+import { ConfigurationSchema } from '../config/schema';
 
-export function serviceRepl(app: ServiceExpress, onExit: () => void) {
+export function serviceRepl<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+>(app: ServiceExpress<Config, SLocals>, onExit: () => void) {
   const rl = repl.start({
     prompt: '> ',
   });

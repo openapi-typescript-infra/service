@@ -8,6 +8,7 @@ import type { NormalizedPackageJson } from 'read-pkg-up';
 import type { RequestLocals, ServiceLocals, ServiceStartOptions } from './types';
 import { isDev } from './env';
 import { startWithTelemetry } from './telemetry/index';
+import { ConfigurationSchema } from './config/schema';
 
 interface BootstrapArguments {
   // The name of the service, else discovered via read-pkg-up
@@ -68,7 +69,8 @@ function getBuildDir(main: string): 'build' | 'dist' {
 // for jobs or other scripts that need service infra but are
 // not simply the service
 export async function bootstrap<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
 >(argv?: BootstrapArguments) {
   const { main, rootDirectory, name } = await getServiceDetails(argv);
@@ -101,7 +103,7 @@ export async function bootstrap<
 
   const absoluteEntrypoint = path.resolve(rootDirectory, entrypoint);
   if (argv?.telemetry) {
-    return startWithTelemetry<SLocals, RLocals>({
+    return startWithTelemetry<Config, SLocals, RLocals>({
       name,
       rootDirectory,
       service: absoluteEntrypoint,
@@ -112,7 +114,7 @@ export async function bootstrap<
   // This needs to be required for TS on-the-fly to work
   // eslint-disable-next-line global-require, import/no-dynamic-require, @typescript-eslint/no-var-requires
   const impl = require(absoluteEntrypoint);
-  const opts: ServiceStartOptions<SLocals, RLocals> = {
+  const opts: ServiceStartOptions<Config, SLocals, RLocals> = {
     name,
     rootDirectory,
     service: impl.default || impl.service,
@@ -120,7 +122,7 @@ export async function bootstrap<
   };
   // eslint-disable-next-line import/no-unresolved
   const { startApp, listen } = await import('./express-app/app.js');
-  const app = await startApp<SLocals, RLocals>(opts);
+  const app = await startApp<Config, SLocals, RLocals>(opts);
   const server = argv?.nobind ? undefined : await listen(app);
   return { server, app };
 }

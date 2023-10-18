@@ -1,3 +1,4 @@
+import { ConfigurationSchema } from './config/schema';
 import type { ServiceLike, ServiceLocals } from './types';
 
 export interface ServiceErrorSpec {
@@ -16,7 +17,10 @@ export interface ServiceErrorSpec {
  *
  * You can also include a display_message which is intended to be viewed by the end user
  */
-export class ServiceError extends Error {
+export class ServiceError<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+> extends Error {
   public status: number | undefined;
 
   public code?: string;
@@ -32,7 +36,7 @@ export class ServiceError extends Error {
   // take up the valuable mental space of an error log.
   public expected_error?: boolean;
 
-  constructor(app: ServiceLike<ServiceLocals>, message: string, spec?: ServiceErrorSpec) {
+  constructor(app: ServiceLike<Config, SLocals>, message: string, spec?: ServiceErrorSpec) {
     super(message);
     this.domain = app.locals.name;
     Object.assign(this, spec);

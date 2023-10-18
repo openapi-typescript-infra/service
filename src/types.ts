@@ -10,9 +10,12 @@ import { Confit } from '@sesamecare-oss/confit';
 
 import { ConfigurationSchema } from './config/schema';
 
-export interface InternalLocals extends Record<string, unknown> {
+export interface InternalLocals<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+> extends Record<string, unknown> {
   server?: Server;
-  mainApp: ServiceExpress;
+  mainApp: ServiceExpress<Config, SLocals>;
 }
 
 export type ServiceLogger = pino.BaseLogger & Pick<pino.Logger, 'isLevelEnabled'>;
@@ -21,12 +24,12 @@ export type ServiceLogger = pino.BaseLogger & Pick<pino.Logger, 'isLevelEnabled'
 // because you lose type checking on it, even though I get that underneath it truly
 // is Record<string, any>
 export interface ServiceLocals<Config extends ConfigurationSchema = ConfigurationSchema> {
-  service: Service;
+  service: Service<Config>;
   name: string;
   logger: ServiceLogger;
   config: Confit<Config>;
   meter: Meter;
-  internalApp: Application<InternalLocals>;
+  internalApp: Application<InternalLocals<Config>>;
 }
 
 export interface RequestLocals {
@@ -36,10 +39,18 @@ export interface RequestLocals {
   logger: ServiceLogger;
 }
 
-export type ServiceExpress<Locals extends ServiceLocals = ServiceLocals> = Application<Locals>;
-export type RequestWithApp<Locals extends ServiceLocals = ServiceLocals> = Omit<Request, 'app'> & {
+export type ServiceExpress<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  Locals extends ServiceLocals<Config> = ServiceLocals<Config>,
+> = Application<Locals>;
+
+export type RequestWithApp<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  Locals extends ServiceLocals<Config> = ServiceLocals<Config>,
+> = Omit<Request, 'app'> & {
   app: Application<Locals>;
 };
+
 export type ResponseFromApp<
   ResBody = unknown,
   RLocals extends RequestLocals = RequestLocals,
@@ -49,60 +60,66 @@ export type ResponseFromApp<
  * This is the core type you need to implement to provide a service
  */
 export interface Service<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
 > {
   name?: string;
 
   // Modify options used for application start
   configure?: (
-    startOptions: ServiceStartOptions<SLocals, RLocals>,
+    startOptions: ServiceStartOptions<Config, SLocals, RLocals>,
     options: ServiceOptions,
   ) => ServiceOptions;
 
   // Run after configuration but before routes are loaded,
   // which is often a good place to add elements to the app locals
   // that are needed during route setup
-  attach?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
+  attach?: (app: ServiceExpress<Config, SLocals>) => void | Promise<void>;
 
-  start(app: ServiceExpress<SLocals>): void | Promise<void>;
+  start(app: ServiceExpress<Config, SLocals>): void | Promise<void>;
 
-  stop?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
+  stop?: (app: ServiceExpress<Config, SLocals>) => void | Promise<void>;
 
-  healthy?: (app: ServiceExpress<SLocals>) => boolean | Promise<boolean>;
+  healthy?: (app: ServiceExpress<Config, SLocals>) => boolean | Promise<boolean>;
 
   // This runs as middleware right BEFORE the body parsers.
   // If you want to run AFTER the body parsers, the current
   // way to do that would be via /routes/index.ts and router.use()
   // in that file.
-  onRequest?(req: RequestWithApp<SLocals>, res: Response<unknown, RLocals>): void | Promise<void>;
+  onRequest?(
+    req: RequestWithApp<Config, SLocals>,
+    res: Response<unknown, RLocals>,
+  ): void | Promise<void>;
 
   // This runs after body parsing but before routing
   authorize?(
-    req: RequestWithApp<SLocals>,
+    req: RequestWithApp<Config, SLocals>,
     res: Response<unknown, RLocals>,
   ): boolean | Promise<boolean>;
 
   // Add or redact any fields for logging. Note this will be called twice per request,
   // once at the start and once at the end. Modify the values directly.
   getLogFields?(
-    req: RequestWithApp<SLocals>,
+    req: RequestWithApp<Config, SLocals>,
     values: Record<string, string | string[] | number | undefined>,
   ): void;
 
   // The repl is a useful tool for diagnosing issues in non-dev environments.
   // The attachRepl method provides a way to add custom functionality
   // (typically with top level variables) to the repl.
-  attachRepl?(app: ServiceExpress<SLocals>, repl: REPLServer): void;
+  attachRepl?(app: ServiceExpress<Config, SLocals>, repl: REPLServer): void;
 }
 
 export type ServiceFactory<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
-> = () => Service<SLocals, RLocals>;
+> = () => Service<Config, SLocals, RLocals>;
 
 export interface ServiceStartOptions<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
 > {
   name: string;
@@ -117,7 +134,7 @@ export interface ServiceStartOptions<
   locals?: Partial<SLocals>;
 
   // And finally, the function that creates the service instance
-  service: () => Service<SLocals, RLocals>;
+  service: () => Service<Config, SLocals, RLocals>;
 }
 
 export interface DelayLoadServiceStartOptions extends Omit<ServiceStartOptions, 'service'> {
@@ -134,7 +151,10 @@ export interface ServiceOptions {
   openApiOptions?: Parameters<typeof middleware>[0];
 }
 
-export interface ServiceLike<SLocals extends ServiceLocals = ServiceLocals> {
+export interface ServiceLike<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+> {
   locals: SLocals;
 }
 
@@ -147,10 +167,11 @@ export interface ServiceLike<SLocals extends ServiceLocals = ServiceLocals> {
  * logger.
  */
 export interface RequestLike<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
 > {
-  app: ServiceLike<SLocals>;
+  app: ServiceLike<Config, SLocals>;
   res: {
     locals: RLocals;
   };
@@ -161,20 +182,21 @@ export interface RequestLike<
 // Typically you should export an interface that extends this one
 // and then access all your types through that.
 export interface ServiceTypes<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
   ResBody = unknown,
 > {
-  App: ServiceExpress<SLocals>;
+  App: ServiceExpress<Config, SLocals>;
   Handler: (
-    req: RequestWithApp<SLocals>,
+    req: RequestWithApp<Config, SLocals>,
     res: ResponseFromApp<ResBody, RLocals>,
   ) => void | Promise<void>;
-  Request: RequestWithApp<SLocals>;
-  RequestLike: RequestLike<SLocals, RLocals>;
+  Request: RequestWithApp<Config, SLocals>;
+  RequestLike: RequestLike<Config, SLocals, RLocals>;
   RequestLocals: RLocals;
   Response: ResponseFromApp<ResBody, RLocals>;
-  Service: Service<SLocals, RLocals>;
-  ServiceFactory: ServiceFactory<SLocals, RLocals>;
+  Service: Service<Config, SLocals, RLocals>;
+  ServiceFactory: ServiceFactory<Config, SLocals, RLocals>;
   ServiceLocals: SLocals;
 }

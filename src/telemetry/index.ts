@@ -10,6 +10,7 @@ import type {
   ServiceStartOptions,
 } from '../types';
 import type { ListenFn, StartAppFn } from '../express-app/index';
+import type { ConfigurationSchema } from '../config/schema';
 
 import { getAutoInstrumentations, getResourceDetectors } from './instrumentations';
 import { DummySpanExporter } from './DummyExporter';
@@ -70,20 +71,21 @@ export async function shutdownGlobalTelemetry() {
 }
 
 export async function startWithTelemetry<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
 >(options: DelayLoadServiceStartOptions) {
   startGlobalTelemetry(options.name);
 
   // eslint-disable-next-line import/no-unresolved, @typescript-eslint/no-var-requires
   const { startApp, listen } = require('../express-app/app.js') as {
-    startApp: StartAppFn<SLocals, RLocals>;
-    listen: ListenFn<SLocals>;
+    startApp: StartAppFn<Config, SLocals, RLocals>;
+    listen: ListenFn<Config, SLocals>;
   };
   // eslint-disable-next-line import/no-dynamic-require, global-require, @typescript-eslint/no-var-requires
   const serviceModule = require(options.service);
   const service = serviceModule.default || serviceModule.service;
-  const startOptions: ServiceStartOptions<SLocals> = {
+  const startOptions: ServiceStartOptions<Config, SLocals> = {
     ...options,
     service,
     locals: { ...options.locals } as Partial<SLocals>,

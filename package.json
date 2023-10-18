@@ -80,7 +80,7 @@
     "@opentelemetry/sdk-node": "^0.43.0",
     "@opentelemetry/sdk-trace-base": "^1.17.1",
     "@opentelemetry/semantic-conventions": "^1.17.1",
-    "@sesamecare-oss/confit": "^1.0.6",
+    "@sesamecare-oss/confit": "^1.1.0",
     "@sesamecare-oss/opentelemetry-node-metrics": "^1.0.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
@@ -92,8 +92,7 @@
     "minimist": "^1.2.8",
     "opentelemetry-instrumentation-fetch-node": "^1.1.0",
     "pino": "^8.16.0",
-    "read-pkg-up": "^7.0.1",
-    "rest-api-support": "^1.16.3"
+    "read-pkg-up": "^7.0.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.8.0",
@@ -104,7 +103,7 @@
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/release-notes-generator": "^12.0.0",
-    "@types/cookie-parser": "^1.4.4",
+    "@types/cookie-parser": "^1.4.5",
     "@types/eventsource": "1.1.12",
     "@types/express": "^4.17.19",
     "@types/glob": "^8.1.0",

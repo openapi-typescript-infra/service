@@ -10,6 +10,7 @@ import { metrics } from '@opentelemetry/api';
 import { setupNodeMetrics } from '@sesamecare-oss/opentelemetry-node-metrics';
 import { createTerminus } from '@godaddy/terminus';
 import type { RequestHandler, Response } from 'express';
+import { Confit } from '@sesamecare-oss/confit';
 
 import { loadConfiguration } from '../config/index';
 import { openApi } from '../openapi';
@@ -41,9 +42,12 @@ function isSyncLogging() {
 }
 
 export async function startApp<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
->(startOptions: ServiceStartOptions<SLocals, RLocals>): Promise<ServiceExpress<SLocals>> {
+>(
+  startOptions: ServiceStartOptions<Config, SLocals, RLocals>,
+): Promise<ServiceExpress<Config, SLocals>> {
   const { service, rootDirectory, codepath = 'build', name } = startOptions;
   const shouldPrettyPrint = isDev() && !process.env.NO_PRETTY_LOGS;
   const destination = pino.destination({
@@ -86,12 +90,12 @@ export async function startApp<
     sourceDirectory: path.join(rootDirectory, codepath),
   });
 
-  const logging = config.get('logging') as ConfigurationSchema['logging'];
+  const logging = config.get('logging');
   logger.level = logging?.level || 'info';
 
   // Concentrate the Typescript ugliness...
-  const app = express() as unknown as ServiceExpress<SLocals>;
-  const routing = config.get('routing') as ConfigurationSchema['routing'];
+  const app = express() as unknown as ServiceExpress<Config, SLocals>;
+  const routing = config.get('routing');
 
   app.disable('x-powered-by');
   if (routing?.etag !== true) {
@@ -125,7 +129,7 @@ export async function startApp<
     let maybePromise: Promise<void> | void | undefined;
     try {
       maybePromise = serviceImpl.onRequest?.(
-        req as RequestWithApp<SLocals>,
+        req as RequestWithApp<Config, SLocals>,
         res as Response<unknown, RLocals>,
       );
     } catch (error) {
@@ -164,7 +168,7 @@ export async function startApp<
       let maybePromise: Promise<boolean> | boolean | undefined;
       try {
         maybePromise = serviceImpl.authorize?.(
-          req as RequestWithApp<SLocals>,
+          req as RequestWithApp<Config, SLocals>,
           res as Response<unknown, RLocals>,
         );
       } catch (error) {
@@ -241,11 +245,15 @@ export async function startApp<
 }
 
 export type StartAppFn<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
-> = typeof startApp<SLocals, RLocals>;
+> = typeof startApp<Config, SLocals, RLocals>;
 
-export async function shutdownApp(app: ServiceExpress) {
+export async function shutdownApp<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+>(app: ServiceExpress<Config, SLocals>) {
   const { logger } = app.locals;
   try {
     await app.locals.service.stop?.(app);
@@ -256,10 +264,10 @@ export async function shutdownApp(app: ServiceExpress) {
   (logger as pino.Logger).flush?.();
 }
 
-function httpServer<SLocals extends ServiceLocals = ServiceLocals>(
-  app: ServiceExpress<SLocals>,
-  config: ConfigurationSchema['server'],
-) {
+function httpServer<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+>(app: ServiceExpress<Config, SLocals>, config: ConfigurationSchema['server']) {
   if (!config.certificate) {
     return http.createServer(app);
   }
@@ -280,11 +288,14 @@ function url(config: ConfigurationSchema['server'], port: number) {
   return `http://${config.hostname}${port === 80 ? '' : `:${port}`}`;
 }
 
-export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
-  app: ServiceExpress<SLocals>,
-  shutdownHandler?: () => Promise<void>,
-) {
-  const config = app.locals.config.get('server') as Required<ConfigurationSchema['server']>;
+export async function listen<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+>(app: ServiceExpress<Config, SLocals>, shutdownHandler?: () => Promise<void>) {
+  // TODO I don't know why this is necessary, but TS can't quite figure this out
+  // otherwise.
+  const typedConfig = app.locals.config as unknown as Confit<ConfigurationSchema>;
+  const config = typedConfig.get('server') as Required<ConfigurationSchema['server']>;
   const { port } = config;
 
   const { service, logger } = app.locals;
@@ -341,7 +352,7 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
       const { locals } = app;
       locals.logger.info({ url: url(config, port), service: locals.name }, 'express listening');
 
-      const serverConfig = locals.config.get('server') as ConfigurationSchema['server'];
+      const serverConfig = typedConfig.get('server');
       // Ok now start the internal port if we have one.
       if (serverConfig?.internalPort || serverConfig?.internalPort === 0) {
         startInternalApp(app, serverConfig.internalPort)
@@ -372,4 +383,7 @@ export async function listen<SLocals extends ServiceLocals = ServiceLocals>(
   return server;
 }
 
-export type ListenFn<SLocals extends ServiceLocals = ServiceLocals> = typeof listen<SLocals>;
+export type ListenFn<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+> = typeof listen<Config, SLocals>;

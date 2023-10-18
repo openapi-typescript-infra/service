@@ -4,8 +4,9 @@ import _ from 'lodash';
 import * as OpenApiValidator from 'express-openapi-validator';
 import type { Handler } from 'express';
 
-import type { ServiceExpress } from './types';
+import type { ServiceExpress, ServiceLocals } from './types';
 import { getFilesInDir, loadModule } from './express-app/modules';
+import { ConfigurationSchema } from './config/schema';
 
 const notImplementedHandler: Handler = (req, res) => {
   res.status(501).json({
@@ -21,8 +22,11 @@ function stripExtension(filename: string) {
   return filename.slice(0, filename.lastIndexOf('.'));
 }
 
-export async function openApi(
-  app: ServiceExpress,
+export async function openApi<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+>(
+  app: ServiceExpress<Config, SLocals>,
   rootDirectory: string,
   codepath: string,
   pattern: string,

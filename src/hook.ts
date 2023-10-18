@@ -1,3 +1,4 @@
+import { ConfigurationSchema } from './config/schema';
 import type { RequestLocals, Service, ServiceLocals } from './types';
 
 /**
@@ -19,12 +20,13 @@ import type { RequestLocals, Service, ServiceLocals } from './types';
  *   }
  * }
  *
- * @returns Service<SLocals, RLocals>
+ * @returns Service<Config, SLocals, RLocals>
  */
 export function useService<
-  SLocals extends ServiceLocals = ServiceLocals,
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
   RLocals extends RequestLocals = RequestLocals,
->(baseService?: Service<SLocals, RLocals>): Service<SLocals, RLocals> {
+>(baseService?: Service<Config, SLocals, RLocals>): Service<Config, SLocals, RLocals> {
   return {
     async start(app) {
       await baseService?.start(app);

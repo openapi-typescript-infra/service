@@ -2,11 +2,15 @@ import path from 'path';
 
 import express from 'express';
 
-import type { ServiceExpress } from '../types';
+import type { ServiceExpress, ServiceLocals } from '../types';
+import { ConfigurationSchema } from '../config/schema';
 
 import { getFilesInDir, loadModule } from './modules';
 
-export async function loadRoutes(app: ServiceExpress, routingDir: string, pattern: string) {
+export async function loadRoutes<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+>(app: ServiceExpress<Config, SLocals>, routingDir: string, pattern: string) {
   const files = await getFilesInDir(pattern, routingDir);
 
   await Promise.all(

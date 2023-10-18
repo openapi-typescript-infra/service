@@ -643,9 +643,9 @@ __metadata:
     "@semantic-release/exec": ^6.0.3
     "@semantic-release/git": ^10.0.1
     "@semantic-release/release-notes-generator": ^12.0.0
-    "@sesamecare-oss/confit": ^1.0.6
+    "@sesamecare-oss/confit": ^1.1.0
     "@sesamecare-oss/opentelemetry-node-metrics": ^1.0.1
-    "@types/cookie-parser": ^1.4.4
+    "@types/cookie-parser": ^1.4.5
     "@types/eventsource": 1.1.12
     "@types/express": ^4.17.19
     "@types/glob": ^8.1.0
@@ -1400,16 +1400,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sesamecare-oss/confit@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "@sesamecare-oss/confit@npm:1.0.6"
+"@sesamecare-oss/confit@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@sesamecare-oss/confit@npm:1.1.0"
   dependencies:
     caller: ^1.1.0
     comment-json: ^4.2.3
     glob: ^10.3.10
     js-yaml: ^4.1.0
     minimist: ^1.2.8
-  checksum: 1e209a8641fa148801bfc59280dafb7d296bb208e26a284d480276ccf2bbb8004de3516694ac582ab9af1b9deb904cb3a4c629c1eca9184aade30231e77a9d83
+  checksum: 041bce5edf5260a077a3ca46ffa97ab62a13a16da7125bddddd78bea1f79171e13bd1fd41fb87c840945e787b9b42aea4304dbd65b8527c2214aa1cccdaba856
   languageName: node
   linkType: hard
 
@@ -1500,12 +1500,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cookie-parser@npm:^1.4.4":
-  version: 1.4.4
-  resolution: "@types/cookie-parser@npm:1.4.4"
+"@types/cookie-parser@npm:^1.4.5":
+  version: 1.4.5
+  resolution: "@types/cookie-parser@npm:1.4.5"
   dependencies:
     "@types/express": "*"
-  checksum: 5c81ac4b7d90a567e0c7a904ecbc09c82c43e30c6b5b507aee5147bc06bc8c6418e6719d63fcf68e6a83c71870485ab3fc579a30891b56a0be05d64753e3f74a
+  checksum: 45855721706d6a57bb0441db11fb59db407414ea83a0000a0df80d19230447cc3bcc43c436397bfb8998ec78db222265fa8083456b00c5b5054a0c03d06f0086
   languageName: node
   linkType: hard
 

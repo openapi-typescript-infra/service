@@ -3,6 +3,7 @@ import type { RequestHandler, Request, Response, ErrorRequestHandler } from 'exp
 import { ServiceError } from '../error';
 import type { RequestWithApp, ServiceExpress, ServiceLocals } from '../types';
 import type { ServiceHandler } from '../express-app/types';
+import { ConfigurationSchema } from '../config/schema';
 
 const LOG_PREFS = Symbol('Logging information');
 
@@ -38,12 +39,10 @@ function getBasicInfo(req: Request) {
   return preInfo;
 }
 
-function finishLog<SLocals extends ServiceLocals = ServiceLocals>(
-  app: ServiceExpress<SLocals>,
-  error: Error | undefined,
-  req: Request,
-  res: Response,
-) {
+function finishLog<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+>(app: ServiceExpress<Config, SLocals>, error: Error | undefined, req: Request, res: Response) {
   const prefs = (res.locals as WithLogPrefs)[LOG_PREFS];
   if (prefs.logged) {
     // This happens when error handler runs, but onEnd hasn't fired yet. We only log the first one.
@@ -88,12 +87,15 @@ function finishLog<SLocals extends ServiceLocals = ServiceLocals>(
     }
   }
 
-  service.getLogFields?.(req as RequestWithApp<SLocals>, endLog);
+  service.getLogFields?.(req as RequestWithApp<Config, SLocals>, endLog);
   logger.info(endLog, 'req');
 }
 
-export function loggerMiddleware<SLocals extends ServiceLocals = ServiceLocals>(
-  app: ServiceExpress<SLocals>,
+export function loggerMiddleware<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+>(
+  app: ServiceExpress<Config, SLocals>,
   logRequests?: boolean,
   logResponses?: boolean,
 ): RequestHandler {
@@ -133,7 +135,7 @@ export function loggerMiddleware<SLocals extends ServiceLocals = ServiceLocals>(
       sid: (req as WithIdentifiedSession).session?.id,
       c: req.headers.correlationid || undefined,
     };
-    service.getLogFields?.(req as RequestWithApp<SLocals>, preLog);
+    service.getLogFields?.(req as RequestWithApp<Config, SLocals>, preLog);
     logger.info(preLog, 'pre');
 
     const logWriter = () => finishLog(app, undefined, req, res);
@@ -142,11 +144,10 @@ export function loggerMiddleware<SLocals extends ServiceLocals = ServiceLocals>(
   };
 }
 
-export function errorHandlerMiddleware<SLocals extends ServiceLocals = ServiceLocals>(
-  app: ServiceExpress<SLocals>,
-  unnest?: boolean,
-  returnError?: boolean,
-) {
+export function errorHandlerMiddleware<
+  Config extends ConfigurationSchema = ConfigurationSchema,
+  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+>(app: ServiceExpress<Config, SLocals>, unnest?: boolean, returnError?: boolean) {
   const gbErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     let loggable: Partial<ServiceError> = error;
     const body = error.response?.body || error.body;
