@@ -17,8 +17,7 @@ export type ServiceHandler<
 // Make it easier to declare route files. This is not an exhaustive list
 // of supported router methods, but it has the most common ones.
 export interface ServiceRouter<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 > {
   all(path: string, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
