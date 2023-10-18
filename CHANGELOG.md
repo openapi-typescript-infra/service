@@ -1,3 +1,11 @@
+## [3.0.2](https://github.com/openapi-typescript-infra/service/compare/v3.0.1...v3.0.2) (2023-10-18)
+
+
+### Bug Fixes
+
+* **types:** distribute the pain of typed config across all the types ([46bdd6b](https://github.com/openapi-typescript-infra/service/commit/46bdd6bc49c97fa4fb7bba38afa56480c178fa6b))
+* **types:** rework all the types to be significantly simpler ([8f05ab4](https://github.com/openapi-typescript-infra/service/commit/8f05ab41090c1eb81e1513daefd45451c6953b0a))
+
 ## [3.0.1](https://github.com/openapi-typescript-infra/service/compare/v3.0.0...v3.0.1) (2023-10-17)
 
 
