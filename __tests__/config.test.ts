@@ -3,29 +3,39 @@ import path from 'path';
 
 import { describe, expect, test } from 'vitest';
 
-import { insertConfigurationBefore, loadConfiguration } from '../src/config';
+import { ConfigurationSchema, insertConfigurationBefore, loadConfiguration } from '../src/config';
+
+interface CustomConfig extends ConfigurationSchema {
+  google: string;
+  envswitchon: boolean;
+  envswitchoff: boolean;
+  servicetype: string;
+  oservicetype: string;
+  notservicetype: string;
+  bash_profile: string;
+}
 
 describe('configuration loader', () => {
   test('overrides and shortstops', async () => {
     const rootDirectory = path.resolve(__dirname, './fake-serv');
-    const config = await loadConfiguration({
+    const config = await loadConfiguration<CustomConfig>({
       name: 'fake-serv',
       sourceDirectory: path.join(rootDirectory, 'src'),
       configurationDirectories: [path.resolve(rootDirectory, './config')],
     });
 
-    expect(config.get('logging:level')).toEqual('debug');
-    expect(config.get('google')).toBeTruthy();
-    expect(config.get('google')).not.toEqual('google.com');
+    expect(config.logging?.level).toEqual('debug');
+    expect(config.google).toBeTruthy();
+    expect(config.google).not.toEqual('google.com');
 
-    expect(config.get('envswitchoff')).toBeFalsy();
-    expect(config.get('envswitchon')).toBeTruthy();
+    expect(config.envswitchoff).toBeFalsy();
+    expect(config.envswitchon).toBeTruthy();
 
-    expect(config.get('servicetype')).toBeTruthy();
-    expect(config.get('oservicetype')).toBeTruthy();
-    expect(config.get('notservicetype')).toBeFalsy();
+    expect(config.servicetype).toBeTruthy();
+    expect(config.oservicetype).toBeTruthy();
+    expect(config.notservicetype).toBeFalsy();
 
-    expect(config.get('bash_profile')).toEqual(path.join(os.homedir(), '.bash_profile'));
+    expect(config.bash_profile).toEqual(path.join(os.homedir(), '.bash_profile'));
 
     const orig = ['a', 'b', 'd'];
     const withC = insertConfigurationBefore(orig, 'c', 'd');

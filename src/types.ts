@@ -6,7 +6,6 @@ import type { Request, Response } from 'express';
 import type { Application } from 'express-serve-static-core';
 import type { middleware } from 'express-openapi-validator';
 import type { Meter } from '@opentelemetry/api';
-import { Confit } from '@sesamecare-oss/confit';
 
 import { ConfigurationSchema } from './config/schema';
 
@@ -26,7 +25,7 @@ export interface ServiceLocals<Config extends ConfigurationSchema = Configuratio
   service: Service;
   name: string;
   logger: ServiceLogger;
-  config: Confit<Config>;
+  config: Config;
   meter: Meter;
   internalApp: Application<InternalLocals<this>>;
 }

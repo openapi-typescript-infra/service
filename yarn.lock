@@ -643,15 +643,14 @@ __metadata:
     "@semantic-release/exec": ^6.0.3
     "@semantic-release/git": ^10.0.1
     "@semantic-release/release-notes-generator": ^12.0.0
-    "@sesamecare-oss/confit": ^1.1.0
+    "@sesamecare-oss/confit": ^2.0.0
     "@sesamecare-oss/opentelemetry-node-metrics": ^1.0.1
     "@types/cookie-parser": ^1.4.5
-    "@types/eventsource": 1.1.12
-    "@types/express": ^4.17.19
+    "@types/express": ^4.17.20
     "@types/glob": ^8.1.0
-    "@types/lodash": ^4.14.199
-    "@types/minimist": ^1.2.3
-    "@types/node": ^20.8.6
+    "@types/lodash": ^4.14.200
+    "@types/minimist": ^1.2.4
+    "@types/node": ^20.8.7
     "@types/supertest": ^2.0.14
     "@typescript-eslint/eslint-plugin": ^6.8.0
     "@typescript-eslint/parser": ^6.8.0
@@ -661,7 +660,6 @@ __metadata:
     eslint: ^8.51.0
     eslint-config-prettier: ^9.0.0
     eslint-plugin-import: ^2.28.1
-    eventsource: ^1.1.2
     express: next
     express-openapi-validator: ^5.0.6
     glob: ^8.1.0
@@ -1399,16 +1397,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sesamecare-oss/confit@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@sesamecare-oss/confit@npm:1.1.0"
+"@sesamecare-oss/confit@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@sesamecare-oss/confit@npm:2.0.0"
   dependencies:
     caller: ^1.1.0
     comment-json: ^4.2.3
     glob: ^10.3.10
     js-yaml: ^4.1.0
     minimist: ^1.2.8
-  checksum: 041bce5edf5260a077a3ca46ffa97ab62a13a16da7125bddddd78bea1f79171e13bd1fd41fb87c840945e787b9b42aea4304dbd65b8527c2214aa1cccdaba856
+  checksum: e3681ae01c4db03859e36cad45462d64079fc531378d4e522b9f2978bb69680461f517fa8d55fac02dcbcbaf655bdd0d3ada4f77e71082745ff8d09010931d74
   languageName: node
   linkType: hard
 
@@ -1515,13 +1513,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eventsource@npm:1.1.12":
-  version: 1.1.12
-  resolution: "@types/eventsource@npm:1.1.12"
-  checksum: 19039099c2dc8fb369517b248856ba30dca3c36cf58cb2d62137d7c907db40871c6c4e67b1960ebba2b6f84a6bba7add4c25dc647fefbb4a37cdb7ccfa3b3f15
-  languageName: node
-  linkType: hard
-
 "@types/express-serve-static-core@npm:^4.17.33":
   version: 4.17.33
   resolution: "@types/express-serve-static-core@npm:4.17.33"
@@ -1533,15 +1524,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:^4.17.19":
-  version: 4.17.19
-  resolution: "@types/express@npm:4.17.19"
+"@types/express@npm:*, @types/express@npm:^4.17.20":
+  version: 4.17.20
+  resolution: "@types/express@npm:4.17.20"
   dependencies:
     "@types/body-parser": "*"
     "@types/express-serve-static-core": ^4.17.33
     "@types/qs": "*"
     "@types/serve-static": "*"
-  checksum: 3d39d0655eb0825d96fec100985a38737767ddd6da2dbda1e330a3adf36c98a9b7cd8d9539db32876d1fbb47a09343cad7b38c30c8dd7c291271fcb9b85cb21b
+  checksum: bf8a97d283128e5129f9ccabbeef728ff3f0484465e0ae74a304bd0588fa6cb715ae68845650caba9a641944b7791ba125d02ddbd47a7e62aaefdd036570c6c5
   languageName: node
   linkType: hard
 
@@ -1590,10 +1581,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.199":
-  version: 4.14.199
-  resolution: "@types/lodash@npm:4.14.199"
-  checksum: e68d1fcbbfce953ed87b296a628573f62939227bcda0c934954e862b421e8a34c5e71cad6fea27b9980567909e6a4698f09025692958e36d64ea9ed99ec6fb2e
+"@types/lodash@npm:^4.14.200":
+  version: 4.14.200
+  resolution: "@types/lodash@npm:4.14.200"
+  checksum: 6471f8bb5da692a6ecf03a8da4935bfbc341e67ee9bcb4f5730bfacff0c367232548f0a01e8ac5ea18c6fe78fb085d502494e33ccb47a7ee87cbdee03b47d00d
   languageName: node
   linkType: hard
 
@@ -1618,10 +1609,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/minimist@npm:^1.2.0, @types/minimist@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "@types/minimist@npm:1.2.3"
-  checksum: 666ea4f8c39dcbdfbc3171fe6b3902157c845cc9cb8cee33c10deb706cda5e0cc80f98ace2d6d29f6774b0dc21180c96cd73c592a1cbefe04777247c7ba0e84b
+"@types/minimist@npm:^1.2.0, @types/minimist@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@types/minimist@npm:1.2.4"
+  checksum: d7912f9a466312cbc1333800272b9208178140ef4da2ccec3fa82231c8e67f57f84275b3c19109c4f68f1b7b057baeacc6b80af1de14b58b46e6b54233e44c6a
   languageName: node
   linkType: hard
 
@@ -1634,12 +1625,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0, @types/node@npm:^20.8.6":
-  version: 20.8.6
-  resolution: "@types/node@npm:20.8.6"
+"@types/node@npm:*, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0, @types/node@npm:^20.8.7":
+  version: 20.8.7
+  resolution: "@types/node@npm:20.8.7"
   dependencies:
     undici-types: ~5.25.1
-  checksum: ccfb7ac482c5a96edeb239893c5c099f5257fcc2ed9ae62fefdfbc782b79e16dbc2af9a85b379665237bf759904b44ca2be68e75d239e0297882aad42f61905c
+  checksum: 2173c0c03daefcb60c03a61b1371b28c8fe412e7a40dc6646458b809d14a85fbc7aeb369d957d57f0aaaafd99964e77436f29b3b579232d8f2b20c58abbd1d25
   languageName: node
   linkType: hard
 
@@ -3562,13 +3553,6 @@ __metadata:
   version: 3.3.0
   resolution: "events@npm:3.3.0"
   checksum: f6f487ad2198aa41d878fa31452f1a3c00958f46e9019286ff4787c84aac329332ab45c9cdc8c445928fc6d7ded294b9e005a7fce9426488518017831b272780
-  languageName: node
-  linkType: hard
-
-"eventsource@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "eventsource@npm:1.1.2"
-  checksum: fe8f2ac3c70b1b63ee3cef5c0a28680cb00b5747bfda1d9835695fab3ed602be41c5c799b1fc997b34b02633573fead25b12b036bdf5212f23a6aa9f59212e9b
   languageName: node
   linkType: hard
 

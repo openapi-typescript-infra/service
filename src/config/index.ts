@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { BaseConfitType, Confit, Factory, confit } from '@sesamecare-oss/confit';
+import { BaseConfitSchema, Confit, Factory, confit } from '@sesamecare-oss/confit';
 
 import { findPort } from '../development/port-finder';
 
@@ -28,11 +28,11 @@ async function pathExists(f: string) {
 async function addDefaultConfiguration<Config extends ConfigurationSchema = ConfigurationSchema>(
   configFactory: Factory<Config>,
   directory: string,
-  envConfit: Confit<BaseConfitType>,
+  envConfit: Confit<BaseConfitSchema>,
 ) {
   const addIfEnv = async (e: (typeof ENVIRONMENTS)[number]) => {
     const c = path.join(directory, `${e}.json`);
-    if (envConfit.get(`env:${e}`) && (await pathExists(c))) {
+    if (envConfit.get().env[e] && (await pathExists(c))) {
       configFactory.addDefault(c);
       return true;
     }
@@ -63,13 +63,13 @@ export async function loadConfiguration<Config extends ConfigurationSchema>({
   name,
   configurationDirectories: dirs,
   sourceDirectory,
-}: ServiceConfigurationSpec): Promise<Confit<Config>> {
+}: ServiceConfigurationSpec): Promise<Config> {
   const defaultProtocols = shortstops({ name }, sourceDirectory);
   const specificConfig = dirs[dirs.length - 1];
 
   // This confit version just gets us environment info
   const envConfit = await confit({ basedir: specificConfig }).create();
-  const configFactory = confit<ConfigurationSchema>({
+  const configFactory = confit<Config>({
     basedir: specificConfig,
     protocols: defaultProtocols,
   });
@@ -90,17 +90,19 @@ export async function loadConfiguration<Config extends ConfigurationSchema>({
 
   // Because other things need to know the port we choose, we pick it here if it's
   // configured to auto-select
-  const serverConfig = loaded.get('server');
+  const serverConfig = loaded.get().server;
   if (serverConfig.port === 0) {
     const port = (await findPort(8001)) as number;
-    loaded.set('server:port', port);
+    const store = loaded.get();
+    store.server = store.server || {};
+    store.server.port = port;
   }
 
   // TODO init other stuff based on config here, such as key management or
   // other cloud-aware shortstop handlers
 
   // Not sure why this is necessary, but it is
-  return loaded as unknown as Confit<Config>;
+  return loaded.get();
 }
 
 export function insertConfigurationBefore(

@@ -10,7 +10,6 @@ import { metrics } from '@opentelemetry/api';
 import { setupNodeMetrics } from '@sesamecare-oss/opentelemetry-node-metrics';
 import { createTerminus } from '@godaddy/terminus';
 import type { RequestHandler, Response } from 'express';
-import { Confit } from '@sesamecare-oss/confit';
 
 import { loadConfiguration } from '../config/index';
 import { openApi } from '../openapi';
@@ -88,12 +87,12 @@ export async function startApp<
     sourceDirectory: path.join(rootDirectory, codepath),
   });
 
-  const logging = config.get('logging');
+  const logging = config.logging;
   logger.level = logging?.level || 'info';
 
   // Concentrate the Typescript ugliness...
   const app = express() as unknown as ServiceExpress<SLocals>;
-  const routing = config.get('routing');
+  const routing = config.routing;
 
   app.disable('x-powered-by');
   if (routing?.etag !== true) {
@@ -114,8 +113,8 @@ export async function startApp<
   app.locals.meter = metrics.getMeterProvider().getMeter(name);
   setupNodeMetrics(app.locals.meter, {});
 
-  if (config.get('trustProxy')) {
-    app.set('trust proxy', config.get('trustProxy'));
+  if (config.trustProxy) {
+    app.set('trust proxy', config.trustProxy);
   }
 
   app.use(loggerMiddleware(app, logging?.logRequestBody, logging?.logResponseBody));
@@ -220,7 +219,7 @@ export async function startApp<
   if (routing?.routes) {
     await loadRoutes(
       app,
-      path.resolve(rootDirectory, codepath, config.get<string>('routing:routes') || 'routes'),
+      path.resolve(rootDirectory, codepath, config.routing?.routes || 'routes'),
       codePattern,
     );
   }
@@ -288,10 +287,7 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
   app: ServiceExpress<SLocals>,
   shutdownHandler?: () => Promise<void>,
 ) {
-  // TODO I don't know why this is necessary, but TS can't quite figure this out
-  // otherwise.
-  const typedConfig = app.locals.config as unknown as Confit<ConfigurationSchema>;
-  const config = typedConfig.get('server') as Required<ConfigurationSchema['server']>;
+  const config = app.locals.config.server || {};
   const { port } = config;
 
   const { service, logger } = app.locals;
@@ -348,7 +344,7 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
       const { locals } = app;
       locals.logger.info({ url: url(config, port), service: locals.name }, 'express listening');
 
-      const serverConfig = typedConfig.get('server');
+      const serverConfig = app.locals.config.server;
       // Ok now start the internal port if we have one.
       if (serverConfig?.internalPort || serverConfig?.internalPort === 0) {
         startInternalApp(app, serverConfig.internalPort)
