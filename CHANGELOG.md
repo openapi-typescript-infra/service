@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/openapi-typescript-infra/service/compare/v3.0.3...v4.0.0) (2023-10-18)
+
+
+### Features
+
+* **config:** expose raw configuration schema ([fae719d](https://github.com/openapi-typescript-infra/service/commit/fae719de5a73084c0580058bc59b59a74861f66f))
+
+
+### BREAKING CHANGES
+
+* **config:** No more config.get, just access config directly
+
 ## [3.0.3](https://github.com/openapi-typescript-infra/service/compare/v3.0.2...v3.0.3) (2023-10-18)
 
 
