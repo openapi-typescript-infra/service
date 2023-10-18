@@ -24,6 +24,7 @@ export type ServiceLogger = pino.BaseLogger & Pick<pino.Logger, 'isLevelEnabled'
 export interface ServiceLocals<Config extends ConfigurationSchema = ConfigurationSchema> {
   service: Service;
   name: string;
+  version: string;
   logger: ServiceLogger;
   config: Config;
   meter: Meter;
@@ -115,6 +116,7 @@ export interface ServiceStartOptions<
   RLocals extends RequestLocals = RequestLocals,
 > {
   name: string;
+  version: string;
   rootDirectory: string;
 
   // Defaults to "build", but can be set to "src" to run off non-built source

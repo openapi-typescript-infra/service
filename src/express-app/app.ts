@@ -45,7 +45,7 @@ export async function startApp<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 >(startOptions: ServiceStartOptions<SLocals, RLocals>): Promise<ServiceExpress<SLocals>> {
-  const { service, rootDirectory, codepath = 'build', name } = startOptions;
+  const { service, rootDirectory, codepath = 'build', name, version } = startOptions;
   const shouldPrettyPrint = isDev() && !process.env.NO_PRETTY_LOGS;
   const destination = pino.destination({
     sync: isSyncLogging(),
@@ -99,11 +99,12 @@ export async function startApp<
     app.disable('etag');
   }
 
-  Object.assign(app.locals, { services: {} }, startOptions.locals, {
+  Object.assign(app.locals, startOptions.locals, {
     service: serviceImpl,
     logger,
     config,
     name,
+    version,
   });
 
   if (serviceImpl.attach) {

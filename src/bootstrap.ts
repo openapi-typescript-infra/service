@@ -25,6 +25,8 @@ interface BootstrapArguments {
   telemetry?: boolean;
   // Don't bind to http port or expose metrics
   nobind?: boolean;
+  // The version of the app, else discovered via read-pkg-up
+  version?: string;
 }
 
 function resolveMain(packageJson: NormalizedPackageJson) {
@@ -39,6 +41,7 @@ async function getServiceDetails(argv: BootstrapArguments = {}) {
     return {
       rootDirectory: argv.root,
       name: argv.name,
+      version: argv.version || '0.0.0',
       main: argv.main || (isDev() && !argv.built ? 'src/index.ts' : 'build/index.js'),
     };
   }
@@ -55,6 +58,7 @@ async function getServiceDetails(argv: BootstrapArguments = {}) {
     main,
     rootDirectory: path.dirname(pkg.path),
     name: parts[parts.length - 1],
+    version: pkg.packageJson.version,
   };
 }
 
@@ -72,7 +76,7 @@ export async function bootstrap<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 >(argv?: BootstrapArguments) {
-  const { main, rootDirectory, name } = await getServiceDetails(argv);
+  const { main, rootDirectory, name, version } = await getServiceDetails(argv);
 
   let entrypoint: string;
   let codepath: 'build' | 'dist' | 'src' = 'build';
@@ -107,6 +111,7 @@ export async function bootstrap<
       rootDirectory,
       service: absoluteEntrypoint,
       codepath,
+      version,
     });
   }
 
@@ -115,6 +120,7 @@ export async function bootstrap<
   const impl = require(absoluteEntrypoint);
   const opts: ServiceStartOptions<SLocals, RLocals> = {
     name,
+    version,
     rootDirectory,
     service: impl.default || impl.service,
     codepath,

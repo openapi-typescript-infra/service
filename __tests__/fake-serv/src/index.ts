@@ -15,6 +15,7 @@ export function service(): Service<FakeServLocals> {
     ...base,
     async start(app) {
       await base.start(app);
+      app.locals.services = app.locals.services || {};
       app.locals.services.fakeServ = {
         get_something() {
           throw new Error('Should not be called.');
