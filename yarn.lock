@@ -603,10 +603,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openapi-typescript-infra/coconfig@npm:^4.2.1":
-  version: 4.2.1
-  resolution: "@openapi-typescript-infra/coconfig@npm:4.2.1"
-  checksum: 067ddd6fff7e1ede69aa0756afaae019269b03aa6bdb4a0cac7a6222575378c1eda2d2a346cfc47fb68a7ca3f54f03b8de3e71781cbe0c31245bc42c691179a5
+"@openapi-typescript-infra/coconfig@npm:^4.2.2":
+  version: 4.2.2
+  resolution: "@openapi-typescript-infra/coconfig@npm:4.2.2"
+  checksum: 8cbaf0bd20a06eaf0f310590456f5d9baef1f2a505c2ec7244685df82a6d9cbec5da4cdf0a28d7e8c8c033d80ad1d85325cc8903301c7d40986abc184aeb4b2e
   languageName: node
   linkType: hard
 
@@ -617,7 +617,7 @@ __metadata:
     "@commitlint/cli": ^17.8.0
     "@commitlint/config-conventional": ^17.8.0
     "@godaddy/terminus": ^4.12.1
-    "@openapi-typescript-infra/coconfig": ^4.2.1
+    "@openapi-typescript-infra/coconfig": ^4.2.2
     "@opentelemetry/api": ^1.6.0
     "@opentelemetry/exporter-prometheus": ^0.43.0
     "@opentelemetry/exporter-trace-otlp-proto": ^0.43.0
@@ -643,7 +643,7 @@ __metadata:
     "@semantic-release/exec": ^6.0.3
     "@semantic-release/git": ^10.0.1
     "@semantic-release/release-notes-generator": ^12.0.0
-    "@sesamecare-oss/confit": ^2.0.0
+    "@sesamecare-oss/confit": ^2.0.1
     "@sesamecare-oss/opentelemetry-node-metrics": ^1.0.1
     "@types/cookie-parser": ^1.4.5
     "@types/express": ^4.17.20
@@ -651,7 +651,7 @@ __metadata:
     "@types/lodash": ^4.14.200
     "@types/minimist": ^1.2.4
     "@types/node": ^20.8.7
-    "@types/supertest": ^2.0.14
+    "@types/supertest": ^2.0.15
     "@typescript-eslint/eslint-plugin": ^6.8.0
     "@typescript-eslint/parser": ^6.8.0
     coconfig: ^1.0.0
@@ -1397,16 +1397,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sesamecare-oss/confit@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@sesamecare-oss/confit@npm:2.0.0"
+"@sesamecare-oss/confit@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@sesamecare-oss/confit@npm:2.0.1"
   dependencies:
     caller: ^1.1.0
     comment-json: ^4.2.3
     glob: ^10.3.10
     js-yaml: ^4.1.0
     minimist: ^1.2.8
-  checksum: e3681ae01c4db03859e36cad45462d64079fc531378d4e522b9f2978bb69680461f517fa8d55fac02dcbcbaf655bdd0d3ada4f77e71082745ff8d09010931d74
+  checksum: 032bccc60a7ebe8c6641da488a3659d63201efd0d48b72cdae97534c2cf733264d836757621b33910c1766acb4afc76a95a52ad40c23ef5002c7d9ad8b28c7b2
   languageName: node
   linkType: hard
 
@@ -1727,12 +1727,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/supertest@npm:^2.0.14":
-  version: 2.0.14
-  resolution: "@types/supertest@npm:2.0.14"
+"@types/supertest@npm:^2.0.15":
+  version: 2.0.15
+  resolution: "@types/supertest@npm:2.0.15"
   dependencies:
     "@types/superagent": "*"
-  checksum: 9f6850a22b8f0fd4c26a6dfd9b64771a66476b1a4f841a3b84a9da843ce69463efbf37594fe107297dd14a225d199b802464d48d70e9413238c637903d392137
+  checksum: 89c1983662f0ab20969b3a6c44344397fd222d0f78b282619aabbe817f7c88a64210fd2b8b8f075ea22a27084e30ebc287bc5105619cbbf9af7f008e77f6eb93
   languageName: node
   linkType: hard
 
