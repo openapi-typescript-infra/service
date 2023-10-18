@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/openapi-typescript-infra/service/compare/v4.0.0...v4.1.0) (2023-10-18)
+
+
+### Features
+
+* **openapi:** expose API spec on internal server port ([ea33b95](https://github.com/openapi-typescript-infra/service/commit/ea33b9594ef891765c2be7fdf85fc0c53d3337cd))
+
 # [4.0.0](https://github.com/openapi-typescript-infra/service/compare/v3.0.3...v4.0.0) (2023-10-18)
 
 
