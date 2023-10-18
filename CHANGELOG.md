@@ -1,3 +1,10 @@
+# [4.2.0](https://github.com/openapi-typescript-infra/service/compare/v4.1.1...v4.2.0) (2023-10-18)
+
+
+### Features
+
+* **env:** support staging environments ([60baaa3](https://github.com/openapi-typescript-infra/service/commit/60baaa3e15c8a04ae10644d889c329558fb01aa8))
+
 ## [4.1.1](https://github.com/openapi-typescript-infra/service/compare/v4.1.0...v4.1.1) (2023-10-18)
 
 
