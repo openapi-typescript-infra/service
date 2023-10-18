@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/openapi-typescript-infra/service/compare/v3.0.2...v3.0.3) (2023-10-18)
+
+
+### Bug Fixes
+
+* **types:** simplify ServiceRouter by removing config arg ([8f1e334](https://github.com/openapi-typescript-infra/service/commit/8f1e334a45b6f8bed5b6c7f1e61136522e7faef9))
+
 ## [3.0.2](https://github.com/openapi-typescript-infra/service/compare/v3.0.1...v3.0.2) (2023-10-18)
 
 
