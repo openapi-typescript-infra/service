@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/openapi-typescript-infra/service/compare/v4.1.0...v4.1.1) (2023-10-18)
+
+
+### Bug Fixes
+
+* **version:** add version info to service metadata ([d5c7efa](https://github.com/openapi-typescript-infra/service/commit/d5c7efa77b9b56b7702df778b1b1ebaea7c623fc))
+
 # [4.1.0](https://github.com/openapi-typescript-infra/service/compare/v4.0.0...v4.1.0) (2023-10-18)
 
 
