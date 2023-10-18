@@ -4,6 +4,7 @@ import * as opentelemetry from '@opentelemetry/sdk-node';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 
 import type {
+  AnyServiceLocals,
   DelayLoadServiceStartOptions,
   RequestLocals,
   ServiceLocals,
@@ -71,21 +72,20 @@ export async function shutdownGlobalTelemetry() {
 }
 
 export async function startWithTelemetry<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 >(options: DelayLoadServiceStartOptions) {
   startGlobalTelemetry(options.name);
 
   // eslint-disable-next-line import/no-unresolved, @typescript-eslint/no-var-requires
   const { startApp, listen } = require('../express-app/app.js') as {
-    startApp: StartAppFn<Config, SLocals, RLocals>;
-    listen: ListenFn<Config, SLocals>;
+    startApp: StartAppFn<SLocals, RLocals>;
+    listen: ListenFn<SLocals>;
   };
   // eslint-disable-next-line import/no-dynamic-require, global-require, @typescript-eslint/no-var-requires
   const serviceModule = require(options.service);
   const service = serviceModule.default || serviceModule.service;
-  const startOptions: ServiceStartOptions<Config, SLocals> = {
+  const startOptions: ServiceStartOptions<SLocals> = {
     ...options,
     service,
     locals: { ...options.locals } as Partial<SLocals>,

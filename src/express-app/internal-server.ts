@@ -1,15 +1,14 @@
 import express from 'express';
 import type { Application } from 'express-serve-static-core';
 
-import { InternalLocals, ServiceExpress, ServiceLocals } from '../types';
+import { AnyServiceLocals, InternalLocals, ServiceExpress, ServiceLocals } from '../types';
 import { findPort } from '../development/port-finder';
 import { ConfigurationSchema } from '../config/schema';
 
 export async function startInternalApp<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
->(mainApp: ServiceExpress<Config, SLocals>, port: number) {
-  const app = express() as unknown as Application<InternalLocals<Config, SLocals>>;
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
+>(mainApp: ServiceExpress<SLocals>, port: number) {
+  const app = express() as unknown as Application<InternalLocals<SLocals>>;
   app.locals.mainApp = mainApp;
 
   const finalPort = port === 0 ? await findPort(3001) : port;

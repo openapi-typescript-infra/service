@@ -11,11 +11,10 @@ import { Confit } from '@sesamecare-oss/confit';
 import { ConfigurationSchema } from './config/schema';
 
 export interface InternalLocals<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
 > extends Record<string, unknown> {
   server?: Server;
-  mainApp: ServiceExpress<Config, SLocals>;
+  mainApp: ServiceExpress<SLocals>;
 }
 
 export type ServiceLogger = pino.BaseLogger & Pick<pino.Logger, 'isLevelEnabled'>;
@@ -24,12 +23,12 @@ export type ServiceLogger = pino.BaseLogger & Pick<pino.Logger, 'isLevelEnabled'
 // because you lose type checking on it, even though I get that underneath it truly
 // is Record<string, any>
 export interface ServiceLocals<Config extends ConfigurationSchema = ConfigurationSchema> {
-  service: Service<Config>;
+  service: Service;
   name: string;
   logger: ServiceLogger;
   config: Confit<Config>;
   meter: Meter;
-  internalApp: Application<InternalLocals<Config>>;
+  internalApp: Application<InternalLocals<this>>;
 }
 
 export interface RequestLocals {
@@ -39,17 +38,13 @@ export interface RequestLocals {
   logger: ServiceLogger;
 }
 
-export type ServiceExpress<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  Locals extends ServiceLocals<Config> = ServiceLocals<Config>,
-> = Application<Locals>;
+export type ServiceExpress<Locals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>> =
+  Application<Locals>;
 
-export type RequestWithApp<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  Locals extends ServiceLocals<Config> = ServiceLocals<Config>,
-> = Omit<Request, 'app'> & {
-  app: Application<Locals>;
-};
+export type RequestWithApp<Locals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>> =
+  Omit<Request, 'app'> & {
+    app: Application<Locals>;
+  };
 
 export type ResponseFromApp<
   ResBody = unknown,
@@ -60,66 +55,60 @@ export type ResponseFromApp<
  * This is the core type you need to implement to provide a service
  */
 export interface Service<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 > {
   name?: string;
 
   // Modify options used for application start
   configure?: (
-    startOptions: ServiceStartOptions<Config, SLocals, RLocals>,
+    startOptions: ServiceStartOptions<SLocals, RLocals>,
     options: ServiceOptions,
   ) => ServiceOptions;
 
   // Run after configuration but before routes are loaded,
   // which is often a good place to add elements to the app locals
   // that are needed during route setup
-  attach?: (app: ServiceExpress<Config, SLocals>) => void | Promise<void>;
+  attach?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
 
-  start(app: ServiceExpress<Config, SLocals>): void | Promise<void>;
+  start(app: ServiceExpress<SLocals>): void | Promise<void>;
 
-  stop?: (app: ServiceExpress<Config, SLocals>) => void | Promise<void>;
+  stop?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
 
-  healthy?: (app: ServiceExpress<Config, SLocals>) => boolean | Promise<boolean>;
+  healthy?: (app: ServiceExpress<SLocals>) => boolean | Promise<boolean>;
 
   // This runs as middleware right BEFORE the body parsers.
   // If you want to run AFTER the body parsers, the current
   // way to do that would be via /routes/index.ts and router.use()
   // in that file.
-  onRequest?(
-    req: RequestWithApp<Config, SLocals>,
-    res: Response<unknown, RLocals>,
-  ): void | Promise<void>;
+  onRequest?(req: RequestWithApp<SLocals>, res: Response<unknown, RLocals>): void | Promise<void>;
 
   // This runs after body parsing but before routing
   authorize?(
-    req: RequestWithApp<Config, SLocals>,
+    req: RequestWithApp<SLocals>,
     res: Response<unknown, RLocals>,
   ): boolean | Promise<boolean>;
 
   // Add or redact any fields for logging. Note this will be called twice per request,
   // once at the start and once at the end. Modify the values directly.
   getLogFields?(
-    req: RequestWithApp<Config, SLocals>,
+    req: RequestWithApp<SLocals>,
     values: Record<string, string | string[] | number | undefined>,
   ): void;
 
   // The repl is a useful tool for diagnosing issues in non-dev environments.
   // The attachRepl method provides a way to add custom functionality
   // (typically with top level variables) to the repl.
-  attachRepl?(app: ServiceExpress<Config, SLocals>, repl: REPLServer): void;
+  attachRepl?(app: ServiceExpress<SLocals>, repl: REPLServer): void;
 }
 
 export type ServiceFactory<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
-> = () => Service<Config, SLocals, RLocals>;
+> = () => Service<SLocals, RLocals>;
 
 export interface ServiceStartOptions<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 > {
   name: string;
@@ -134,7 +123,7 @@ export interface ServiceStartOptions<
   locals?: Partial<SLocals>;
 
   // And finally, the function that creates the service instance
-  service: () => Service<Config, SLocals, RLocals>;
+  service: () => Service<SLocals, RLocals>;
 }
 
 export interface DelayLoadServiceStartOptions extends Omit<ServiceStartOptions, 'service'> {
@@ -152,8 +141,7 @@ export interface ServiceOptions {
 }
 
 export interface ServiceLike<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
 > {
   locals: SLocals;
 }
@@ -167,11 +155,10 @@ export interface ServiceLike<
  * logger.
  */
 export interface RequestLike<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 > {
-  app: ServiceLike<Config, SLocals>;
+  app: ServiceLike<SLocals>;
   res: {
     locals: RLocals;
   };
@@ -182,21 +169,31 @@ export interface RequestLike<
 // Typically you should export an interface that extends this one
 // and then access all your types through that.
 export interface ServiceTypes<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
   ResBody = unknown,
 > {
-  App: ServiceExpress<Config, SLocals>;
+  App: ServiceExpress<SLocals>;
   Handler: (
-    req: RequestWithApp<Config, SLocals>,
+    req: RequestWithApp<SLocals>,
     res: ResponseFromApp<ResBody, RLocals>,
   ) => void | Promise<void>;
-  Request: RequestWithApp<Config, SLocals>;
-  RequestLike: RequestLike<Config, SLocals, RLocals>;
+  Request: RequestWithApp<SLocals>;
+  RequestLike: RequestLike<SLocals, RLocals>;
   RequestLocals: RLocals;
   Response: ResponseFromApp<ResBody, RLocals>;
-  Service: Service<Config, SLocals, RLocals>;
-  ServiceFactory: ServiceFactory<Config, SLocals, RLocals>;
+  Service: Service<SLocals, RLocals>;
+  ServiceFactory: ServiceFactory<SLocals, RLocals>;
   ServiceLocals: SLocals;
 }
+
+export type UnwrapServiceConfig<SLocals extends ServiceLocals> = SLocals extends ServiceLocals<
+  infer C
+>
+  ? C
+  : never;
+
+// TODO this allows us to clean up the generics by having a loose parameter
+// but using the UnwrapServiceConfig to get the specific type back
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyServiceLocals = ServiceLocals<any>;

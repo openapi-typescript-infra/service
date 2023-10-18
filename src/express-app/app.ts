@@ -20,6 +20,7 @@ import {
   notFoundMiddleware,
 } from '../telemetry/requestLogger';
 import type {
+  AnyServiceLocals,
   RequestLocals,
   RequestWithApp,
   ServiceExpress,
@@ -42,12 +43,9 @@ function isSyncLogging() {
 }
 
 export async function startApp<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
->(
-  startOptions: ServiceStartOptions<Config, SLocals, RLocals>,
-): Promise<ServiceExpress<Config, SLocals>> {
+>(startOptions: ServiceStartOptions<SLocals, RLocals>): Promise<ServiceExpress<SLocals>> {
   const { service, rootDirectory, codepath = 'build', name } = startOptions;
   const shouldPrettyPrint = isDev() && !process.env.NO_PRETTY_LOGS;
   const destination = pino.destination({
@@ -94,7 +92,7 @@ export async function startApp<
   logger.level = logging?.level || 'info';
 
   // Concentrate the Typescript ugliness...
-  const app = express() as unknown as ServiceExpress<Config, SLocals>;
+  const app = express() as unknown as ServiceExpress<SLocals>;
   const routing = config.get('routing');
 
   app.disable('x-powered-by');
@@ -129,7 +127,7 @@ export async function startApp<
     let maybePromise: Promise<void> | void | undefined;
     try {
       maybePromise = serviceImpl.onRequest?.(
-        req as RequestWithApp<Config, SLocals>,
+        req as RequestWithApp<SLocals>,
         res as Response<unknown, RLocals>,
       );
     } catch (error) {
@@ -168,7 +166,7 @@ export async function startApp<
       let maybePromise: Promise<boolean> | boolean | undefined;
       try {
         maybePromise = serviceImpl.authorize?.(
-          req as RequestWithApp<Config, SLocals>,
+          req as RequestWithApp<SLocals>,
           res as Response<unknown, RLocals>,
         );
       } catch (error) {
@@ -245,15 +243,13 @@ export async function startApp<
 }
 
 export type StartAppFn<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
-> = typeof startApp<Config, SLocals, RLocals>;
+> = typeof startApp<SLocals, RLocals>;
 
 export async function shutdownApp<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
->(app: ServiceExpress<Config, SLocals>) {
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
+>(app: ServiceExpress<SLocals>) {
   const { logger } = app.locals;
   try {
     await app.locals.service.stop?.(app);
@@ -267,7 +263,7 @@ export async function shutdownApp<
 function httpServer<
   Config extends ConfigurationSchema = ConfigurationSchema,
   SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
->(app: ServiceExpress<Config, SLocals>, config: ConfigurationSchema['server']) {
+>(app: ServiceExpress<SLocals>, config: ConfigurationSchema['server']) {
   if (!config.certificate) {
     return http.createServer(app);
   }
@@ -288,10 +284,10 @@ function url(config: ConfigurationSchema['server'], port: number) {
   return `http://${config.hostname}${port === 80 ? '' : `:${port}`}`;
 }
 
-export async function listen<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
->(app: ServiceExpress<Config, SLocals>, shutdownHandler?: () => Promise<void>) {
+export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>>(
+  app: ServiceExpress<SLocals>,
+  shutdownHandler?: () => Promise<void>,
+) {
   // TODO I don't know why this is necessary, but TS can't quite figure this out
   // otherwise.
   const typedConfig = app.locals.config as unknown as Confit<ConfigurationSchema>;
@@ -383,7 +379,5 @@ export async function listen<
   return server;
 }
 
-export type ListenFn<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
-> = typeof listen<Config, SLocals>;
+export type ListenFn<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>> =
+  typeof listen<SLocals>;

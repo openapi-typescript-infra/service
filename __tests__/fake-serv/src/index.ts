@@ -1,12 +1,10 @@
-import { RestApiErrorResponse, RestApiSuccessResponse } from 'rest-api-support';
-
 import type { Service, ServiceLocals } from '../../../src/types';
 import { useService } from '../../../src';
 
 export interface FakeServLocals extends ServiceLocals {
   services: {
     fakeServ: {
-      get_something(): RestApiSuccessResponse<{ things: string[] }> | RestApiErrorResponse;
+      get_something(): { things: string[] } | Error;
     };
   };
 }

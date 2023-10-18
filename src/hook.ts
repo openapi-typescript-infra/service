@@ -1,5 +1,5 @@
 import { ConfigurationSchema } from './config/schema';
-import type { RequestLocals, Service, ServiceLocals } from './types';
+import type { AnyServiceLocals, RequestLocals, Service, ServiceLocals } from './types';
 
 /**
  * Your service should call this function and then "inherit"
@@ -23,10 +23,9 @@ import type { RequestLocals, Service, ServiceLocals } from './types';
  * @returns Service<Config, SLocals, RLocals>
  */
 export function useService<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
->(baseService?: Service<Config, SLocals, RLocals>): Service<Config, SLocals, RLocals> {
+>(baseService?: Service<SLocals, RLocals>): Service<SLocals, RLocals> {
   return {
     async start(app) {
       await baseService?.start(app);

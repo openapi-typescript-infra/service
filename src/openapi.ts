@@ -4,7 +4,7 @@ import _ from 'lodash';
 import * as OpenApiValidator from 'express-openapi-validator';
 import type { Handler } from 'express';
 
-import type { ServiceExpress, ServiceLocals } from './types';
+import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from './types';
 import { getFilesInDir, loadModule } from './express-app/modules';
 import { ConfigurationSchema } from './config/schema';
 
@@ -23,10 +23,9 @@ function stripExtension(filename: string) {
 }
 
 export async function openApi<
-  Config extends ConfigurationSchema = ConfigurationSchema,
-  SLocals extends ServiceLocals<Config> = ServiceLocals<Config>,
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
 >(
-  app: ServiceExpress<Config, SLocals>,
+  app: ServiceExpress<SLocals>,
   rootDirectory: string,
   codepath: string,
   pattern: string,
