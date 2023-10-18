@@ -360,6 +360,12 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
             } else {
               locals.logger.info('No metrics will be exported');
             }
+            if (app.locals.openApiSpecification) {
+              locals.internalApp.get('/api-docs/openapi.json', (req, res) => {
+                res.json(app.locals.openApiSpecification);
+              });
+              locals.logger.info('OpenAPI specification available at /api-docs/openapi.json');
+            }
             accept();
           })
           .catch((error) => {

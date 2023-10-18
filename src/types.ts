@@ -28,6 +28,10 @@ export interface ServiceLocals<Config extends ConfigurationSchema = Configuratio
   config: Config;
   meter: Meter;
   internalApp: Application<InternalLocals<this>>;
+  /**
+   * This is the parsed OpenAPI spec we are hosting (if openapi is enabled)
+   */
+  openApiSpecification?: ReturnType<typeof JSON.parse>;
 }
 
 export interface RequestLocals {

@@ -2,6 +2,7 @@ import path from 'path';
 
 import _ from 'lodash';
 import * as OpenApiValidator from 'express-openapi-validator';
+import { OpenAPIFramework } from 'express-openapi-validator/dist/framework/index';
 import type { Handler } from 'express';
 
 import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from './types';
@@ -63,6 +64,12 @@ export async function openApi<
     },
     {} as Record<string, Record<string, unknown>>,
   );
+
+  app.locals.openApiSpecification = await new OpenAPIFramework({ apiDoc: apiSpec })
+    .initialize({ visitApi() {} })
+    .catch((error) => {
+      app.locals.logger.error(error, 'Failed to parse and load OpenAPI spec');
+    });
 
   const defaultOptions: OAPIOpts = {
     apiSpec,
