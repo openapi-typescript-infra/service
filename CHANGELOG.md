@@ -1,3 +1,10 @@
+## [4.5.1](https://github.com/openapi-typescript-infra/service/compare/v4.5.0...v4.5.1) (2023-10-19)
+
+
+### Bug Fixes
+
+* **config:** remove unused config ([263d084](https://github.com/openapi-typescript-infra/service/commit/263d0841ca630760ddff2f746f73870c4d8eddee))
+
 # [4.5.0](https://github.com/openapi-typescript-infra/service/compare/v4.4.0...v4.5.0) (2023-10-19)
 
 
