@@ -1,3 +1,10 @@
+## [4.3.1](https://github.com/openapi-typescript-infra/service/compare/v4.3.0...v4.3.1) (2023-10-19)
+
+
+### Bug Fixes
+
+* **make:** use more compatible awk function ([fa9adda](https://github.com/openapi-typescript-infra/service/commit/fa9addab9be8a56e5ec99d8d6e9c436b1faccc40))
+
 # [4.3.0](https://github.com/openapi-typescript-infra/service/compare/v4.2.0...v4.3.0) (2023-10-19)
 
 
