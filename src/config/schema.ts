@@ -66,7 +66,7 @@ export interface ConfigurationSchema extends BaseConfitSchema {
     // Note that generally it's better to offload tls termination,
     // but this is useful for dev.
     key?: string | Uint8Array;
-    certificate?: string;
+    certificate?: string | Uint8Array;
     // If you have an alternate host name (other than localhost) that
     // should be used when referring to this service, set it here.
     hostname?: string;

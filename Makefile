@@ -23,6 +23,7 @@
 build_dir := $(shell node -e "console.log(require('./package.json').main.replace(/^.\//, '').split('/')[0])")
 src_files := $(shell find src -name '*.ts')
 build_files := $(patsubst src/%.ts,$(build_dir)/%.js,$(src_files))
+camel_case_name := $(shell echo $(SERVICE_NAME) | awk -F- '{result=""; for(i=1; i<=NF; i++) result = result toupper(substr($$i,1,1)) substr($$i,2); print result}' | tr -d '\n')
 
 # General utilities
 clean:
@@ -50,6 +51,17 @@ src/generated/service/index.ts: $(shell find api -type f)
 		--output ./src/generated/service/index.ts
 	./node_modules/.bin/prettier ./src/generated/service/index.ts --write
 	rm -rf $(TMP)
+
+# Config schema generation
+CONFIG_TYPE_SRC ?= src/types/config.ts
+CONFIG_TYPE ?= $(camel_case_name)ConfigSchema
+
+config-schema: src/generated/config-validator.ts
+
+src/generated/config-validator.ts: src/types/config.ts
+	npx -y @sesamecare-oss/typia-standalone-validator \
+		$(CONFIG_TYPE_SRC) $(CONFIG_TYPE) \
+		--project tsconfig.json -o src/generated/config-validator.ts
 
 # Postgres database things
 export PGUSER ?= postgres
