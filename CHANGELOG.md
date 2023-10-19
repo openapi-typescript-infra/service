@@ -1,3 +1,15 @@
+# [4.4.0](https://github.com/openapi-typescript-infra/service/compare/v4.3.4...v4.4.0) (2023-10-19)
+
+
+### Bug Fixes
+
+* **confit:** get latest confit and fix issue with tls keys from config ([20cab44](https://github.com/openapi-typescript-infra/service/commit/20cab443fa60b0f6ce6bad7037cba593437d9e3a))
+
+
+### Features
+
+* **config:** remove config schema generation, it's not ready yet ([9db5c98](https://github.com/openapi-typescript-infra/service/commit/9db5c981efdb3ed1dbe36acf02817a7f11fdbdd9))
+
 ## [4.3.4](https://github.com/openapi-typescript-infra/service/compare/v4.3.3...v4.3.4) (2023-10-19)
 
 
