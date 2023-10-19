@@ -67,6 +67,7 @@ export async function openApi<
 
   app.locals.openApiSpecification = await new OpenAPIFramework({ apiDoc: apiSpec })
     .initialize({ visitApi() {} })
+    .then((docs) => docs.apiDoc)
     .catch((error) => {
       app.locals.logger.error(error, 'Failed to parse and load OpenAPI spec');
     });
