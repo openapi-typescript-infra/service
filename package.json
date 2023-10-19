@@ -17,8 +17,8 @@
     "url": "git+https://github.com/openapi-typescript-infra/service.git"
   },
   "bin": {
-    "start-service": "./build/bin/start-service.js",
-    "generate-config-schema": "./build/bin/generate-config-schema.js"
+    "generate-config-schema": "./build/bin/generate-config-schema.js",
+    "start-service": "./build/bin/start-service.js"
   },
   "config": {
     "coconfig": "@openapi-typescript-infra/coconfig"
