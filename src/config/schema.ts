@@ -1,14 +1,6 @@
 import type { BaseConfitSchema } from '@sesamecare-oss/confit';
 import type { Level } from 'pino';
 
-export interface ServiceConfiguration {
-  protocol?: string;
-  port?: number;
-  host?: string;
-  basePath?: string;
-  proxy?: string | false;
-}
-
 export interface ConfigurationItemEnabled {
   enabled?: boolean;
 }
@@ -71,5 +63,4 @@ export interface ConfigurationSchema extends BaseConfitSchema {
     // should be used when referring to this service, set it here.
     hostname?: string;
   };
-  connections: Record<string, ServiceConfiguration>;
 }

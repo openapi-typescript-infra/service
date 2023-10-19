@@ -6,10 +6,5 @@
   "server": {
     "port": 0,
     "internalPort": 0
-  },
-  "connections": {
-    "default": {
-      "proxy": "http://localhost:9990"
-    }
   }
 }
