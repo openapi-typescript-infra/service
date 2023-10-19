@@ -55,7 +55,7 @@ src/generated/service/index.ts: $(shell find api -type f)
 # Config schema generation
 # Function to convert snake case to camel case
 define to_camel
-$(shell echo $(1) | awk -F- '{for(i=1; i<=NF; i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1' | tr -d '\n')
+$(shell echo $(1) | awk -F- '{result=""; for(i=1; i<=NF; i++) result = result toupper(substr($$i,1,1)) substr($$i,2); print result}' | tr -d '\n')
 endef
 
 export CONFIG_SOURCE ?= src/types/config.ts
