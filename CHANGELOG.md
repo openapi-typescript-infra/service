@@ -1,3 +1,10 @@
+## [4.3.3](https://github.com/openapi-typescript-infra/service/compare/v4.3.2...v4.3.3) (2023-10-19)
+
+
+### Bug Fixes
+
+* **openapi:** move openapi url to match swagger UI ([2b19d1a](https://github.com/openapi-typescript-infra/service/commit/2b19d1a3817973fa1c013c8f4f2d23e663241c3a))
+
 ## [4.3.2](https://github.com/openapi-typescript-infra/service/compare/v4.3.1...v4.3.2) (2023-10-19)
 
 
