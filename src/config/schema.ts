@@ -65,7 +65,7 @@ export interface ConfigurationSchema extends BaseConfitSchema {
     // actual key material (not the path). Use shortstop file: handler.
     // Note that generally it's better to offload tls termination,
     // but this is useful for dev.
-    key?: string;
+    key?: string | Uint8Array;
     certificate?: string;
     // If you have an alternate host name (other than localhost) that
     // should be used when referring to this service, set it here.

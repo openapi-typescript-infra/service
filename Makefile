@@ -51,26 +51,6 @@ src/generated/service/index.ts: $(shell find api -type f)
 	./node_modules/.bin/prettier ./src/generated/service/index.ts --write
 	rm -rf $(TMP)
 
-
-# Config schema generation
-# Function to convert snake case to camel case
-define to_camel
-$(shell echo $(1) | awk -F- '{result=""; for(i=1; i<=NF; i++) result = result toupper(substr($$i,1,1)) substr($$i,2); print result}' | tr -d '\n')
-endef
-
-export CONFIG_SOURCE ?= src/types/config.ts
-export CONFIG_TYPE ?= $(call to_camel,$(SERVICE_NAME))ConfigSchema
-
-config-schema: src/generated/config-schema.ts
-
-src/generated/config-schema.ts: $(CONFIG_SOURCE)
-	mkdir -p src/generated
-	echo "Building config schema"
-	yarn generate-config-schema \
-		--source $(CONFIG_SOURCE) \
-		--type $(CONFIG_TYPE) \
-		--output src/generated/config-schema.ts
-
 # Postgres database things
 export PGUSER ?= postgres
 export PGPASSWORD ?= postgres
