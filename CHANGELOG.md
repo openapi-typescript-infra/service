@@ -1,3 +1,10 @@
+## [4.3.4](https://github.com/openapi-typescript-infra/service/compare/v4.3.3...v4.3.4) (2023-10-19)
+
+
+### Bug Fixes
+
+* **openapi:** spec is in a prop of loader result ([818f204](https://github.com/openapi-typescript-infra/service/commit/818f2045e84eb1069ed729e445d974372f8e7e97))
+
 ## [4.3.3](https://github.com/openapi-typescript-infra/service/compare/v4.3.2...v4.3.3) (2023-10-19)
 
 
