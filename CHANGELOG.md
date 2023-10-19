@@ -1,3 +1,10 @@
+## [4.3.2](https://github.com/openapi-typescript-infra/service/compare/v4.3.1...v4.3.2) (2023-10-19)
+
+
+### Bug Fixes
+
+* **make:** point to generate schema script properly ([2c3c824](https://github.com/openapi-typescript-infra/service/commit/2c3c824e08837d1323f7e09a745ca6bb39ea3b8f))
+
 ## [4.3.1](https://github.com/openapi-typescript-infra/service/compare/v4.3.0...v4.3.1) (2023-10-19)
 
 
