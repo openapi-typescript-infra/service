@@ -1,3 +1,10 @@
+# [4.5.0](https://github.com/openapi-typescript-infra/service/compare/v4.4.0...v4.5.0) (2023-10-19)
+
+
+### Features
+
+* **config:** expose helpers for configuration validation ([4659807](https://github.com/openapi-typescript-infra/service/commit/46598073015ac36c83f9872d986345af1e6b4f28))
+
 # [4.4.0](https://github.com/openapi-typescript-infra/service/compare/v4.3.4...v4.4.0) (2023-10-19)
 
 
