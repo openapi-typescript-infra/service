@@ -1,3 +1,15 @@
+# [4.3.0](https://github.com/openapi-typescript-infra/service/compare/v4.2.0...v4.3.0) (2023-10-19)
+
+
+### Bug Fixes
+
+* **yarn:** update lockfile ([24b492b](https://github.com/openapi-typescript-infra/service/commit/24b492b4c8780a361b8187ce6e002c94d862fb27))
+
+
+### Features
+
+* **config:** add support for generating config schema validation ([a5c9c3f](https://github.com/openapi-typescript-infra/service/commit/a5c9c3f65bfc2798a97a4ffe960ffd88df9f9115))
+
 # [4.2.0](https://github.com/openapi-typescript-infra/service/compare/v4.1.1...v4.2.0) (2023-10-18)
 
 
