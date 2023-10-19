@@ -66,7 +66,7 @@ config-schema: src/generated/config-schema.ts
 src/generated/config-schema.ts: $(CONFIG_SOURCE)
 	mkdir -p src/generated
 	echo "Building config schema"
-	node ./build/bin/generate-config-schema.js \
+	yarn generate-config-schema \
 		--source $(CONFIG_SOURCE) \
 		--type $(CONFIG_TYPE) \
 		--output src/generated/config-schema.ts
