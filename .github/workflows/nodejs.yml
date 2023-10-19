@@ -1,20 +1,32 @@
 name: Node CI
 
-on: [push]
+on:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
 
 jobs:
+  prepare:
+    runs-on: node-20
+    steps:
+      - name: Cleanup stale actions
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          access_token: ${{ github.token }}
+
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - name: npm install, lint, build, and test
         run: |
           yarn install --immutable
@@ -23,3 +35,27 @@ jobs:
           yarn test
         env:
           CI: true
+
+  publish-npm:
+    needs: build
+    permissions:
+      contents: write
+      issues: write
+      id-token: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+      - run: yarn install --immutable
+      - run: yarn build
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          yarn dlx semantic-release
