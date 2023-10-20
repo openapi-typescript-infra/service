@@ -1,3 +1,10 @@
+## [4.5.2](https://github.com/openapi-typescript-infra/service/compare/v4.5.1...v4.5.2) (2023-10-20)
+
+
+### Bug Fixes
+
+* **make:** only build db when migrations change ([0bee073](https://github.com/openapi-typescript-infra/service/commit/0bee0737c84d8053f62e340f64715c1e2c4f69b3))
+
 ## [4.5.1](https://github.com/openapi-typescript-infra/service/compare/v4.5.0...v4.5.1) (2023-10-19)
 
 
