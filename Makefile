@@ -85,7 +85,9 @@ db-:
 
 db-clean: db-drop db-ci
 
-dbi:
+dbi: src/generated/database.ts
+
+src/generated/database.ts: $(wildcard migrations/* migrations/**/*)
 	echo "Generating database types"
 	DATABASE_URL=postgres://$(PGUSER):$(PGPASSWORD)@$(PGHOST)/$(DB_NAME) yarn kysely-codegen \
 		--dialect postgres --schema public \
