@@ -80,7 +80,7 @@
     "@opentelemetry/sdk-node": "^0.43.0",
     "@opentelemetry/sdk-trace-base": "^1.17.1",
     "@opentelemetry/semantic-conventions": "^1.17.1",
-    "@sesamecare-oss/confit": "^2.0.2",
+    "@sesamecare-oss/confit": "^2.1.1",
     "@sesamecare-oss/opentelemetry-node-metrics": "^1.0.1",
     "ajv": "^8.12.0",
     "cookie-parser": "^1.4.6",
