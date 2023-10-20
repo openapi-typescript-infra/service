@@ -1,3 +1,10 @@
+## [4.5.3](https://github.com/openapi-typescript-infra/service/compare/v4.5.2...v4.5.3) (2023-10-20)
+
+
+### Bug Fixes
+
+* **deps:** get new confit for updated formatters ([d411d80](https://github.com/openapi-typescript-infra/service/commit/d411d808b7106ffac25464f09988ccedfc62b3c5))
+
 ## [4.5.2](https://github.com/openapi-typescript-infra/service/compare/v4.5.1...v4.5.2) (2023-10-20)
 
 
