@@ -1,3 +1,10 @@
+## [4.5.4](https://github.com/openapi-typescript-infra/service/compare/v4.5.3...v4.5.4) (2023-10-22)
+
+
+### Bug Fixes
+
+* **deps:** get latest confit ([156d883](https://github.com/openapi-typescript-infra/service/commit/156d88354e17c5913b79df9300de23b3184220d5))
+
 ## [4.5.3](https://github.com/openapi-typescript-infra/service/compare/v4.5.2...v4.5.3) (2023-10-20)
 
 
