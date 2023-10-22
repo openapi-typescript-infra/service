@@ -80,7 +80,7 @@
     "@opentelemetry/sdk-node": "^0.43.0",
     "@opentelemetry/sdk-trace-base": "^1.17.1",
     "@opentelemetry/semantic-conventions": "^1.17.1",
-    "@sesamecare-oss/confit": "^2.1.1",
+    "@sesamecare-oss/confit": "^2.2.0",
     "@sesamecare-oss/opentelemetry-node-metrics": "^1.0.1",
     "ajv": "^8.12.0",
     "cookie-parser": "^1.4.6",
@@ -95,8 +95,8 @@
     "read-pkg-up": "^7.0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.8.0",
-    "@commitlint/config-conventional": "^17.8.0",
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
     "@openapi-typescript-infra/coconfig": "^4.2.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^11.0.0",
@@ -113,7 +113,7 @@
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
     "coconfig": "^1.0.0",
-    "eslint": "^8.51.0",
+    "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.1",
     "pino-pretty": "^10.2.3",
