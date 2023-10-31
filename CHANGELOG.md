@@ -1,3 +1,10 @@
+# [4.6.0](https://github.com/openapi-typescript-infra/service/compare/v4.5.4...v4.6.0) (2023-10-31)
+
+
+### Features
+
+* **metrics:** expose per-path per-status per-method express metrics ([2dde8b3](https://github.com/openapi-typescript-infra/service/commit/2dde8b3beb5b147dcbe48607e39950ec3b13cfef))
+
 ## [4.5.4](https://github.com/openapi-typescript-infra/service/compare/v4.5.3...v4.5.4) (2023-10-22)
 
 
