@@ -1,3 +1,10 @@
+## [4.6.1](https://github.com/openapi-typescript-infra/service/compare/v4.6.0...v4.6.1) (2023-10-31)
+
+
+### Bug Fixes
+
+* **metrics:** fixup the path when not available ([b2b8ee1](https://github.com/openapi-typescript-infra/service/commit/b2b8ee118af6e71dcf6c506163aa38231be6172f))
+
 # [4.6.0](https://github.com/openapi-typescript-infra/service/compare/v4.5.4...v4.6.0) (2023-10-31)
 
 
