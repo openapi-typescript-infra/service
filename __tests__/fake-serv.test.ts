@@ -78,6 +78,9 @@ describe('fake-serv', () => {
         expect(res.text).toMatch(/nodejs_version_info{version/);
         expect(res.text).toMatch(/# UNIT http_server_duration ms/);
         expect(res.text).toMatch(/world_requests_total{method="get"} 1/);
+        expect(res.text).toContain(
+          'http_request_duration_seconds_bucket{status_code="200",method="GET",path="/world"',
+        );
       });
 
     // Clean shutdown

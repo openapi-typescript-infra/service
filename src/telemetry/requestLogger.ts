@@ -1,4 +1,5 @@
 import type { RequestHandler, Request, Response, ErrorRequestHandler } from 'express';
+import { Histogram } from '@opentelemetry/api';
 
 import { ServiceError } from '../error';
 import type { AnyServiceLocals, RequestWithApp, ServiceExpress, ServiceLocals } from '../types';
@@ -44,6 +45,7 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   error: Error | undefined,
   req: Request,
   res: Response,
+  histogram: Histogram,
 ) {
   const prefs = (res.locals as WithLogPrefs)[LOG_PREFS];
   if (prefs.logged) {
@@ -60,6 +62,14 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
     s: (error as ErrorWithStatus)?.status || res.statusCode || 0,
     dur,
   };
+
+  const path = req.route ? req.route.path : null;
+  histogram.record(dur, {
+    status_code: endLog.s,
+    method: endLog.m,
+    path,
+    service: app.locals.name,
+  });
 
   if (res.locals.user?.id) {
     endLog.u = res.locals.user.id;
@@ -95,7 +105,12 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
 
 export function loggerMiddleware<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
->(app: ServiceExpress<SLocals>, logRequests?: boolean, logResponses?: boolean): RequestHandler {
+>(
+  app: ServiceExpress<SLocals>,
+  histogram: Histogram,
+  logRequests?: boolean,
+  logResponses?: boolean,
+): RequestHandler {
   const { logger, service } = app.locals;
   return function gblogger(req, res, next) {
     const prefs: LogPrefs = {
@@ -135,7 +150,7 @@ export function loggerMiddleware<
     service.getLogFields?.(req as RequestWithApp<SLocals>, preLog);
     logger.info(preLog, 'pre');
 
-    const logWriter = () => finishLog(app, undefined, req, res);
+    const logWriter = () => finishLog(app, undefined, req, res, histogram);
     res.on('finish', logWriter);
     next();
   };
@@ -143,7 +158,7 @@ export function loggerMiddleware<
 
 export function errorHandlerMiddleware<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
->(app: ServiceExpress<SLocals>, unnest?: boolean, returnError?: boolean) {
+>(app: ServiceExpress<SLocals>, histogram: Histogram, unnest?: boolean, returnError?: boolean) {
   const gbErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     let loggable: Partial<ServiceError> = error;
     const body = error.response?.body || error.body;
@@ -159,7 +174,7 @@ export function errorHandlerMiddleware<
     // Set the status to error, even if we aren't going to render the error.
     res.status(loggable.status || 500);
     if (returnError) {
-      finishLog(app, error, req, res);
+      finishLog(app, error, req, res, histogram);
       const prefs = (res.locals as WithLogPrefs)[LOG_PREFS];
       prefs.logged = true;
       res.json({

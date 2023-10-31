@@ -55,6 +55,16 @@ export function startGlobalTelemetry(serviceName: string) {
       resourceDetectors: getResourceDetectors(),
       metricReader: prometheusExporter,
       instrumentations: [getAutoInstrumentations()],
+      views: [
+        new opentelemetry.metrics.View({
+          instrumentName: 'http_request_duration_seconds',
+          instrumentType: opentelemetry.metrics.InstrumentType.HISTOGRAM,
+          aggregation: new opentelemetry.metrics.ExplicitBucketHistogramAggregation(
+            [0.003, 0.03, 0.1, 0.3, 1.5, 10],
+            true,
+          ),
+        }),
+      ],
     });
     telemetrySdk.start();
   }

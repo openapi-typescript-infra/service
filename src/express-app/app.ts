@@ -118,7 +118,11 @@ export async function startApp<
     app.set('trust proxy', config.trustProxy);
   }
 
-  app.use(loggerMiddleware(app, logging?.logRequestBody, logging?.logResponseBody));
+  const histogram = app.locals.meter.createHistogram('http_request_duration_seconds', {
+    description: 'Duration of HTTP requests in seconds',
+  });
+
+  app.use(loggerMiddleware(app, histogram, logging?.logRequestBody, logging?.logResponseBody));
 
   // Allow the service to add locals, etc. We put this before the body parsers
   // so that the req can decide whether to save the raw request body or not.
@@ -236,7 +240,7 @@ export async function startApp<
     app.use(notFoundMiddleware());
   }
   if (errors?.enabled) {
-    app.use(errorHandlerMiddleware(app, errors?.unnest, errors?.render));
+    app.use(errorHandlerMiddleware(app, histogram, errors?.unnest, errors?.render));
   }
 
   return app;
