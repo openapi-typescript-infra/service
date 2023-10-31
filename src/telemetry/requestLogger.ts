@@ -63,11 +63,11 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
     dur,
   };
 
-  const path = req.route ? req.route.path : null;
+  const path = req.route ? { path: req.route.path } : undefined;
   histogram.record(dur, {
     status_code: endLog.s,
     method: endLog.m,
-    path,
+    ...path,
     service: app.locals.name,
   });
 
