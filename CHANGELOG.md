@@ -1,3 +1,10 @@
+## [4.6.2](https://github.com/openapi-typescript-infra/service/compare/v4.6.1...v4.6.2) (2023-11-01)
+
+
+### Bug Fixes
+
+* **trust:** allow trust proxy to be set to true ([d62ebff](https://github.com/openapi-typescript-infra/service/commit/d62ebffefb9a169ad4be7672273404a495a35a7a))
+
 ## [4.6.1](https://github.com/openapi-typescript-infra/service/compare/v4.6.0...v4.6.1) (2023-10-31)
 
 
