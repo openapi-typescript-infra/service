@@ -114,7 +114,9 @@ export async function startApp<
   app.locals.meter = metrics.getMeterProvider().getMeter(name);
   setupNodeMetrics(app.locals.meter, {});
 
-  if (config.trustProxy) {
+  if (config.trustProxy === true) {
+    app.enable('trust proxy');
+  } else if (config.trustProxy) {
     app.set('trust proxy', config.trustProxy);
   }
 

@@ -6,7 +6,7 @@ export interface ConfigurationItemEnabled {
 }
 
 export interface ConfigurationSchema extends BaseConfitSchema {
-  trustProxy?: string[];
+  trustProxy?: string[] | boolean;
   logging?: {
     level?: Level;
     logHttpRequests?: boolean;
