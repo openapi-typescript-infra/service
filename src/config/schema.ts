@@ -9,7 +9,6 @@ export interface ConfigurationSchema extends BaseConfitSchema {
   trustProxy?: string[] | boolean;
   logging?: {
     level?: Level;
-    logHttpRequests?: boolean;
     logRequestBody?: boolean;
     logResponseBody?: boolean;
   };

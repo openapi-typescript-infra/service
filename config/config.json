@@ -2,7 +2,7 @@
   "$schema": "tsschema://../src/config/schema#ConfigurationSchema",
   "logging": {
     "level": "info",
-    "logHttpRequests": "env_switch:LOG_HTTP_REQUESTS"
+    "logRequestBody": "env_switch:LOG_HTTP_REQUESTS"
   },
   "routing": {
     "openapi": true,
