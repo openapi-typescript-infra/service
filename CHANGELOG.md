@@ -1,3 +1,10 @@
+## [4.6.3](https://github.com/openapi-typescript-infra/service/compare/v4.6.2...v4.6.3) (2023-11-05)
+
+
+### Bug Fixes
+
+* **logging:** clean up logging config ([8f11e49](https://github.com/openapi-typescript-infra/service/commit/8f11e495c49c53365f5d7d01cab85a9003868734))
+
 ## [4.6.2](https://github.com/openapi-typescript-infra/service/compare/v4.6.1...v4.6.2) (2023-11-01)
 
 
