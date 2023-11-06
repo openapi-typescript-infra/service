@@ -1,3 +1,10 @@
+# [4.7.0](https://github.com/openapi-typescript-infra/service/compare/v4.6.3...v4.7.0) (2023-11-06)
+
+
+### Features
+
+* **log:** do not log 'pre' request log unless configured to do so ([3f1c77f](https://github.com/openapi-typescript-infra/service/commit/3f1c77f64cbd39ee5a85f1a4df53e682d08e968f))
+
 ## [4.6.3](https://github.com/openapi-typescript-infra/service/compare/v4.6.2...v4.6.3) (2023-11-05)
 
 
