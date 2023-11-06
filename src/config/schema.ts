@@ -11,6 +11,9 @@ export interface ConfigurationSchema extends BaseConfitSchema {
     level?: Level;
     logRequestBody?: boolean;
     logResponseBody?: boolean;
+    // Whether to log a "pre" message when request processing starts. Most useful in
+    // situations where there is some problem causing requests to hang
+    preLog?: boolean;
   };
   routing?: {
     openapi?: boolean;

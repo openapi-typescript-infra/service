@@ -124,7 +124,7 @@ export async function startApp<
     description: 'Duration of HTTP requests in seconds',
   });
 
-  app.use(loggerMiddleware(app, histogram, logging?.logRequestBody, logging?.logResponseBody));
+  app.use(loggerMiddleware(app, histogram, logging));
 
   // Allow the service to add locals, etc. We put this before the body parsers
   // so that the req can decide whether to save the raw request body or not.

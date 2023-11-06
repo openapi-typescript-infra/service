@@ -108,21 +108,20 @@ export function loggerMiddleware<
 >(
   app: ServiceExpress<SLocals>,
   histogram: Histogram,
-  logRequests?: boolean,
-  logResponses?: boolean,
+  config?: ConfigurationSchema['logging'],
 ): RequestHandler {
   const { logger, service } = app.locals;
   return function gblogger(req, res, next) {
     const prefs: LogPrefs = {
       start: process.hrtime(),
-      logRequests,
-      chunks: logResponses ? [] : undefined,
+      logRequests: config?.logRequestBody,
+      chunks: config?.logResponseBody ? [] : undefined,
       logged: false,
     };
 
     (res.locals as WithLogPrefs)[LOG_PREFS] = prefs;
 
-    if (logResponses) {
+    if (config?.logResponseBody) {
       // res is a read-only stream, so the only way to intercept response
       // data is to monkey-patch.
       const oldWrite = res.write;
@@ -141,14 +140,16 @@ export function loggerMiddleware<
       }) as (typeof res)['end'];
     }
 
-    const preLog: Record<string, string | string[] | number | undefined> = {
-      ...getBasicInfo(req),
-      ref: req.headers.referer || undefined,
-      sid: (req as WithIdentifiedSession).session?.id,
-      c: req.headers.correlationid || undefined,
-    };
-    service.getLogFields?.(req as RequestWithApp<SLocals>, preLog);
-    logger.info(preLog, 'pre');
+    if (config?.preLog) {
+      const preLog: Record<string, string | string[] | number | undefined> = {
+        ...getBasicInfo(req),
+        ref: req.headers.referer || undefined,
+        sid: (req as WithIdentifiedSession).session?.id,
+        c: req.headers.correlationid || undefined,
+      };
+      service.getLogFields?.(req as RequestWithApp<SLocals>, preLog);
+      logger.info(preLog, 'pre');
+    }
 
     const logWriter = () => finishLog(app, undefined, req, res, histogram);
     res.on('finish', logWriter);
