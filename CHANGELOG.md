@@ -1,3 +1,10 @@
+## [4.8.1](https://github.com/openapi-typescript-infra/service/compare/v4.8.0...v4.8.1) (2023-11-11)
+
+
+### Bug Fixes
+
+* **regex:** throw on badly formatted regex ([75030fd](https://github.com/openapi-typescript-infra/service/commit/75030fd4f16ffadb728d596dd4855445489d7929))
+
 # [4.8.0](https://github.com/openapi-typescript-infra/service/compare/v4.7.0...v4.8.0) (2023-11-11)
 
 
