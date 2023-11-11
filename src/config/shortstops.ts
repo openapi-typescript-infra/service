@@ -122,7 +122,10 @@ export function shortstops(service: { name: string }, sourcedir: string) {
     },
     base64: base64Handler(),
     regex(v: string) {
-      const [, pattern, flags] = v.match(/^\/(.*)\/([a-z]*)/) || [];
+      const [, pattern, flags] = v.match(/^\/(.*)\/([a-z]*)$/) || [];
+      if (pattern === undefined) {
+        throw new Error(`Invalid regular expression in configuration ${v}`);
+      }
       return new RegExp(pattern, flags);
     },
 
