@@ -4,6 +4,7 @@ import path from 'path';
 import { describe, expect, test } from 'vitest';
 
 import { ConfigurationSchema, insertConfigurationBefore, loadConfiguration } from '../src/config';
+import { shortstops } from '../src/config/shortstops';
 
 interface CustomConfig extends ConfigurationSchema {
   google: string;
@@ -18,10 +19,10 @@ interface CustomConfig extends ConfigurationSchema {
 describe('configuration loader', () => {
   test('overrides and shortstops', async () => {
     const rootDirectory = path.resolve(__dirname, './fake-serv');
+    const shortstopHandlers = shortstops({ name: 'fake-serv' }, path.join(rootDirectory, 'src'));
     const config = await loadConfiguration<CustomConfig>({
-      name: 'fake-serv',
-      sourceDirectory: path.join(rootDirectory, 'src'),
       configurationDirectories: [path.resolve(rootDirectory, './config')],
+      shortstopHandlers,
     });
 
     expect(config.logging?.level).toEqual('debug');

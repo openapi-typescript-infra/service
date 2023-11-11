@@ -1,11 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 
-import { BaseConfitSchema, Confit, Factory, confit } from '@sesamecare-oss/confit';
+import {
+  BaseConfitSchema,
+  Confit,
+  Factory,
+  ShortstopHandler,
+  confit,
+} from '@sesamecare-oss/confit';
 
 import { findPort } from '../development/port-finder';
 
-import { shortstops } from './shortstops';
 import type { ConfigurationSchema } from './schema';
 
 // Order matters here.
@@ -51,27 +56,23 @@ async function addDefaultConfiguration<Config extends ConfigurationSchema = Conf
 }
 
 export interface ServiceConfigurationSpec {
-  // Used for "sourcerequire" and other source-relative paths and for the package name
-  sourceDirectory: string;
   // The LAST configuration is the most "specific" - if a configuration value
   // exists in all directories, the last one wins
   configurationDirectories: string[];
-  name: string;
+  shortstopHandlers: Record<string, ShortstopHandler<string, unknown>>;
 }
 
 export async function loadConfiguration<Config extends ConfigurationSchema>({
-  name,
   configurationDirectories: dirs,
-  sourceDirectory,
+  shortstopHandlers,
 }: ServiceConfigurationSpec): Promise<Config> {
-  const defaultProtocols = shortstops({ name }, sourceDirectory);
   const specificConfig = dirs[dirs.length - 1];
 
   // This confit version just gets us environment info
   const envConfit = await confit({ basedir: specificConfig }).create();
   const configFactory = confit<Config>({
     basedir: specificConfig,
-    protocols: defaultProtocols,
+    protocols: shortstopHandlers,
   });
 
   /**

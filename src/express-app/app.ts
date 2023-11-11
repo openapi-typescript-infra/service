@@ -28,6 +28,7 @@ import type {
   ServiceStartOptions,
 } from '../types';
 import { ConfigurationSchema } from '../config/schema';
+import { shortstops } from '../config/shortstops';
 import { getNodeEnv, isDev } from '../env';
 import { getGlobalPrometheusExporter } from '../telemetry/index';
 
@@ -76,15 +77,16 @@ export async function startApp<
   const serviceImpl = service();
   assert(serviceImpl?.start, 'Service function did not return a conforming object');
 
+  const sourceDirectory = path.join(rootDirectory, codepath);
   const baseOptions: ServiceOptions = {
     configurationDirectories: [path.resolve(rootDirectory, './config')],
+    shortstopHandlers: shortstops({ name }, sourceDirectory),
   };
   const options = serviceImpl.configure?.(startOptions, baseOptions) || baseOptions;
 
   const config = await loadConfiguration({
-    name,
     configurationDirectories: options.configurationDirectories,
-    sourceDirectory: path.join(rootDirectory, codepath),
+    shortstopHandlers: options.shortstopHandlers,
   });
 
   const logging = config.logging;

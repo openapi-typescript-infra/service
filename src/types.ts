@@ -6,6 +6,7 @@ import type { Request, Response } from 'express';
 import type { Application } from 'express-serve-static-core';
 import type { middleware } from 'express-openapi-validator';
 import type { Meter } from '@opentelemetry/api';
+import { ShortstopHandler } from '@sesamecare-oss/confit';
 
 import { ConfigurationSchema } from './config/schema';
 
@@ -143,6 +144,8 @@ export interface ServiceOptions {
 
   // Add or control OpenAPI options such as security handlers
   openApiOptions?: Parameters<typeof middleware>[0];
+
+  shortstopHandlers: Record<string, ShortstopHandler<string, unknown>>;
 }
 
 export interface ServiceLike<
