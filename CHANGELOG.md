@@ -1,3 +1,10 @@
+# [4.8.0](https://github.com/openapi-typescript-infra/service/compare/v4.7.0...v4.8.0) (2023-11-11)
+
+
+### Features
+
+* **config:** allow additional shortstop handlers to be inserted before configuration is loaded ([8fd3991](https://github.com/openapi-typescript-infra/service/commit/8fd39919ebd38ae45e198177bf10a9a741c0a000))
+
 # [4.7.0](https://github.com/openapi-typescript-infra/service/compare/v4.6.3...v4.7.0) (2023-11-06)
 
 
