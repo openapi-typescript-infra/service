@@ -49,7 +49,7 @@ src/generated/service/index.ts: $(shell find api -type f)
 	$(MAKE) bundlespec SERVICE_NAME=$(SERVICE_NAME) BUNDLE_OUTPUT=$(BUNDLE_OUTPUT)
 	yarn dlx openapi-typescript-express $(BUNDLE_OUTPUT)/openapi-spec.json \
 		--output ./src/generated/service/index.ts
-	./node_modules/.bin/prettier ./src/generated/service/index.ts --write
+	yarn prettier ./src/generated/service/index.ts --write
 	rm -rf $(TMP)
 
 # Config schema generation
