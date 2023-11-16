@@ -1,3 +1,10 @@
+## [4.8.2](https://github.com/openapi-typescript-infra/service/compare/v4.8.1...v4.8.2) (2023-11-16)
+
+
+### Bug Fixes
+
+* **make:** use yarn to run prettier ([a8b436d](https://github.com/openapi-typescript-infra/service/commit/a8b436d2d100df34021f529451c32ddb7e05bf60))
+
 ## [4.8.1](https://github.com/openapi-typescript-infra/service/compare/v4.8.0...v4.8.1) (2023-11-11)
 
 
