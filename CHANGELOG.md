@@ -1,3 +1,10 @@
+## [4.8.3](https://github.com/openapi-typescript-infra/service/compare/v4.8.2...v4.8.3) (2023-11-17)
+
+
+### Bug Fixes
+
+* **types:** allow partial openapi options to be provided ([e639e02](https://github.com/openapi-typescript-infra/service/commit/e639e02e53cae959e0e3aeadcab9e58fa5c171d6))
+
 ## [4.8.2](https://github.com/openapi-typescript-infra/service/compare/v4.8.1...v4.8.2) (2023-11-16)
 
 
