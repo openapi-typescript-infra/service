@@ -143,7 +143,7 @@ export interface ServiceOptions {
   configurationDirectories: string[];
 
   // Add or control OpenAPI options such as security handlers
-  openApiOptions?: Parameters<typeof middleware>[0];
+  openApiOptions?: Partial<Parameters<typeof middleware>[0]>;
 
   shortstopHandlers: Record<string, ShortstopHandler<string, unknown>>;
 }
