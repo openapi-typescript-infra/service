@@ -1,3 +1,10 @@
+## [4.8.5](https://github.com/openapi-typescript-infra/service/compare/v4.8.4...v4.8.5) (2023-11-20)
+
+
+### Bug Fixes
+
+* **typia:** use a local copy instead of npx ([3f1f3eb](https://github.com/openapi-typescript-infra/service/commit/3f1f3eb04a25ea00b333fb89b21c4953d694478f))
+
 ## [4.8.4](https://github.com/openapi-typescript-infra/service/compare/v4.8.3...v4.8.4) (2023-11-20)
 
 
