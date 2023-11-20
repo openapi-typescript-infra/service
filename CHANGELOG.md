@@ -1,3 +1,10 @@
+## [4.8.4](https://github.com/openapi-typescript-infra/service/compare/v4.8.3...v4.8.4) (2023-11-20)
+
+
+### Bug Fixes
+
+* **make:** don't remove dir if we didn't make it ([ae06a6b](https://github.com/openapi-typescript-infra/service/commit/ae06a6bb7c64d5a922fc9baaf9f491fe214cb86e))
+
 ## [4.8.3](https://github.com/openapi-typescript-infra/service/compare/v4.8.2...v4.8.3) (2023-11-17)
 
 
