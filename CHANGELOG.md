@@ -1,3 +1,10 @@
+## [4.8.7](https://github.com/openapi-typescript-infra/service/compare/v4.8.6...v4.8.7) (2023-11-20)
+
+
+### Bug Fixes
+
+* **make:** another indent fix ([28120f9](https://github.com/openapi-typescript-infra/service/commit/28120f999bd92ec93791fb9116999f7557dbc05b))
+
 ## [4.8.6](https://github.com/openapi-typescript-infra/service/compare/v4.8.5...v4.8.6) (2023-11-20)
 
 
