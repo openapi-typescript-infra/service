@@ -64,7 +64,7 @@ CONFIG_TYPE ?= $(camel_case_name)ConfigSchema
 config-schema: src/generated/config-validator.ts
 
 src/generated/config-validator.ts: src/types/config.ts
-	npx -y @sesamecare-oss/typia-standalone-validator \
+	yarn typia-standalone-validator \
 		$(CONFIG_TYPE_SRC) $(CONFIG_TYPE) \
 		--project tsconfig.json -o src/generated/config-validator.ts
 
