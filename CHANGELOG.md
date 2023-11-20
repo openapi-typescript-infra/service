@@ -1,3 +1,10 @@
+## [4.8.6](https://github.com/openapi-typescript-infra/service/compare/v4.8.5...v4.8.6) (2023-11-20)
+
+
+### Bug Fixes
+
+* **make:** fix tabs ([a67d33a](https://github.com/openapi-typescript-infra/service/commit/a67d33abbe7bf2f98f3fafea4d9dab6b835ab86d))
+
 ## [4.8.5](https://github.com/openapi-typescript-infra/service/compare/v4.8.4...v4.8.5) (2023-11-20)
 
 
