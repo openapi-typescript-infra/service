@@ -45,12 +45,17 @@ bundlespec:
 
 src/generated/service/index.ts: $(shell find api -type f)
 	echo "Building service interface"
-	$(eval BUNDLE_OUTPUT := $(shell mktemp -d))
+	ifndef BUNDLE_OUTPUT
+  	$(eval BUNDLE_OUTPUT := $(shell mktemp -d))
+		$(eval GENERATED_DIR := true)
+  endif
 	$(MAKE) bundlespec SERVICE_NAME=$(SERVICE_NAME) BUNDLE_OUTPUT=$(BUNDLE_OUTPUT)
 	yarn dlx openapi-typescript-express $(BUNDLE_OUTPUT)/openapi-spec.json \
 		--output ./src/generated/service/index.ts
 	yarn prettier ./src/generated/service/index.ts --write
-	rm -rf $(TMP)
+	ifdef GENERATED_DIR
+		rm -rf $(BUNDLE_OUTPUT)
+	endif
 
 # Config schema generation
 CONFIG_TYPE_SRC ?= src/types/config.ts
