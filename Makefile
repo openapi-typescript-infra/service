@@ -46,9 +46,9 @@ bundlespec:
 src/generated/service/index.ts: $(shell find api -type f)
 	echo "Building service interface"
 	ifndef BUNDLE_OUTPUT
-  	$(eval BUNDLE_OUTPUT := $(shell mktemp -d))
+		$(eval BUNDLE_OUTPUT := $(shell mktemp -d))
 		$(eval GENERATED_DIR := true)
-  endif
+	endif
 	$(MAKE) bundlespec SERVICE_NAME=$(SERVICE_NAME) BUNDLE_OUTPUT=$(BUNDLE_OUTPUT)
 	yarn dlx openapi-typescript-express $(BUNDLE_OUTPUT)/openapi-spec.json \
 		--output ./src/generated/service/index.ts
