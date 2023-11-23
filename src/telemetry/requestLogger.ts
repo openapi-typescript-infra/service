@@ -1,4 +1,5 @@
 import type { RequestHandler, Request, Response, ErrorRequestHandler } from 'express';
+import requestip from 'request-ip';
 import { Histogram } from '@opentelemetry/api';
 
 import { ServiceError } from '../error';
@@ -34,8 +35,14 @@ function getBasicInfo(req: Request) {
 
   const preInfo: Record<string, string> = {
     url,
+    ip: requestip.getClientIp(req) || '',
     m: req.method,
   };
+
+  const sessionReq = req as WithIdentifiedSession;
+  if (sessionReq.session?.id) {
+    preInfo.sid = sessionReq.session.id;
+  }
 
   return preInfo;
 }

@@ -92,7 +92,8 @@
     "minimist": "^1.2.8",
     "opentelemetry-instrumentation-fetch-node": "^1.1.2",
     "pino": "^8.16.2",
-    "read-pkg-up": "^7.0.1"
+    "read-pkg-up": "^7.0.1",
+    "request-ip": "^3.3.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.2",
@@ -109,6 +110,7 @@
     "@types/lodash": "^4.14.201",
     "@types/minimist": "^1.2.5",
     "@types/node": "^20.9.1",
+    "@types/request-ip": "^0.0.41",
     "@types/supertest": "^2.0.16",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
