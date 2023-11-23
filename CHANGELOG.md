@@ -1,3 +1,10 @@
+# [4.9.0](https://github.com/openapi-typescript-infra/service/compare/v4.8.7...v4.9.0) (2023-11-23)
+
+
+### Features
+
+* **ip:** log ip and session id ([a8f280f](https://github.com/openapi-typescript-infra/service/commit/a8f280fa8499b9eccd267eef945c57e2c9422cd6))
+
 ## [4.8.7](https://github.com/openapi-typescript-infra/service/compare/v4.8.6...v4.8.7) (2023-11-20)
 
 
