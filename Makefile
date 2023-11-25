@@ -63,8 +63,8 @@ CONFIG_TYPE ?= $(camel_case_name)ConfigSchema
 
 config-schema: src/generated/config-validator.ts
 
-src/generated/config-validator.ts: src/types/config.ts
-	yarn typia-standalone-validator \
+src/generated/config-validator.ts: $(CONFIG_TYPE_SRC)
+	yarn typia-standalone-validator --force \
 		$(CONFIG_TYPE_SRC) $(CONFIG_TYPE) \
 		--project tsconfig.json -o src/generated/config-validator.ts
 
