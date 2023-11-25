@@ -731,7 +731,7 @@ __metadata:
     "@commitlint/cli": ^18.6.0
     "@commitlint/config-conventional": ^18.6.0
     "@godaddy/terminus": ^4.12.1
-    "@openapi-typescript-infra/coconfig": ^4.3.0
+    "@openapi-typescript-infra/coconfig": ^4.2.2
     "@opentelemetry/api": ^1.7.0
     "@opentelemetry/exporter-prometheus": ^0.45.1
     "@opentelemetry/exporter-trace-otlp-proto": ^0.45.1
