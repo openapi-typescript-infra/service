@@ -1,3 +1,10 @@
+## [4.9.1](https://github.com/openapi-typescript-infra/service/compare/v4.9.0...v4.9.1) (2023-11-25)
+
+
+### Bug Fixes
+
+* **make:** update typia make to play nice with dependencies ([dbdae34](https://github.com/openapi-typescript-infra/service/commit/dbdae34f6e8a9e59d5e7374fa4f19d72b0019911))
+
 # [4.9.0](https://github.com/openapi-typescript-infra/service/compare/v4.8.7...v4.9.0) (2023-11-23)
 
 
