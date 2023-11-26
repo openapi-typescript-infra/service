@@ -1,3 +1,10 @@
+# [4.10.0](https://github.com/openapi-typescript-infra/service/compare/v4.9.1...v4.10.0) (2023-11-26)
+
+
+### Features
+
+* **openapi:** allow config file options for openapi, validateResponses in test ([d28d9bd](https://github.com/openapi-typescript-infra/service/commit/d28d9bdc01a852cf3e1ab429e521a1dade8bf4b3))
+
 ## [4.9.1](https://github.com/openapi-typescript-infra/service/compare/v4.9.0...v4.9.1) (2023-11-25)
 
 
