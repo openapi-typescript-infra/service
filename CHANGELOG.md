@@ -1,3 +1,10 @@
+## [4.10.2](https://github.com/openapi-typescript-infra/service/compare/v4.10.1...v4.10.2) (2023-11-26)
+
+
+### Bug Fixes
+
+* **openapi:** allow partial config ([b8d6898](https://github.com/openapi-typescript-infra/service/commit/b8d68980e41df2b94c5bc62c6e9e4da1f3e5b97a))
+
 ## [4.10.1](https://github.com/openapi-typescript-infra/service/compare/v4.10.0...v4.10.1) (2023-11-26)
 
 
