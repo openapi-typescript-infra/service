@@ -17,7 +17,7 @@ export interface ConfigurationSchema extends BaseConfitSchema {
     preLog?: boolean;
   };
   routing?: {
-    openapi?: boolean | Parameters<typeof middleware>[0];
+    openapi?: boolean | Partial<Parameters<typeof middleware>[0]>;
     // Relative to the *root directory* of the app
     routes?: string;
     // Whether to add middleware that "freezes" the query string
