@@ -1,4 +1,5 @@
 import type { BaseConfitSchema } from '@sesamecare-oss/confit';
+import type { middleware } from 'express-openapi-validator';
 import type { Level } from 'pino';
 
 export interface ConfigurationItemEnabled {
@@ -16,7 +17,7 @@ export interface ConfigurationSchema extends BaseConfitSchema {
     preLog?: boolean;
   };
   routing?: {
-    openapi?: boolean;
+    openapi?: boolean | Parameters<typeof middleware>[0];
     // Relative to the *root directory* of the app
     routes?: string;
     // Whether to add middleware that "freezes" the query string
