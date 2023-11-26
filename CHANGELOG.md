@@ -1,3 +1,10 @@
+## [4.10.1](https://github.com/openapi-typescript-infra/service/compare/v4.10.0...v4.10.1) (2023-11-26)
+
+
+### Bug Fixes
+
+* **schema:** add missing schema change ([878fda5](https://github.com/openapi-typescript-infra/service/commit/878fda554544a9dfbb01e4677e20018c144416d0))
+
 # [4.10.0](https://github.com/openapi-typescript-infra/service/compare/v4.9.1...v4.10.0) (2023-11-26)
 
 
