@@ -3,11 +3,6 @@
   "logging": {
     "level": "warn"
   },
-  "routing": {
-    "openapi": {
-      "validateResponses": true
-    }
-  },
   "server": {
     "port": 0
   }

@@ -3,9 +3,10 @@ import path from 'path';
 import _ from 'lodash';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { OpenAPIFramework } from 'express-openapi-validator/dist/framework/index';
-import type { Handler } from 'express';
+import type { Handler, Request } from 'express';
 
 import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from './types';
+import { getNodeEnv } from './env';
 import { getFilesInDir, loadModule } from './express-app/modules';
 import { ConfigurationSchema } from './config/schema';
 
@@ -116,6 +117,19 @@ export async function openApi<
 
   const { routing } = app.locals.config;
   const combinedOptions = {
+    // In test mode, validate returned swagger responses. This can easily be disabled
+    // by setting validateResponses to false in the config.
+    ...(getNodeEnv() === 'test'
+      ? {
+          validateResponses: {
+            onError(error: Error, body: unknown, req: Request) {
+              console.log('Response body fails validation: ', error);
+              console.log('Emitted from:', req.originalUrl);
+              console.debug(body);
+            },
+          },
+        }
+      : {}),
     ...(typeof routing.openapi === 'object' ? routing.openapi : {}),
     ...openApiOptions,
   };
