@@ -126,6 +126,7 @@ export async function openApi<
               console.log('Response body fails validation: ', error);
               console.log('Emitted from:', req.originalUrl);
               console.debug(body);
+              throw error;
             },
           },
         }
