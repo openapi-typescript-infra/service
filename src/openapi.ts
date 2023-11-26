@@ -114,5 +114,10 @@ export async function openApi<
     },
   };
 
-  return OpenApiValidator.middleware(_.defaultsDeep(defaultOptions, openApiOptions || {}));
+  const { routing } = app.locals.config;
+  const combinedOptions = {
+    ...(typeof routing.openapi === 'object' ? routing.openapi : {}),
+    ...openApiOptions,
+  };
+  return OpenApiValidator.middleware(_.defaultsDeep(defaultOptions, combinedOptions));
 }
