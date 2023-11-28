@@ -22,7 +22,8 @@ diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
 function getExporter() {
   if (
     !process.env.DISABLE_OLTP_EXPORTER &&
-    ['production', 'staging'].includes(process.env.APP_ENV || process.env.NODE_ENV || '')
+    (['production', 'staging'].includes(process.env.APP_ENV || process.env.NODE_ENV || '') ||
+      process.env.OTLP_EXPORTER)
   ) {
     return new OTLPTraceExporter({
       url: process.env.OTLP_EXPORTER || 'http://otlp-exporter:4318/v1/traces',
