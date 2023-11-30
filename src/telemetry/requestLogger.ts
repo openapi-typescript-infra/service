@@ -6,6 +6,7 @@ import { ServiceError } from '../error';
 import type { AnyServiceLocals, RequestWithApp, ServiceExpress, ServiceLocals } from '../types';
 import type { ServiceHandler } from '../express-app/types';
 import { ConfigurationSchema } from '../config/schema';
+import { getNodeEnv } from '../env';
 
 const LOG_PREFS = Symbol('Logging information');
 
@@ -117,18 +118,22 @@ export function loggerMiddleware<
   histogram: Histogram,
   config?: ConfigurationSchema['logging'],
 ): RequestHandler {
+  const nonProd = getNodeEnv() !== 'production';
   const { logger, service } = app.locals;
   return function gblogger(req, res, next) {
+    const logResponse =
+      config?.logResponseBody || (nonProd && req.headers['x-log']?.includes('res'));
+    const logRequest = config?.logRequestBody || (nonProd && req.headers['x-log']?.includes('req'));
     const prefs: LogPrefs = {
       start: process.hrtime(),
-      logRequests: config?.logRequestBody,
-      chunks: config?.logResponseBody ? [] : undefined,
+      logRequests: logRequest,
+      chunks: logResponse ? [] : undefined,
       logged: false,
     };
 
     (res.locals as WithLogPrefs)[LOG_PREFS] = prefs;
 
-    if (config?.logResponseBody) {
+    if (logResponse) {
       // res is a read-only stream, so the only way to intercept response
       // data is to monkey-patch.
       const oldWrite = res.write;
