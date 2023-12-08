@@ -3,7 +3,6 @@ import http from 'http';
 import https from 'https';
 import path from 'path';
 
-import express from 'express';
 import { pino } from 'pino';
 import cookieParser from 'cookie-parser';
 import { metrics } from '@opentelemetry/api';
@@ -93,6 +92,7 @@ export async function startApp<
   logger.level = logging?.level || 'info';
 
   // Concentrate the Typescript ugliness...
+  const { default: express } = await import('express');
   const app = express() as unknown as ServiceExpress<SLocals>;
   const routing = config.routing;
 
