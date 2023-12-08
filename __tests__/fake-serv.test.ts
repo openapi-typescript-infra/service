@@ -1,3 +1,4 @@
+import http from 'http';
 import path from 'path';
 
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
@@ -12,6 +13,24 @@ import {
 } from '../src/index';
 
 import { FakeServLocals, service } from './fake-serv/src/index';
+
+function httpRequest(options: http.RequestOptions) {
+  return new Promise((resolve, reject) => {
+    const req = http.request(options, (res) => {
+      let responseData = '';
+      res.on('data', (chunk) => {
+        responseData += chunk;
+      });
+      res.on('end', () => {
+        resolve(responseData);
+      });
+    });
+    req.on('error', (e) => {
+      reject(e);
+    });
+    req.end();
+  });
+}
 
 describe('fake-serv', () => {
   beforeAll(() => {
@@ -28,6 +47,7 @@ describe('fake-serv', () => {
       name: 'fake-serv',
       rootDirectory: path.resolve(__dirname, './fake-serv'),
       codepath: 'src',
+      version: '1.0.0',
     };
 
     const app = await startApp(options).catch((error) => {
@@ -70,6 +90,13 @@ describe('fake-serv', () => {
     await request(app).post('/world').expect(500);
 
     const server = await listen(app);
+    // Exercise the http module
+    await httpRequest({
+      hostname: 'localhost',
+      port: app.locals.config.server.port,
+      path: '/hello?greeting=Hello&number=6',
+      method: 'GET',
+    });
     await request(app.locals.internalApp)
       .get('/metrics')
       .expect(200)
