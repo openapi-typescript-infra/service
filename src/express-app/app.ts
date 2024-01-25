@@ -53,15 +53,17 @@ export async function startApp<
     minLength: process.env.LOG_BUFFER ? Number(process.env.LOG_BUFFER) : undefined,
   });
   const logger = shouldPrettyPrint
-    ? pino({
-        transport: {
-          destination,
-          target: 'pino-pretty',
-          options: {
-            colorize: true,
+    ? pino(
+        {
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              colorize: true,
+            },
           },
         },
-      })
+        destination,
+      )
     : pino(
         {
           formatters: {
