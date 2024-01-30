@@ -108,8 +108,8 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
     }
   }
 
-  service.getLogFields?.(req as RequestWithApp<SLocals>, endLog);
-  logger.info(endLog, url);
+  const msg = service.getLogFields?.(req as RequestWithApp<SLocals>, endLog) || url;
+  logger.info(endLog, msg);
 }
 
 export function loggerMiddleware<
@@ -162,8 +162,8 @@ export function loggerMiddleware<
         sid: (req as WithIdentifiedSession).session?.id,
         c: req.headers.correlationid || undefined,
       };
-      service.getLogFields?.(req as RequestWithApp<SLocals>, preLog);
-      logger.info(preLog, url);
+      const msg = service.getLogFields?.(req as RequestWithApp<SLocals>, preLog) || url;
+      logger.info(preLog, msg);
     }
 
     const logWriter = () => finishLog(app, undefined, req, res, histogram);

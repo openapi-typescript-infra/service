@@ -95,11 +95,13 @@ export interface Service<
   ): boolean | Promise<boolean>;
 
   // Add or redact any fields for logging. Note this will be called twice per request,
-  // once at the start and once at the end. Modify the values directly.
+  // once at the start and once at the end. Modify the values directly. Return a
+  // string to control the "msg" field of the logs, or return undefined to leave it
+  // as the default, which is the request URL.
   getLogFields?(
     req: RequestWithApp<SLocals>,
     values: Record<string, string | string[] | number | undefined>,
-  ): void;
+  ): string | undefined;
 
   // The repl is a useful tool for diagnosing issues in non-dev environments.
   // The attachRepl method provides a way to add custom functionality
@@ -195,11 +197,8 @@ export interface ServiceTypes<
   ServiceLocals: SLocals;
 }
 
-export type UnwrapServiceConfig<SLocals extends ServiceLocals> = SLocals extends ServiceLocals<
-  infer C
->
-  ? C
-  : never;
+export type UnwrapServiceConfig<SLocals extends ServiceLocals> =
+  SLocals extends ServiceLocals<infer C> ? C : never;
 
 // TODO this allows us to clean up the generics by having a loose parameter
 // but using the UnwrapServiceConfig to get the specific type back
