@@ -31,11 +31,10 @@ interface ErrorWithStatus extends Error {
   status?: number;
 }
 
-function getBasicInfo(req: Request) {
+function getBasicInfo(req: Request): [string, Record<string, string | number>] {
   const url = req.originalUrl || req.url;
 
   const preInfo: Record<string, string> = {
-    url,
     ip: requestip.getClientIp(req) || '',
     m: req.method,
   };
@@ -45,7 +44,7 @@ function getBasicInfo(req: Request) {
     preInfo.sid = sessionReq.session.id;
   }
 
-  return preInfo;
+  return [url, preInfo];
 }
 
 function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>>(
@@ -65,8 +64,10 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   const hrdur = process.hrtime(prefs.start);
 
   const dur = hrdur[0] + hrdur[1] / 1000000000;
+  const [url, preInfo] = getBasicInfo(req);
   const endLog: Record<string, string | string[] | number | undefined> = {
-    ...getBasicInfo(req),
+    ...preInfo,
+    t: 'req',
     s: (error as ErrorWithStatus)?.status || res.statusCode || 0,
     dur,
   };
@@ -108,7 +109,7 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   }
 
   service.getLogFields?.(req as RequestWithApp<SLocals>, endLog);
-  logger.info(endLog, 'req');
+  logger.info(endLog, url);
 }
 
 export function loggerMiddleware<
@@ -153,14 +154,16 @@ export function loggerMiddleware<
     }
 
     if (config?.preLog) {
+      const [url, preInfo] = getBasicInfo(req);
       const preLog: Record<string, string | string[] | number | undefined> = {
-        ...getBasicInfo(req),
+        ...preInfo,
+        t: 'pre',
         ref: req.headers.referer || undefined,
         sid: (req as WithIdentifiedSession).session?.id,
         c: req.headers.correlationid || undefined,
       };
       service.getLogFields?.(req as RequestWithApp<SLocals>, preLog);
-      logger.info(preLog, 'pre');
+      logger.info(preLog, url);
     }
 
     const logWriter = () => finishLog(app, undefined, req, res, histogram);

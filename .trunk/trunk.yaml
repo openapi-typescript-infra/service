@@ -9,14 +9,14 @@ plugins:
 lint:
   enabled:
     - actionlint@1.6.26
-    - checkov@3.1.70
+    - checkov@3.2.1
     - eslint@8.56.0
     - git-diff-check
-    - markdownlint@0.38.0
+    - markdownlint@0.39.0
     - osv-scanner@1.6.1
     - prettier@3.2.4
     - trivy@0.48.3
-    - trufflehog@3.64.0
+    - trufflehog@3.66.1
     - yamllint@1.33.0
   ignore:
     - linters: [ALL]
