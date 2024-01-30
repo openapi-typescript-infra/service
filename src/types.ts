@@ -101,7 +101,7 @@ export interface Service<
   getLogFields?(
     req: RequestWithApp<SLocals>,
     values: Record<string, string | string[] | number | undefined>,
-  ): string | undefined;
+  ): string | undefined | void;
 
   // The repl is a useful tool for diagnosing issues in non-dev environments.
   // The attachRepl method provides a way to add custom functionality
