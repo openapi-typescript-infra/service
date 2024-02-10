@@ -92,6 +92,7 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   }
 
   if (prefs.logRequests) {
+    endLog.h = JSON.stringify(req.headers);
     if (Buffer.isBuffer(req.body)) {
       endLog.b = req.body.toString('base64');
     } else if (typeof req.body !== 'string') {
