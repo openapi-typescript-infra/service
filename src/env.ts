@@ -12,3 +12,15 @@ export function getNodeEnv() {
 export function isDev() {
   return getNodeEnv() === 'development';
 }
+
+export function isProd() {
+  return getNodeEnv() === 'production';
+}
+
+export function isStaging() {
+  return getNodeEnv() === 'staging';
+}
+
+export function isTest() {
+  return getNodeEnv() === 'test';
+}
