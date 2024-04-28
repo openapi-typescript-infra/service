@@ -754,8 +754,6 @@ __metadata:
     "@openapi-typescript-infra/coconfig": ^4.4.0
     "@opentelemetry/api": ^1.8.0
     "@opentelemetry/exporter-prometheus": ^0.51.0
-    "@opentelemetry/exporter-trace-otlp-proto": ^0.51.0
-    "@opentelemetry/instrumentation": ^0.51.0
     "@opentelemetry/instrumentation-dns": ^0.36.0
     "@opentelemetry/instrumentation-express": ^0.38.0
     "@opentelemetry/instrumentation-generic-pool": ^0.36.0
@@ -768,10 +766,7 @@ __metadata:
     "@opentelemetry/instrumentation-undici": ^0.2.0
     "@opentelemetry/resource-detector-container": ^0.3.9
     "@opentelemetry/resource-detector-gcp": ^0.29.9
-    "@opentelemetry/resources": ^1.24.0
-    "@opentelemetry/sdk-metrics": ^1.24.0
     "@opentelemetry/sdk-node": ^0.51.0
-    "@opentelemetry/sdk-trace-base": ^1.24.0
     "@opentelemetry/semantic-conventions": ^1.24.0
     "@semantic-release/commit-analyzer": ^12.0.0
     "@semantic-release/exec": ^6.0.3
@@ -896,7 +891,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/exporter-trace-otlp-proto@npm:0.51.0, @opentelemetry/exporter-trace-otlp-proto@npm:^0.51.0":
+"@opentelemetry/exporter-trace-otlp-proto@npm:0.51.0":
   version: 0.51.0
   resolution: "@opentelemetry/exporter-trace-otlp-proto@npm:0.51.0"
   dependencies:
@@ -1177,7 +1172,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/resources@npm:1.24.0, @opentelemetry/resources@npm:^1.0.0, @opentelemetry/resources@npm:^1.24.0":
+"@opentelemetry/resources@npm:1.24.0, @opentelemetry/resources@npm:^1.0.0":
   version: 1.24.0
   resolution: "@opentelemetry/resources@npm:1.24.0"
   dependencies:
@@ -1202,7 +1197,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/sdk-metrics@npm:1.24.0, @opentelemetry/sdk-metrics@npm:^1.17.1, @opentelemetry/sdk-metrics@npm:^1.24.0":
+"@opentelemetry/sdk-metrics@npm:1.24.0, @opentelemetry/sdk-metrics@npm:^1.17.1":
   version: 1.24.0
   resolution: "@opentelemetry/sdk-metrics@npm:1.24.0"
   dependencies:
@@ -1238,7 +1233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/sdk-trace-base@npm:1.24.0, @opentelemetry/sdk-trace-base@npm:^1.24.0":
+"@opentelemetry/sdk-trace-base@npm:1.24.0":
   version: 1.24.0
   resolution: "@opentelemetry/sdk-trace-base@npm:1.24.0"
   dependencies:
