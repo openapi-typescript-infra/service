@@ -1,4 +1,3 @@
-import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
 import * as opentelemetry from '@opentelemetry/sdk-node';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
@@ -13,11 +12,11 @@ import type {
 import type { ListenFn, StartAppFn } from '../express-app/index';
 import type { ConfigurationSchema } from '../config/schema';
 
-import { getAutoInstrumentations, getResourceDetectors } from './instrumentations';
+import { getAutoInstrumentations, getResource } from './instrumentations';
 import { DummySpanExporter } from './DummyExporter';
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
-diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
+opentelemetry.api.diag.setLogger(new (opentelemetry.api.DiagConsoleLogger)(), opentelemetry.api.DiagLogLevel.INFO);
 
 function getExporter() {
   if (
@@ -46,16 +45,17 @@ let telemetrySdk: opentelemetry.NodeSDK | undefined;
  * In addition, since we have to load it right away before configuration
  * is available, we can't use configuration to decide anything.
  */
-export function startGlobalTelemetry(serviceName: string) {
+export async function startGlobalTelemetry(serviceName: string) {
   if (!prometheusExporter) {
     prometheusExporter = new PrometheusExporter({ preventServerStart: true });
+    const instrumentations = getAutoInstrumentations();
     telemetrySdk = new opentelemetry.NodeSDK({
       serviceName,
-      autoDetectResources: true,
+      autoDetectResources: false,
       traceExporter: getExporter(),
-      resourceDetectors: getResourceDetectors(),
+      resource: await getResource(),
       metricReader: prometheusExporter,
-      instrumentations: [getAutoInstrumentations()],
+      instrumentations,
       views: [
         new opentelemetry.metrics.View({
           instrumentName: 'http_request_duration_seconds',
@@ -76,7 +76,6 @@ export function getGlobalPrometheusExporter() {
 }
 
 export async function shutdownGlobalTelemetry() {
-  await prometheusExporter?.shutdown();
   await telemetrySdk?.shutdown();
   telemetrySdk = undefined;
   prometheusExporter = undefined;
@@ -86,7 +85,7 @@ export async function startWithTelemetry<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 >(options: DelayLoadServiceStartOptions) {
-  startGlobalTelemetry(options.name);
+  await startGlobalTelemetry(options.name);
 
   // eslint-disable-next-line import/no-unresolved, @typescript-eslint/no-var-requires
   const { startApp, listen } = require('../express-app/app.js') as {

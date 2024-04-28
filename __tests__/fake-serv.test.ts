@@ -1,18 +1,16 @@
 import http from 'http';
 import path from 'path';
 
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import request from 'supertest';
 
 import {
   listen,
   ServiceStartOptions,
-  shutdownGlobalTelemetry,
   startApp,
-  startGlobalTelemetry,
 } from '../src/index';
 
-import { FakeServLocals, service } from './fake-serv/src/index';
+import { type FakeServLocals, service } from './fake-serv/src/index';
 
 function httpRequest(options: http.RequestOptions) {
   return new Promise((resolve, reject) => {
@@ -33,14 +31,6 @@ function httpRequest(options: http.RequestOptions) {
 }
 
 describe('fake-serv', () => {
-  beforeAll(() => {
-    startGlobalTelemetry('fake-serv');
-  });
-
-  afterAll(async () => {
-    await shutdownGlobalTelemetry();
-  });
-
   test('basic service functionality', async () => {
     const options: ServiceStartOptions<FakeServLocals> = {
       service,
@@ -101,7 +91,6 @@ describe('fake-serv', () => {
       .get('/metrics')
       .expect(200)
       .expect((res) => {
-        // console.error(`---\n${res.text}\n---`);
         expect(res.text).toMatch(/nodejs_version_info{version/);
         expect(res.text).toMatch(/# UNIT http_server_duration ms/);
         expect(res.text).toMatch(/world_requests_total{method="get"} 1/);
