@@ -117,7 +117,7 @@ export async function loadConfiguration<Config extends ConfigurationSchema>({
   // configured to auto-select
   const serverConfig = loaded.get().server;
   if (serverConfig.port === 0) {
-    const portPromise: Promise<number> = isTest() ? getEphemeralPort() : findPort(8001);
+    const portPromise: Promise<number> = (isTest() || process.env.TEST_RUNNER) ? getEphemeralPort() : findPort(8001);
     const port = await portPromise;
     const store = loaded.get();
     store.server = store.server || {};
