@@ -36,5 +36,5 @@ export async function findPort(start: number) {
       return p;
     }
   }
-  return null;
+  return 0;
 }
