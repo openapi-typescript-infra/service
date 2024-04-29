@@ -796,7 +796,7 @@ __metadata:
     glob: ^8.1.0
     lodash: ^4.17.21
     minimist: ^1.2.8
-    pino: ^8.21.0
+    pino: ^9.0.0
     pino-pretty: ^11.0.0
     pinst: ^3.0.0
     read-pkg-up: ^7.0.1
@@ -6290,9 +6290,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:^8.21.0":
-  version: 8.21.0
-  resolution: "pino@npm:8.21.0"
+"pino@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "pino@npm:9.0.0"
   dependencies:
     atomic-sleep: ^1.0.0
     fast-redact: ^3.1.1
@@ -6307,7 +6307,7 @@ __metadata:
     thread-stream: ^2.6.0
   bin:
     pino: bin.js
-  checksum: d895c37cfcb7ade33ad7ac4ca54c0497ab719ec726e42b7c7b9697e07572a09a7c7de18d751440769c3ea5ecbac2075fdac720cf182720a4764defe3de8a1411
+  checksum: d4d22aa5ab7d1c116c40b694bcc14a38cc9335ff195186933bb9f622784f9dd95d755c454cde420bf971bcda07d3a6013b3a2a4dcb9be43745f9c1a7f86c352c
   languageName: node
   linkType: hard
 

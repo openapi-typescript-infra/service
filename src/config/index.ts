@@ -1,5 +1,4 @@
 import fs from 'fs';
-import net from 'net';
 import path from 'path';
 
 import {
@@ -10,8 +9,7 @@ import {
   confit,
 } from '@sesamecare-oss/confit';
 
-import { findPort } from '../development/port-finder';
-import { isTest } from '../env';
+import { getAvailablePort } from '../development/port-finder';
 
 import type { ConfigurationSchema } from './schema';
 
@@ -57,28 +55,6 @@ async function addDefaultConfiguration<Config extends ConfigurationSchema = Conf
   }
 }
 
-async function getEphemeralPort(): Promise<number> {
-  return new Promise((resolve, reject) => {
-    const server = net.createServer();
-
-    server.listen(0, () => {
-      const address = server.address();
-      if (typeof address === 'string' || !address) {
-        reject(new Error('Invalid address'));
-        return;
-      }
-      const port = address.port; // Retrieve the ephemeral port
-      server.close((err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(port);
-        }
-      });
-    });
-  });
-}
-
 export interface ServiceConfigurationSpec {
   // The LAST configuration is the most "specific" - if a configuration value
   // exists in all directories, the last one wins
@@ -117,8 +93,7 @@ export async function loadConfiguration<Config extends ConfigurationSchema>({
   // configured to auto-select
   const serverConfig = loaded.get().server;
   if (serverConfig.port === 0) {
-    const portPromise: Promise<number> = (isTest() || process.env.TEST_RUNNER) ? getEphemeralPort() : findPort(8001);
-    const port = await portPromise;
+    const port = await getAvailablePort(8001);
     const store = loaded.get();
     store.server = store.server || {};
     store.server.port = port;

@@ -2,7 +2,7 @@ import express from 'express';
 import type { Application } from 'express-serve-static-core';
 
 import { AnyServiceLocals, InternalLocals, ServiceExpress, ServiceLocals } from '../types';
-import { findPort } from '../development/port-finder';
+import { getAvailablePort } from '../development/port-finder';
 import { ConfigurationSchema } from '../config/schema';
 
 export async function startInternalApp<
@@ -11,7 +11,7 @@ export async function startInternalApp<
   const app = express() as unknown as Application<InternalLocals<SLocals>>;
   app.locals.mainApp = mainApp;
 
-  const finalPort = port === 0 ? await findPort(3001) : port;
+  const finalPort = port === 0 ? await getAvailablePort(3001) : port;
 
   app.get('/health', async (req, res) => {
     if (mainApp.locals.service?.healthy) {
