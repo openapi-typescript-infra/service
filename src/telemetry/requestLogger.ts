@@ -29,6 +29,7 @@ interface WithIdentifiedSession {
 
 interface ErrorWithStatus extends Error {
   status?: number;
+  expected_error?: boolean;
 }
 
 function getBasicInfo(req: Request): [string, Record<string, string | number>] {
@@ -84,10 +85,14 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
     endLog.u = res.locals.user.id;
   }
 
+  let unexpectedError = false;
   if (error) {
     endLog.e = error.message;
     if (!(error instanceof ServiceError) || error.log_stack) {
       endLog.st = error.stack;
+    }
+    if (!(error as ErrorWithStatus).expected_error) {
+      unexpectedError = true;
     }
   }
 
@@ -110,7 +115,11 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   }
 
   const msg = service.getLogFields?.(req as RequestWithApp<SLocals>, endLog) || url;
-  logger.info(endLog, msg);
+  if (unexpectedError) {
+    logger.error(endLog, msg);
+  } else {
+    logger.info(endLog, msg);
+  }
 }
 
 export function loggerMiddleware<
@@ -122,7 +131,7 @@ export function loggerMiddleware<
 ): RequestHandler {
   const nonProd = getNodeEnv() !== 'production';
   const { logger, service } = app.locals;
-  return function gblogger(req, res, next) {
+  return function serviceLogger(req, res, next) {
     const logResponse =
       config?.logResponseBody || (nonProd && req.headers['x-log']?.includes('res'));
     const logRequest = config?.logRequestBody || (nonProd && req.headers['x-log']?.includes('req'));
@@ -176,7 +185,7 @@ export function loggerMiddleware<
 export function errorHandlerMiddleware<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
 >(app: ServiceExpress<SLocals>, histogram: Histogram, unnest?: boolean, returnError?: boolean) {
-  const gbErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
+  const svcErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     let loggable: Partial<ServiceError> = error;
     const body = error.response?.body || error.body;
     if (unnest && body?.domain && body?.code && body?.message) {
@@ -204,11 +213,11 @@ export function errorHandlerMiddleware<
       next(error);
     }
   };
-  return gbErrorHandler;
+  return svcErrorHandler;
 }
 
 export function notFoundMiddleware() {
-  const gbNotFoundHandler: ServiceHandler = (req, res, next) => {
+  const serviceNotFoundHandler: ServiceHandler = (req, res, next) => {
     const error = new ServiceError(req.app, `Cannot ${req.method} ${req.path}`, {
       status: 404,
       code: 'NotFound',
@@ -216,5 +225,5 @@ export function notFoundMiddleware() {
     });
     next(error);
   };
-  return gbNotFoundHandler as RequestHandler;
+  return serviceNotFoundHandler as RequestHandler;
 }
