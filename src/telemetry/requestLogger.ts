@@ -40,6 +40,10 @@ function getBasicInfo(req: Request): [string, Record<string, string | number>] {
     m: req.method,
   };
 
+  if (req.headers['user-agent']) {
+    preInfo.ua = req.headers['user-agent'];
+  }
+
   const sessionReq = req as WithIdentifiedSession;
   if (sessionReq.session?.id) {
     preInfo.sid = sessionReq.session.id;
@@ -113,7 +117,6 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
       endLog.resBody = bodyString;
     }
   }
-
   const msg = service.getLogFields?.(req as RequestWithApp<SLocals>, endLog) || url;
   if (unexpectedError) {
     logger.error(endLog, msg);
