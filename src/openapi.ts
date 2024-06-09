@@ -3,7 +3,7 @@ import path from 'path';
 import _ from 'lodash';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { OpenAPIFramework } from 'express-openapi-validator/dist/framework/index';
-import type { Handler, Request } from 'express';
+import type { Handler, Request, RequestHandler } from 'express';
 
 import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from './types';
 import { getNodeEnv } from './env';
@@ -99,7 +99,7 @@ export async function openApi<
               `Could not find a [${route.method}] function in ${modulePath} when trying to route [${route.method} ${route.expressRoute}].`,
             );
           }
-          return module[method];
+          return module[method] as RequestHandler;
         } catch (error) {
           app.locals.logger.error(
             {
