@@ -76,6 +76,9 @@ export interface Service<
   // that are needed during route setup
   attach?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
 
+  // Called after a server is created but before the server starts listening
+  attachServer?: (server: Server) => void | Promise<void>;
+
   start(app: ServiceExpress<SLocals>): void | Promise<void>;
 
   stop?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
