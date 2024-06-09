@@ -303,7 +303,7 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
 
   const { service, logger } = app.locals;
   const server = httpServer(app, config);
-  await app.locals.service.attachServer?.(server);
+  await app.locals.service.attachServer?.(app, server);
 
   let shutdownInProgress = false;
   createTerminus(server, {
