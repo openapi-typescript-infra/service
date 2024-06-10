@@ -1,9 +1,11 @@
-export function getNodeEnv() {
+type ValidEnv = 'development' | 'production' | 'staging' | 'test';
+
+export function getNodeEnv(): ValidEnv {
   switch (process.env.APP_ENV || process.env.NODE_ENV) {
     case 'production':
     case 'staging':
     case 'test':
-      return process.env.APP_ENV || process.env.NODE_ENV;
+      return (process.env.APP_ENV || process.env.NODE_ENV) as ValidEnv;
     default:
       return 'development';
   }
