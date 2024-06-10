@@ -86,7 +86,7 @@ export async function openApi<
   };
 
   const defaultOptions: OAPIOpts = {
-    apiSpec,
+    apiSpec: app.locals.openApiSpecification,
     ignoreUndocumented: true,
     validateRequests: {
       allowUnknownQueryParameters: true,
@@ -146,5 +146,6 @@ export async function openApi<
     ...(typeof routing.openapi === 'object' ? routing.openapi : {}),
     ...openApiOptions,
   };
+
   return OpenApiValidator.middleware(_.defaultsDeep(defaultOptions, combinedOptions));
 }
