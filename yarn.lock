@@ -754,7 +754,7 @@ __metadata:
     "@opentelemetry/api": ^1.9.0
     "@opentelemetry/exporter-prometheus": ^0.52.0
     "@opentelemetry/instrumentation-dns": ^0.37.0
-    "@opentelemetry/instrumentation-express": ^0.40.0
+    "@opentelemetry/instrumentation-express": ^0.40.1
     "@opentelemetry/instrumentation-generic-pool": ^0.37.0
     "@opentelemetry/instrumentation-graphql": ^0.41.0
     "@opentelemetry/instrumentation-http": ^0.52.0
@@ -763,7 +763,7 @@ __metadata:
     "@opentelemetry/instrumentation-pg": ^0.42.0
     "@opentelemetry/instrumentation-pino": ^0.40.0
     "@opentelemetry/instrumentation-undici": ^0.3.0
-    "@opentelemetry/resource-detector-container": ^0.3.10
+    "@opentelemetry/resource-detector-container": ^0.3.11
     "@opentelemetry/resource-detector-gcp": ^0.29.10
     "@opentelemetry/sdk-node": ^0.52.0
     "@opentelemetry/semantic-conventions": ^1.25.0
@@ -796,7 +796,7 @@ __metadata:
     lodash: ^4.17.21
     minimist: ^1.2.8
     pino: ^9.1.0
-    pino-pretty: ^11.1.0
+    pino-pretty: ^11.2.0
     pinst: ^3.0.0
     read-pkg-up: ^7.0.1
     request-ip: ^3.3.0
@@ -931,16 +931,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation-express@npm:^0.40.0":
-  version: 0.40.0
-  resolution: "@opentelemetry/instrumentation-express@npm:0.40.0"
+"@opentelemetry/instrumentation-express@npm:^0.40.1":
+  version: 0.40.1
+  resolution: "@opentelemetry/instrumentation-express@npm:0.40.1"
   dependencies:
     "@opentelemetry/core": ^1.8.0
     "@opentelemetry/instrumentation": ^0.52.0
     "@opentelemetry/semantic-conventions": ^1.22.0
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
-  checksum: 4bc398ac1237608eb7d308277ef9e8872275b21f68565c6514596fb9071623d730107af2ec4ca1a83407a21f254f2ed3362d1f251dc8ec9cd7c4d1883ed98bfd
+  checksum: 6634182e7d02c3afa73bb01277a1bbaf6dace104cda74b29dad5515d624b6bdb1846b8bf038fa4cf6009091bee6f4b3dbb01bb8b01d022d0c9e158b4440ae586
   languageName: node
   linkType: hard
 
@@ -1131,15 +1131,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/resource-detector-container@npm:^0.3.10":
-  version: 0.3.10
-  resolution: "@opentelemetry/resource-detector-container@npm:0.3.10"
+"@opentelemetry/resource-detector-container@npm:^0.3.11":
+  version: 0.3.11
+  resolution: "@opentelemetry/resource-detector-container@npm:0.3.11"
   dependencies:
     "@opentelemetry/resources": ^1.0.0
     "@opentelemetry/semantic-conventions": ^1.22.0
   peerDependencies:
     "@opentelemetry/api": ^1.0.0
-  checksum: 2e169693f5fd3fa412db89780837991cdf05a80b4e629c6d8f44089eef6733ceca0e43d7c240a93448651e086a736cdba55d45c3fe4f533efa91a0c619628ac3
+  checksum: 900c4f2466899a8a03613b3b6216e2954e8f65232c679dac208d08bcd755bd5c3c2473f61fd265b0b42531bee7d6aae83e96e47e3ebd02d2f5960fef2f340ca3
   languageName: node
   linkType: hard
 
@@ -6259,9 +6259,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-pretty@npm:^11.1.0":
-  version: 11.1.0
-  resolution: "pino-pretty@npm:11.1.0"
+"pino-pretty@npm:^11.2.0":
+  version: 11.2.0
+  resolution: "pino-pretty@npm:11.2.0"
   dependencies:
     colorette: ^2.0.7
     dateformat: ^4.6.3
@@ -6279,7 +6279,7 @@ __metadata:
     strip-json-comments: ^3.1.1
   bin:
     pino-pretty: bin.js
-  checksum: 6f76de3ea0397f3dab7a12ad05fa5224783c0813076daec319b43e07b5c70d006212204ff338f74cdc108a7b427b2e1cf821fd53e2a10d607747c7caf436b538
+  checksum: 158eae8f214c0cc03b1dd0e51516aaa2ba4ba392039310a5a1ff3e7ac5050533f8eaee4dcf3f74d7f6c7b3479ecc802a8ab13f2f12c96161255f99f12ce282e2
   languageName: node
   linkType: hard
 
