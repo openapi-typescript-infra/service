@@ -74,65 +74,62 @@ export async function openApi<
     delete (global as { window: unknown }).window;
   }
 
-  app.locals.openApiSpecification = await new OpenAPIFramework({ apiDoc: apiSpec })
-    .initialize({ visitApi() {} })
-    .then((docs) => docs.apiDoc)
-    .catch((error) => {
-      app.locals.logger.error(error, 'Failed to parse and load OpenAPI spec');
-    });
+  try {
+    app.locals.openApiSpecification = await new OpenAPIFramework({ apiDoc: apiSpec })
+      .initialize({ visitApi() { } })
+      .then((docs) => docs.apiDoc)
+      .catch((error) => {
+        app.locals.logger.error(error, 'Failed to parse and load OpenAPI spec');
+      });
 
-  if (_window) {
-    (global as { window: unknown }).window = _window;
-  };
-
-  const defaultOptions: OAPIOpts = {
-    apiSpec: app.locals.openApiSpecification,
-    ignoreUndocumented: true,
-    validateRequests: {
-      allowUnknownQueryParameters: true,
-      coerceTypes: 'array',
-    },
-    operationHandlers: {
-      basePath,
-      resolver(
-        basePath: string,
-        route: Parameters<typeof OpenApiValidator.resolvers.defaultResolver>[1],
-      ) {
-        const pathKey = route.openApiRoute.substring(route.basePath.length);
-        const modulePath = path.join(basePath, pathKey);
-
-        try {
-          const module = modulesByPath[pathKey];
-          const method = module
-            ? Object.keys(module).find((m) => m.toUpperCase() === route.method)
-            : undefined;
-          if (!module || !method) {
-            throw new Error(
-              `Could not find a [${route.method}] function in ${modulePath} when trying to route [${route.method} ${route.expressRoute}].`,
-            );
-          }
-          return module[method] as RequestHandler;
-        } catch (error) {
-          app.locals.logger.error(
-            {
-              error: (error as Error).message,
-              pathKey,
-              modulePath: path.relative(rootDirectory, modulePath),
-            },
-            'Failed to load API method handler',
-          );
-          return notImplementedHandler;
-        }
+    const defaultOptions: OAPIOpts = {
+      apiSpec: app.locals.openApiSpecification,
+      ignoreUndocumented: true,
+      validateRequests: {
+        allowUnknownQueryParameters: true,
+        coerceTypes: 'array',
       },
-    },
-  };
+      operationHandlers: {
+        basePath,
+        resolver(
+          basePath: string,
+          route: Parameters<typeof OpenApiValidator.resolvers.defaultResolver>[1],
+        ) {
+          const pathKey = route.openApiRoute.substring(route.basePath.length);
+          const modulePath = path.join(basePath, pathKey);
 
-  const { routing } = app.locals.config;
-  const combinedOptions = {
-    // In test mode, validate returned swagger responses. This can easily be disabled
-    // by setting validateResponses to false in the config.
-    ...(getNodeEnv() === 'test'
-      ? {
+          try {
+            const module = modulesByPath[pathKey];
+            const method = module
+              ? Object.keys(module).find((m) => m.toUpperCase() === route.method)
+              : undefined;
+            if (!module || !method) {
+              throw new Error(
+                `Could not find a [${route.method}] function in ${modulePath} when trying to route [${route.method} ${route.expressRoute}].`,
+              );
+            }
+            return module[method] as RequestHandler;
+          } catch (error) {
+            app.locals.logger.error(
+              {
+                error: (error as Error).message,
+                pathKey,
+                modulePath: path.relative(rootDirectory, modulePath),
+              },
+              'Failed to load API method handler',
+            );
+            return notImplementedHandler;
+          }
+        },
+      },
+    };
+
+    const { routing } = app.locals.config;
+    const combinedOptions = {
+      // In test mode, validate returned swagger responses. This can easily be disabled
+      // by setting validateResponses to false in the config.
+      ...(getNodeEnv() === 'test'
+        ? {
           validateResponses: {
             onError(error: Error, body: unknown, req: Request) {
               console.log('Response body fails validation: ', error);
@@ -142,10 +139,15 @@ export async function openApi<
             },
           },
         }
-      : {}),
-    ...(typeof routing.openapi === 'object' ? routing.openapi : {}),
-    ...openApiOptions,
-  };
+        : {}),
+      ...(typeof routing.openapi === 'object' ? routing.openapi : {}),
+      ...openApiOptions,
+    };
 
-  return OpenApiValidator.middleware(_.defaultsDeep(defaultOptions, combinedOptions));
+    return OpenApiValidator.middleware(_.defaultsDeep(defaultOptions, combinedOptions));
+  } finally {
+    if (_window) {
+      (global as { window: unknown }).window = _window;
+    };
+  }
 }
