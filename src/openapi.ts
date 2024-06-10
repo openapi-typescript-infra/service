@@ -69,9 +69,9 @@ export async function openApi<
   // This is nuts, but there are testing frameworks or some other things
   // that seem to set window in Node. The OpenAPI infra will fail under that
   // circumstance.
-  const window = globalThis.window;
-  if (window) {
-    delete (globalThis as { window: unknown }).window;
+  const _window = global.window;
+  if (_window) {
+    delete (global as { window: unknown }).window;
   }
 
   app.locals.openApiSpecification = await new OpenAPIFramework({ apiDoc: apiSpec })
@@ -81,8 +81,8 @@ export async function openApi<
       app.locals.logger.error(error, 'Failed to parse and load OpenAPI spec');
     });
 
-  if (window) {
-    (globalThis as { window: unknown }).window = window;
+  if (_window) {
+    (global as { window: unknown }).window = _window;
   };
 
   const defaultOptions: OAPIOpts = {
