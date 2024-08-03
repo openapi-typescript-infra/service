@@ -1,16 +1,14 @@
-import { ExportResultCode } from '@opentelemetry/core';
-import type { SpanExporter } from '@opentelemetry/sdk-trace-base';
-
-const noop: SpanExporter['export'] = (spans, resultCallback) => {
-  setImmediate(() =>
-    resultCallback({
-      code: ExportResultCode.SUCCESS,
-    }),
-  );
-};
+import { ExportResult, ExportResultCode } from '@opentelemetry/core';
+import type { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
 
 export class DummySpanExporter implements SpanExporter {
-  export: typeof noop = noop;
+  export(spans: ReadableSpan[], resultCallback: (r: ExportResult) => void) {
+    setImmediate(() =>
+      resultCallback({
+        code: ExportResultCode.SUCCESS,
+      }),
+    );
+  }
 
   async shutdown() {
     // Nothing to do
