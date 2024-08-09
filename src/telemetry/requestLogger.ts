@@ -198,6 +198,7 @@ export function errorHandlerMiddleware<
         domain: body.domain,
         code: body.code,
         display_message: body.display_message,
+        ...loggable.client_metadata,
       };
     }
     // Set the status to error, even if we aren't going to render the error.
@@ -211,6 +212,7 @@ export function errorHandlerMiddleware<
         message: loggable.message,
         domain: loggable.domain,
         display_message: loggable.display_message,
+        ...loggable.client_metadata,
       });
     } else {
       next(error);

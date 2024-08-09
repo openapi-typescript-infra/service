@@ -8,6 +8,7 @@ export interface ServiceErrorSpec {
   display_message?: string;
   log_stack?: boolean;
   expected_error?: boolean;
+  client_metadata?: Record<string, unknown>;
 }
 
 /**
@@ -29,6 +30,9 @@ export class ServiceError<
   public display_message?: string;
 
   public log_stack?: boolean;
+
+  // Additional data TO BE RETURNED TO THE CLIENT
+  public client_metadata?: Record<string, unknown>;
 
   // If true, this shouldn't be logged as an error, but as an info log.
   // This is common when the error needs to go to the client, but should not
