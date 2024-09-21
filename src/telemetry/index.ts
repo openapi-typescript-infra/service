@@ -1,4 +1,12 @@
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
+import {
+  envDetectorSync,
+  hostDetectorSync,
+  osDetectorSync,
+  processDetectorSync,
+} from '@opentelemetry/resources';
+import { containerDetector } from '@opentelemetry/resource-detector-container';
+import { gcpDetector } from '@opentelemetry/resource-detector-gcp';
 import * as opentelemetry from '@opentelemetry/sdk-node';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 
@@ -12,7 +20,7 @@ import type {
 import type { ListenFn, StartAppFn } from '../express-app/index';
 import type { ConfigurationSchema } from '../config/schema';
 
-import { getAutoInstrumentations, getResource } from './instrumentations';
+import { getAutoInstrumentations } from './instrumentations';
 import { DummySpanExporter } from './DummyExporter';
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
@@ -53,9 +61,17 @@ export async function startGlobalTelemetry(serviceName: string) {
       serviceName,
       autoDetectResources: false,
       traceExporter: getExporter(),
-      resource: await getResource(),
+      resourceDetectors: [
+        envDetectorSync,
+        hostDetectorSync,
+        osDetectorSync,
+        processDetectorSync,
+        containerDetector,
+        gcpDetector,
+      ],
       metricReader: prometheusExporter,
       instrumentations,
+      logRecordProcessors: [],
       views: [
         new opentelemetry.metrics.View({
           instrumentName: 'http_request_duration_seconds',

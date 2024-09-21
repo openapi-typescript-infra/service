@@ -8,17 +8,6 @@ import { IORedisInstrumentation } from '@opentelemetry/instrumentation-ioredis';
 import { NetInstrumentation } from '@opentelemetry/instrumentation-net';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
 import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
-import { containerDetector } from '@opentelemetry/resource-detector-container';
-import { gcpDetector } from '@opentelemetry/resource-detector-gcp';
-import {
-  Resource,
-  detectResources,
-  detectResourcesSync,
-  envDetectorSync,
-  hostDetectorSync,
-  osDetectorSync,
-  processDetectorSync,
-} from '@opentelemetry/resources';
 
 const InstrumentationMap = {
   '@opentelemetry/instrumentation-http': HttpInstrumentation,
@@ -57,24 +46,4 @@ export function getAutoInstrumentations(
       }
     })
     .filter((i) => !!i) as Instrumentation[];
-}
-
-// Async function to get combined resources
-export async function getResource(): Promise<Resource> {
-  const syncDetectors = [
-    envDetectorSync,
-    hostDetectorSync,
-    osDetectorSync,
-    processDetectorSync,
-  ];
-  const asyncDetectors = [
-    containerDetector,
-    gcpDetector,
-  ];
-
-  const asyncResources = await detectResources({ detectors: asyncDetectors });
-  const syncResources = detectResourcesSync({ detectors: syncDetectors });
-
-  // Combine async and sync resources
-  return syncResources.merge(asyncResources);
 }
