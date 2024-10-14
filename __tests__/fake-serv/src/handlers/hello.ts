@@ -1,4 +1,4 @@
-import { addToRepl, ServiceHandler } from '../../../../src/index';
+import { repl$, ServiceHandler } from '../../../../src/index';
 import { FakeServLocals } from '../index';
 
 export const get: ServiceHandler<FakeServLocals> = async (req, res) => {
@@ -13,4 +13,4 @@ export function thisIsATest() {
   return 'Yes, true';
 }
 
-addToRepl(thisIsATest);
+repl$(thisIsATest);
