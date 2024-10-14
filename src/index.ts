@@ -6,4 +6,4 @@ export * from './config';
 export * from './error';
 export * from './bootstrap';
 export * from './hook';
-export { addToRepl } from './development/repl';
+export { repl$ } from './development/repl';

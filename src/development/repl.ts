@@ -3,9 +3,16 @@ import fs from 'fs';
 import path from 'path';
 
 import { glob } from 'glob';
+import { set } from 'lodash';
 
 import { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types';
 import { ConfigurationSchema } from '../config/schema';
+
+const REPL_PROP = '$$repl$$';
+
+interface WithReplProp {
+  [REPL_PROP]?: string;
+}
 
 export function serviceRepl<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>>(
   app: ServiceExpress<SLocals>,
@@ -51,23 +58,20 @@ function loadReplFunctions<SLocals extends AnyServiceLocals = ServiceLocals<Conf
       // Read the file content as text
       const fileContent = fs.readFileSync(file, 'utf-8');
 
-      // Check if @repl is present
-      if (/addToRepl\(/.test(fileContent)) {
+      // Check if repl$ is present, in a very rudimentary way
+      if (/repl\$\(/.test(fileContent)) {
         // eslint-disable-next-line global-require, import/no-dynamic-require, @typescript-eslint/no-var-requires
-        const module = require(file); // Only require if @repl is found
+        const module = require(path.resolve(file));
 
-        // Look for functions with the __isReplFunction marker
+        // Look for functions with the REPL_PROP marker
         Object.values(module).forEach((exported) => {
           if (!exported) {
             return;
           }
-          if (typeof exported === 'function' || typeof exported === 'object') {
-            const obj = exported as Record<string, unknown>;
-            for (const key of Object.keys(obj)) {
-              if ((obj[key] as { __openApiServiceReplFunction?: boolean }).__openApiServiceReplFunction) {
-                const fn = obj[key] as (app: ServiceExpress<SLocals>, ...args: unknown[]) => unknown;
-                rl.context[key] = (...args: unknown[]) => fn(app, ...args);
-              }
+          if (typeof exported === 'function') {
+            const replName = (exported as WithReplProp)[REPL_PROP];
+            if (replName) {
+              set(rl.context, replName, exported.bind(null, app));
             }
           }
         });
@@ -78,17 +82,32 @@ function loadReplFunctions<SLocals extends AnyServiceLocals = ServiceLocals<Conf
   });
 }
 
+// Can't seem to sort out proper generics here, so we'll just use any since it's dev only
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ReplAny = any;
+
 /**
  * This decorator-like function can be applied to functions and the service will load and expose
  * the function when the repl is engaged.
+ *
+ * async function myFunction(app: MyService['App'], arg1: string, arg2: number) {
+ * }
+ * repl$(myFunction);
+ *
+ * or
+ *
+ * repl(myFunction, 'some.func.name');
  */
-export function addToRepl<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>>(
-  fn: (app: ServiceExpress<SLocals>, ...args: unknown[]) => unknown,
-  name?: string,
-) {
+export function repl$<
+  S extends ServiceExpress<ReplAny>,
+  T extends (app: S, ...args: ReplAny[]) => ReplAny
+>(fn: T, name?: string) {
   const functionName = name || fn.name;
   if (!functionName) {
     throw new Error('Function must have a name or a name must be provided.');
   }
-  (fn as unknown as { __openApiServiceReplFunction: string }).__openApiServiceReplFunction = functionName;
+  Object.defineProperty(fn, REPL_PROP, {
+    enumerable: false,
+    value: functionName,
+  });
 }
