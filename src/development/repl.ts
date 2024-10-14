@@ -1,11 +1,22 @@
-import repl from 'repl';
+import repl, { REPLServer } from 'repl';
+import fs from 'fs';
 import path from 'path';
+
+import { glob } from 'glob';
+import { set } from 'lodash';
 
 import { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types';
 import { ConfigurationSchema } from '../config/schema';
 
+const REPL_PROP = '$$repl$$';
+
+interface WithReplProp {
+  [REPL_PROP]?: string;
+}
+
 export function serviceRepl<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>>(
   app: ServiceExpress<SLocals>,
+  codepath: string | undefined,
   onExit: () => void,
 ) {
   const rl = repl.start({
@@ -25,5 +36,78 @@ export function serviceRepl<SLocals extends AnyServiceLocals = ServiceLocals<Con
     }
   });
   app.locals.service.attachRepl?.(app, rl);
+
+  loadReplFunctions(app, codepath, rl);
+
   rl.on('exit', onExit);
+}
+
+function loadReplFunctions<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>>(
+  app: ServiceExpress<SLocals>,
+  codepath: string | undefined,
+  rl: REPLServer,
+) {
+  if (!codepath) {
+    return;
+  }
+
+  const files = glob.sync(path.join(codepath, '**/*.{js,ts}'));
+
+  files.forEach((file) => {
+    try {
+      // Read the file content as text
+      const fileContent = fs.readFileSync(file, 'utf-8');
+
+      // Check if repl$ is present, in a very rudimentary way
+      if (/repl\$\(/.test(fileContent)) {
+        // eslint-disable-next-line global-require, import/no-dynamic-require, @typescript-eslint/no-var-requires
+        const module = require(path.resolve(file));
+
+        // Look for functions with the REPL_PROP marker
+        Object.values(module).forEach((exported) => {
+          if (!exported) {
+            return;
+          }
+          if (typeof exported === 'function') {
+            const replName = (exported as WithReplProp)[REPL_PROP];
+            if (replName) {
+              set(rl.context, replName, exported.bind(null, app));
+            }
+          }
+        });
+      }
+    } catch (err) {
+      console.error(`Failed to load REPL functions from ${file}:`, err);
+    }
+  });
+}
+
+// Can't seem to sort out proper generics here, so we'll just use any since it's dev only
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ReplAny = any;
+
+/**
+ * This decorator-like function can be applied to functions and the service will load and expose
+ * the function when the repl is engaged.
+ *
+ * async function myFunction(app: MyService['App'], arg1: string, arg2: number) {
+ * }
+ * repl$(myFunction);
+ *
+ * or
+ *
+ * repl(myFunction, 'some.func.name');
+ */
+export function repl$<
+  S extends ServiceExpress<ReplAny>,
+  T extends (app: S, ...args: ReplAny[]) => ReplAny
+>(fn: T, name?: string) {
+  const functionName = name || fn.name;
+  if (!functionName) {
+    throw new Error('Function must have a name or a name must be provided.');
+  }
+  Object.defineProperty(fn, REPL_PROP, {
+    enumerable: false,
+    value: functionName,
+  });
 }

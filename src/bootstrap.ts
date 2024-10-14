@@ -129,5 +129,5 @@ export async function bootstrap<
   const { startApp, listen } = await import('./express-app/app.js');
   const app = await startApp<SLocals, RLocals>(opts);
   const server = argv?.nobind ? undefined : await listen(app);
-  return { server, app };
+  return { server, app, codepath };
 }
