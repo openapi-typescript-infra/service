@@ -123,5 +123,5 @@ export async function startWithTelemetry<
     await shutdownGlobalTelemetry();
     app.locals.logger.info('OpenTelemetry shut down');
   });
-  return { app, server };
+  return { app, codepath: options.codepath, server };
 }

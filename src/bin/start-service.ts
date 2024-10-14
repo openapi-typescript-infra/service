@@ -19,9 +19,9 @@ const noTelemetry = (argv.repl || isDev()) && !argv.telemetry;
 bootstrap({
   ...argv,
   telemetry: !noTelemetry,
-}).then(({ app, server }) => {
+}).then(({ app, codepath, server }) => {
   if (argv.repl) {
-    serviceRepl(app, () => {
+    serviceRepl(app, codepath, () => {
       server?.close();
     });
   }
