@@ -58,8 +58,8 @@ function loadReplFunctions<SLocals extends AnyServiceLocals = ServiceLocals<Conf
       // Read the file content as text
       const fileContent = fs.readFileSync(file, 'utf-8');
 
-      // Check if repl$ is present, in a very rudimentary way
-      if (/repl\$\(/.test(fileContent)) {
+      // Check if repl$ is present, in a very rudimentary way (note built JS has close paren not open)
+      if (/repl\$[()]/.test(fileContent)) {
         // eslint-disable-next-line global-require, import/no-dynamic-require, @typescript-eslint/no-var-requires
         const module = require(path.resolve(file));
 
