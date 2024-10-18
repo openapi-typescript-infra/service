@@ -5,8 +5,8 @@ import path from 'path';
 import { glob } from 'glob';
 import { set } from 'lodash';
 
-import { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types';
-import { ConfigurationSchema } from '../config/schema';
+import { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types.js';
+import { ConfigurationSchema } from '../config/schema.js';
 
 const REPL_PROP = '$$repl$$';
 
@@ -42,7 +42,7 @@ export function serviceRepl<SLocals extends AnyServiceLocals = ServiceLocals<Con
   rl.on('exit', onExit);
 }
 
-function loadReplFunctions<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>>(
+async function loadReplFunctions<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>>(
   app: ServiceExpress<SLocals>,
   codepath: string | undefined,
   rl: REPLServer,
@@ -53,15 +53,14 @@ function loadReplFunctions<SLocals extends AnyServiceLocals = ServiceLocals<Conf
 
   const files = glob.sync(path.join(codepath, '**/*.{js,ts}'));
 
-  files.forEach((file) => {
+  for (const file of files) {
     try {
       // Read the file content as text
       const fileContent = fs.readFileSync(file, 'utf-8');
 
       // Check if repl$ is present, in a very rudimentary way (note built JS has close paren not open)
       if (/repl\$[()]/.test(fileContent)) {
-        // eslint-disable-next-line global-require, import/no-dynamic-require, @typescript-eslint/no-var-requires
-        const module = require(path.resolve(file));
+        const module = await import(path.resolve(file));
 
         // Look for functions with the REPL_PROP marker
         Object.values(module).forEach((exported) => {
@@ -79,7 +78,7 @@ function loadReplFunctions<SLocals extends AnyServiceLocals = ServiceLocals<Conf
     } catch (err) {
       console.error(`Failed to load REPL functions from ${file}:`, err);
     }
-  });
+  }
 }
 
 // Can't seem to sort out proper generics here, so we'll just use any since it's dev only

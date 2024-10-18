@@ -1,4 +1,4 @@
-import { ConfigurationSchema } from './schema';
+import { ConfigurationSchema } from './schema.js';
 
 export interface ConfigValidationError {
   path: string;

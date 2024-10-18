@@ -2,13 +2,13 @@ import path from 'path';
 
 import _ from 'lodash';
 import * as OpenApiValidator from 'express-openapi-validator';
-import { OpenAPIFramework } from 'express-openapi-validator/dist/framework/index';
+import { OpenAPIFramework } from 'express-openapi-validator/dist/framework/index.js';
 import type { Handler, Request, RequestHandler } from 'express';
 
-import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from './types';
-import { getNodeEnv } from './env';
-import { getFilesInDir, loadModule } from './express-app/modules';
-import { ConfigurationSchema } from './config/schema';
+import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from './types.js';
+import { getNodeEnv } from './env.js';
+import { getFilesInDir } from './express-app/modules.js';
+import { ConfigurationSchema } from './config/schema.js';
 
 const notImplementedHandler: Handler = (req, res) => {
   res.status(501).json({
@@ -46,7 +46,7 @@ export async function openApi<
   const preloadedModules = await Promise.all(
     moduleFiles.map((file) => {
       const fullPath = path.join(basePath, file);
-      return loadModule(fullPath).catch((error) => {
+      return import(fullPath).catch((error) => {
         app.locals.logger.warn(
           { file: fullPath, message: error.message },
           'Could not load potential API handler',

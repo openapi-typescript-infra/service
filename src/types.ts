@@ -1,14 +1,14 @@
 import type { Server } from 'http';
 import type { REPLServer } from 'repl';
 
-import type pino from 'pino';
+import type { pino } from 'pino';
 import type { Request, Response } from 'express';
 import type { Application } from 'express-serve-static-core';
 import type { middleware } from 'express-openapi-validator';
 import type { Meter } from '@opentelemetry/api';
 import { ShortstopHandler } from '@sesamecare-oss/confit';
 
-import { ConfigurationSchema } from './config/schema';
+import { ConfigurationSchema } from './config/schema.js';
 
 export interface InternalLocals<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,

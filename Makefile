@@ -20,7 +20,7 @@
 # all: service dbi ts
 #
 
-build_dir := $(shell node -e "console.log(require('./package.json').main.replace(/^.\//, '').split('/')[0])")
+build_dir := $(shell node -e "console.log(require('./package.json').exports.replace(/^.\//, '').split('/')[0])")
 src_files := $(shell find src -name '*.ts')
 build_files := $(patsubst src/%.ts,$(build_dir)/%.js,$(src_files))
 camel_case_name := $(shell echo $(SERVICE_NAME) | awk -F- '{result=""; for(i=1; i<=NF; i++) result = result toupper(substr($$i,1,1)) substr($$i,2); print result}' | tr -d '\n')

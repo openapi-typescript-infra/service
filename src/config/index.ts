@@ -9,9 +9,9 @@ import {
   confit,
 } from '@sesamecare-oss/confit';
 
-import { getAvailablePort } from '../development/port-finder';
+import { getAvailablePort } from '../development/port-finder.js';
 
-import type { ConfigurationSchema } from './schema';
+import type { ConfigurationSchema } from './schema.js';
 
 // Order matters here.
 const ENVIRONMENTS = ['production', 'staging', 'test', 'development'] as const;
@@ -121,5 +121,5 @@ export function insertConfigurationBefore(
   return copy;
 }
 
-export * from './schema';
-export * from './validation';
+export * from './schema.js';
+export * from './validation.js';

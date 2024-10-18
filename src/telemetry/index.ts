@@ -16,12 +16,12 @@ import type {
   RequestLocals,
   ServiceLocals,
   ServiceStartOptions,
-} from '../types';
-import type { ListenFn, StartAppFn } from '../express-app/index';
-import type { ConfigurationSchema } from '../config/schema';
+} from '../types.js';
+import type { ListenFn, StartAppFn } from '../express-app/index.js';
+import type { ConfigurationSchema } from '../config/schema.js';
 
-import { getAutoInstrumentations } from './instrumentations';
-import { DummySpanExporter } from './DummyExporter';
+import { getAutoInstrumentations } from './instrumentations.js';
+import { DummySpanExporter } from './DummyExporter.js';
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
 opentelemetry.api.diag.setLogger(new (opentelemetry.api.DiagConsoleLogger)(), opentelemetry.api.DiagLogLevel.INFO);

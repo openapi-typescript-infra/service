@@ -1,9 +1,9 @@
 import express from 'express';
 import type { Application } from 'express-serve-static-core';
 
-import { AnyServiceLocals, InternalLocals, ServiceExpress, ServiceLocals } from '../types';
-import { getAvailablePort } from '../development/port-finder';
-import { ConfigurationSchema } from '../config/schema';
+import { AnyServiceLocals, InternalLocals, ServiceExpress, ServiceLocals } from '../types.js';
+import { getAvailablePort } from '../development/port-finder.js';
+import { ConfigurationSchema } from '../config/schema.js';
 
 export async function startInternalApp<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,

@@ -1,11 +1,11 @@
 import path from 'path';
 
-import express from 'express';
+import { Router } from 'express';
 
-import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types';
-import { ConfigurationSchema } from '../config/schema';
+import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types.js';
+import { ConfigurationSchema } from '../config/schema.js';
 
-import { getFilesInDir, loadModule } from './modules';
+import { getFilesInDir } from './modules.js';
 
 export async function loadRoutes<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
@@ -16,10 +16,10 @@ export async function loadRoutes<
     files.map(async (filename) => {
       const routeBase = path.dirname(filename);
       const modulePath = path.resolve(routingDir, filename);
-      const module = await loadModule(modulePath);
+      const module = await import(modulePath);
       const mounter = module.default || module.route;
       if (typeof mounter === 'function') {
-        const childRouter = express.Router();
+        const childRouter = Router();
         mounter(childRouter, app);
         const pathParts = [''];
         if (routeBase !== '.') {

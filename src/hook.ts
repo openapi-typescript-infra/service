@@ -1,5 +1,5 @@
-import { ConfigurationSchema } from './config/schema';
-import type { AnyServiceLocals, RequestLocals, Service, ServiceLocals } from './types';
+import { ConfigurationSchema } from './config/schema.js';
+import type { AnyServiceLocals, RequestLocals, Service, ServiceLocals } from './types.js';
 
 /**
  * Your service should call this function and then "inherit"

@@ -10,13 +10,13 @@ import { setupNodeMetrics } from '@sesamecare-oss/opentelemetry-node-metrics';
 import { createTerminus } from '@godaddy/terminus';
 import type { RequestHandler, Response } from 'express';
 
-import { loadConfiguration } from '../config/index';
-import { openApi } from '../openapi';
+import { loadConfiguration } from '../config/index.js';
+import { openApi } from '../openapi.js';
 import {
   errorHandlerMiddleware,
   loggerMiddleware,
   notFoundMiddleware,
-} from '../telemetry/requestLogger';
+} from '../telemetry/requestLogger.js';
 import type {
   AnyServiceLocals,
   RequestLocals,
@@ -25,14 +25,14 @@ import type {
   ServiceLocals,
   ServiceOptions,
   ServiceStartOptions,
-} from '../types';
-import { ConfigurationSchema } from '../config/schema';
-import { shortstops } from '../config/shortstops';
-import { getNodeEnv, isDev } from '../env';
-import { getGlobalPrometheusExporter } from '../telemetry/index';
+} from '../types.js';
+import { ConfigurationSchema } from '../config/schema.js';
+import { shortstops } from '../config/shortstops.js';
+import { getNodeEnv, isDev } from '../env.js';
+import { getGlobalPrometheusExporter } from '../telemetry/index.js';
 
-import { loadRoutes } from './route-loader';
-import { startInternalApp } from './internal-server';
+import { loadRoutes } from './route-loader.js';
+import { startInternalApp } from './internal-server.js';
 
 function isSyncLogging() {
   if (process.env.LOG_SYNC) {

@@ -3,8 +3,8 @@ import path from 'path';
 
 import { describe, expect, test } from 'vitest';
 
-import { ConfigurationSchema, insertConfigurationBefore, loadConfiguration } from '../src/config';
-import { shortstops } from '../src/config/shortstops';
+import { ConfigurationSchema, insertConfigurationBefore, loadConfiguration } from '../src/config/index.js';
+import { shortstops } from '../src/config/shortstops.js';
 
 interface CustomConfig extends ConfigurationSchema {
   google: string;

@@ -8,9 +8,9 @@ import {
   listen,
   ServiceStartOptions,
   startApp,
-} from '../src/index';
+} from '../src/index.js';
 
-import { type FakeServLocals, service } from './fake-serv/src/index';
+import { type FakeServLocals, service } from './fake-serv/src/index.js';
 
 function httpRequest(options: http.RequestOptions) {
   return new Promise((resolve, reject) => {

@@ -1,21 +1,21 @@
 import path from 'node:path';
 import assert from 'node:assert';
 
-import dotenv from 'dotenv';
-import readPackageUp from 'read-pkg-up';
-import type { NormalizedPackageJson } from 'read-pkg-up';
+import { config } from 'dotenv';
+import { readPackageUp } from 'read-package-up';
+import type { NormalizedPackageJson } from 'read-package-up';
 
-import type { AnyServiceLocals, RequestLocals, ServiceLocals, ServiceStartOptions } from './types';
-import { isDev } from './env';
-import { startWithTelemetry } from './telemetry/index';
-import { ConfigurationSchema } from './config/schema';
+import type { AnyServiceLocals, RequestLocals, ServiceLocals, ServiceStartOptions } from './types.js';
+import { isDev } from './env.js';
+import { startWithTelemetry } from './telemetry/index.js';
+import { ConfigurationSchema } from './config/schema.js';
 
 interface BootstrapArguments {
-  // The name of the service, else discovered via read-pkg-up
+  // The name of the service, else discovered via read-package-up
   name?: string;
   // The name of the file with the service function, relative to root
   main?: string;
-  // Root directory of the app, else discovered via read-pkg-up
+  // Root directory of the app, else discovered via read-package-up
   root?: string;
   // Use built directory. Omitting lets us determine a sensible default
   built?: boolean;
@@ -25,7 +25,7 @@ interface BootstrapArguments {
   telemetry?: boolean;
   // Don't bind to http port or expose metrics
   nobind?: boolean;
-  // The version of the app, else discovered via read-pkg-up
+  // The version of the app, else discovered via read-package-up
   version?: string;
 }
 
@@ -84,11 +84,6 @@ export async function bootstrap<
     // eslint-disable-next-line import/no-extraneous-dependencies
     const { register } = await import('ts-node');
     register();
-    try {
-      require('tsconfig-paths/register');
-    } catch (error) {
-      // No action needed
-    }
     if (main) {
       entrypoint = main.replace(/^(\.?\/?)(build|dist)\//, '$1src/').replace(/\.js$/, '.ts');
     } else {
@@ -102,7 +97,7 @@ export async function bootstrap<
     entrypoint = './build/index.js';
   }
 
-  dotenv.config();
+  config();
 
   const absoluteEntrypoint = path.resolve(rootDirectory, entrypoint);
   if (argv?.telemetry) {
@@ -117,7 +112,7 @@ export async function bootstrap<
 
   // This needs to be required for TS on-the-fly to work
   // eslint-disable-next-line global-require, import/no-dynamic-require, @typescript-eslint/no-var-requires
-  const impl = require(absoluteEntrypoint);
+  const impl = await import(absoluteEntrypoint);
   const opts: ServiceStartOptions<SLocals, RLocals> = {
     name,
     version,

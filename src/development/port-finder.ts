@@ -1,6 +1,6 @@
 import net from 'net';
 
-import { isTest } from '../env';
+import { isTest } from '../env.js';
 
 // Inspired by https://github.com/kessler/find-port/blob/master/lib/findPort.js
 async function isAvailable(port: number) {

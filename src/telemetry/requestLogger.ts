@@ -1,12 +1,12 @@
 import type { RequestHandler, Request, Response, ErrorRequestHandler } from 'express';
-import requestip from 'request-ip';
+import { getClientIp } from 'request-ip';
 import { Histogram } from '@opentelemetry/api';
 
-import { ServiceError } from '../error';
-import type { AnyServiceLocals, RequestWithApp, ServiceExpress, ServiceLocals } from '../types';
-import type { ServiceHandler } from '../express-app/types';
-import { ConfigurationSchema } from '../config/schema';
-import { getNodeEnv } from '../env';
+import { ServiceError } from '../error.js';
+import type { AnyServiceLocals, RequestWithApp, ServiceExpress, ServiceLocals } from '../types.js';
+import type { ServiceHandler } from '../express-app/types.js';
+import { ConfigurationSchema } from '../config/schema.js';
+import { getNodeEnv } from '../env.js';
 
 const LOG_PREFS = Symbol('Logging information');
 
@@ -36,7 +36,7 @@ function getBasicInfo(req: Request): [string, Record<string, string | number>] {
   const url = req.originalUrl || req.url;
 
   const preInfo: Record<string, string> = {
-    ip: requestip.getClientIp(req) || '',
+    ip: getClientIp(req) || '',
     m: req.method,
   };
 

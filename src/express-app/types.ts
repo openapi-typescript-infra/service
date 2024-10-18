@@ -1,7 +1,7 @@
 import type { NextFunction, Response } from 'express';
 
-import type { AnyServiceLocals, RequestLocals, RequestWithApp, ServiceLocals } from '../types';
-import { ConfigurationSchema } from '../config/schema';
+import type { AnyServiceLocals, RequestLocals, RequestWithApp, ServiceLocals } from '../types.js';
+import { ConfigurationSchema } from '../config/schema.js';
 
 export type ServiceHandler<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,

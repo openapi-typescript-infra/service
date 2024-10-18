@@ -1,5 +1,5 @@
-import type { Service, ServiceLocals } from '../../../src/types';
-import { useService } from '../../../src';
+import type { Service, ServiceLocals } from '../../../src/types.js';
+import { useService } from '../../../src/index.js';
 
 export interface FakeServLocals extends ServiceLocals {
   services: {
