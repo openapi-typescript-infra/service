@@ -1,5 +1,6 @@
 import http from 'http';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { describe, expect, test } from 'vitest';
 import request from 'supertest';
@@ -32,6 +33,9 @@ function httpRequest(options: http.RequestOptions) {
 
 describe('fake-serv', () => {
   test('basic service functionality', async () => {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
     const options: ServiceStartOptions<FakeServLocals> = {
       service,
       name: 'fake-serv',

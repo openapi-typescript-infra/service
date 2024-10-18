@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import {
   BaseConfitSchema,
@@ -81,6 +82,9 @@ export async function loadConfiguration<Config extends ConfigurationSchema>({
    * if you override this method, you should register your defaults first.
    */
   const defaultOrder = dirs.slice(0, dirs.length - 1).reverse();
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+
   defaultOrder.push(path.join(__dirname, '../..', 'config'));
   await defaultOrder.reduce(
     (promise, dir) => promise.then(() => addDefaultConfiguration(configFactory, dir, envConfit)),

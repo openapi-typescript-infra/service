@@ -1,5 +1,6 @@
 import os from 'os';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { describe, expect, test } from 'vitest';
 
@@ -18,6 +19,8 @@ interface CustomConfig extends ConfigurationSchema {
 
 describe('configuration loader', () => {
   test('overrides and shortstops', async () => {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
     const rootDirectory = path.resolve(__dirname, './fake-serv');
     const shortstopHandlers = shortstops({ name: 'fake-serv' }, path.join(rootDirectory, 'src'));
     const config = await loadConfiguration<CustomConfig>({
