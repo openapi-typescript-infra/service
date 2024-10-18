@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { glob } from 'glob';
-import { set } from 'lodash';
+import { set } from 'moderndash';
 
 import { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types.js';
 import { ConfigurationSchema } from '../config/schema.js';

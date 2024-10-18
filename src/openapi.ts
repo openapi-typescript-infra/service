@@ -1,6 +1,6 @@
 import path from 'path';
 
-import _ from 'lodash';
+import { merge } from 'moderndash';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { OpenAPIFramework } from 'express-openapi-validator/dist/framework/index.js';
 import type { Handler, Request, RequestHandler } from 'express';
@@ -144,7 +144,7 @@ export async function openApi<
       ...openApiOptions,
     };
 
-    return OpenApiValidator.middleware(_.defaultsDeep(defaultOptions, combinedOptions));
+    return OpenApiValidator.middleware(merge(defaultOptions, combinedOptions));
   } finally {
     if (_window) {
       (global as { window: unknown }).window = _window;
