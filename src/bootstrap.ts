@@ -81,6 +81,7 @@ export async function bootstrap<
   let entrypoint: string;
   let codepath: 'build' | 'dist' | 'src' = 'build';
   if (isDev() && argv?.built !== true) {
+    await import('tsx/esm');
     if (main) {
       entrypoint = main.replace(/^(\.?\/?)(build|dist)\//, '$1src/').replace(/\.js$/, '.ts');
     } else {
