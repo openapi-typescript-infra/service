@@ -2,7 +2,18 @@
   "name": "@openapi-typescript-infra/service",
   "version": "4.10.2",
   "description": "An opinionated framework for building configuration driven services - web, api, or  ob. Uses OpenAPI, pino logging, express, confit, Typescript and vitest.",
-  "exports": "./build/index.js",
+  "exports": {
+    ".": {
+      "import": "./build/index.js",
+      "require": "./build/index.js",
+      "types": "./build/index.d.ts"
+    },
+    "./telemetry": {
+      "import": "./build/telemetry/index.js",
+      "require": "./build/telemetry/index.js",
+      "types": "./build/telemetry/index.d.ts"
+    }
+  },
   "type": "module",
   "scripts": {
     "test": "vitest",
