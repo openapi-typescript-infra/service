@@ -104,7 +104,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
-    "@openapi-typescript-infra/coconfig": "^4.5.0",
+    "@openapi-typescript-infra/coconfig": "^4.6.0",
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/github": "^11.0.0",
@@ -125,7 +125,6 @@
     "pino-pretty": "^11.3.0",
     "pinst": "^3.0.0",
     "supertest": "^7.0.0",
-    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3",
     "vitest": "^2.1.3"

@@ -739,10 +739,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openapi-typescript-infra/coconfig@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "@openapi-typescript-infra/coconfig@npm:4.5.0"
-  checksum: 5f0eacbc9588ae7ec1984265e978e65d15c8a06c9f1cc181f249b1cbf09928f500e62501b636895c87ebdd67a92a5ba0ae091bd8a12303b2386108e8fc01c1f1
+"@openapi-typescript-infra/coconfig@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "@openapi-typescript-infra/coconfig@npm:4.6.0"
+  checksum: 34cb2e461996befe5062eab92cf6d65408f4e92ef33cc2dc3471b32e5853a1654416242efaecc4c0f64080b9b162340205836ab0984bdf2e5e6e62d054b73a93
   languageName: node
   linkType: hard
 
@@ -753,7 +753,7 @@ __metadata:
     "@commitlint/cli": ^19.5.0
     "@commitlint/config-conventional": ^19.5.0
     "@godaddy/terminus": ^4.12.1
-    "@openapi-typescript-infra/coconfig": ^4.5.0
+    "@openapi-typescript-infra/coconfig": ^4.6.0
     "@opentelemetry/api": ^1.9.0
     "@opentelemetry/exporter-prometheus": ^0.53.0
     "@opentelemetry/instrumentation-dns": ^0.39.0
@@ -803,7 +803,6 @@ __metadata:
     read-package-up: ^11.0.0
     request-ip: ^3.3.0
     supertest: ^7.0.0
-    ts-node: ^10.9.2
     tsconfig-paths: ^4.2.0
     typescript: ^5.6.3
     vitest: ^2.1.3
