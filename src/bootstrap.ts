@@ -1,5 +1,7 @@
 import path from 'node:path';
 import assert from 'node:assert';
+import { pathToFileURL } from 'node:url';
+import { register } from 'node:module';
 
 import { config } from 'dotenv';
 import { readPackageUp } from 'read-package-up';
@@ -81,9 +83,7 @@ export async function bootstrap<
   let entrypoint: string;
   let codepath: 'build' | 'dist' | 'src' = 'build';
   if (isDev() && argv?.built !== true) {
-    // eslint-disable-next-line import/no-extraneous-dependencies
-    const { register } = await import('ts-node');
-    register();
+    register('ts-node/esm', pathToFileURL('./'));
     if (main) {
       entrypoint = main.replace(/^(\.?\/?)(build|dist)\//, '$1src/').replace(/\.js$/, '.ts');
     } else {

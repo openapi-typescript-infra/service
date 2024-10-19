@@ -23,9 +23,6 @@ import type { ConfigurationSchema } from '../config/schema.js';
 import { getAutoInstrumentations } from './instrumentations.js';
 import { DummySpanExporter } from './DummyExporter.js';
 
-// For troubleshooting, set the log level to DiagLogLevel.DEBUG
-opentelemetry.api.diag.setLogger(new (opentelemetry.api.DiagConsoleLogger)(), opentelemetry.api.DiagLogLevel.INFO);
-
 function getExporter() {
   if (
     !process.env.DISABLE_OLTP_EXPORTER &&
@@ -55,6 +52,9 @@ let telemetrySdk: opentelemetry.NodeSDK | undefined;
  */
 export async function startGlobalTelemetry(serviceName: string) {
   if (!prometheusExporter) {
+    // For troubleshooting, set the log level to DiagLogLevel.DEBUG
+    opentelemetry.api.diag.setLogger(new (opentelemetry.api.DiagConsoleLogger)(), opentelemetry.api.DiagLogLevel.INFO);
+
     prometheusExporter = new PrometheusExporter({ preventServerStart: true });
     const instrumentations = getAutoInstrumentations();
     telemetrySdk = new opentelemetry.NodeSDK({

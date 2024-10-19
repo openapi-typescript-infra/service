@@ -93,7 +93,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
-    "@openapi-typescript-infra/coconfig": "^4.4.0",
+    "@openapi-typescript-infra/coconfig": "^4.5.0",
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/github": "^11.0.0",
@@ -101,7 +101,7 @@
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^5.0.0",
     "@types/minimist": "^1.2.5",
-    "@types/node": "^22.7.6",
+    "@types/node": "^22.7.7",
     "@types/request-ip": "^0.0.41",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
