@@ -94,6 +94,9 @@ dbi: src/generated/database.ts
 
 src/generated/database.ts: $(wildcard migrations/* migrations/**/*)
 	echo "Generating database types"
-	DATABASE_URL=postgres://$(PGUSER):$(PGPASSWORD)@$(PGHOST)/$(DB_NAME) yarn kysely-codegen \
+	envfile=$$(mktemp) && \
+	echo "DATABASE_URL=postgres://$(PGUSER):$(PGPASSWORD)@$(PGHOST)/$(DB_NAME)" > $$envfile && \
+	yarn kysely-codegen \
+		--env-file $$envfile \
 		--dialect postgres --schema public \
 		--out-file src/generated/database.ts
