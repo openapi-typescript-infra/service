@@ -27,7 +27,7 @@ camel_case_name := $(shell echo $(SERVICE_NAME) | awk -F- '{result=""; for(i=1; 
 
 # General utilities
 clean:
-	yarn dlx rimraf ./$(build_dir) src/generated
+	yarn dlx rimraf ./$(build_dir) src/generated tsconfig.build.tsbuildinfo
 
 # Typescript items
 ts: $(word 1, $(build_files))
@@ -60,13 +60,14 @@ endif
 # Config schema generation
 CONFIG_TYPE_SRC ?= src/types/config.ts
 CONFIG_TYPE ?= $(camel_case_name)ConfigSchema
+CONFIG_TS_CONFIG ?= tsconfig.tsup.json
 
 config-schema: src/generated/config-validator.ts
 
 src/generated/config-validator.ts: $(CONFIG_TYPE_SRC)
 	yarn typia-standalone-validator --force \
 		$(CONFIG_TYPE_SRC) $(CONFIG_TYPE) \
-		--project tsconfig.json -o src/generated/config-validator.ts
+		--project $(CONFIG_TS_CONFIG) -o src/generated/config-validator.ts
 
 # Postgres database things
 export PGUSER ?= postgres
