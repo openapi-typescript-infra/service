@@ -90,6 +90,7 @@
     "@sesamecare-oss/confit": "^2.2.1",
     "@sesamecare-oss/opentelemetry-node-metrics": "^1.1.0",
     "ajv": "^8.17.1",
+    "clean-stack": "^5.2.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^5.0.1",

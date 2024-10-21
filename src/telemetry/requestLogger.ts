@@ -1,6 +1,7 @@
 import type { RequestHandler, Request, Response, ErrorRequestHandler } from 'express';
 import { getClientIp } from 'request-ip';
 import { Histogram } from '@opentelemetry/api';
+import cleanStack from 'clean-stack';
 
 import { ServiceError } from '../error.js';
 import type { AnyServiceLocals, RequestWithApp, ServiceExpress, ServiceLocals } from '../types.js';
@@ -93,7 +94,7 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   if (error) {
     endLog.e = error.message;
     if (!(error instanceof ServiceError) || error.log_stack) {
-      endLog.st = error.stack;
+      endLog.st = cleanStack(error.stack);
     }
     if (!(error as ErrorWithStatus).expected_error) {
       unexpectedError = true;
