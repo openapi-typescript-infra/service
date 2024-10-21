@@ -20,13 +20,13 @@ export interface ServiceRouter<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 > {
-  all(path: string, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
-  get(path: string, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
-  post(path: string, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
-  put(path: string, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
-  delete(path: string, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
-  patch(path: string, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
-  options(path: string, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
-  head(path: string, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
+  all(path: string | RegExp, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
+  get(path: string | RegExp, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
+  post(path: string | RegExp, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
+  put(path: string | RegExp, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
+  delete(path: string | RegExp, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
+  patch(path: string | RegExp, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
+  options(path: string | RegExp, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
+  head(path: string | RegExp, ...handlers: ServiceHandler<SLocals, RLocals>[]): void;
   use(...handlers: ServiceHandler<SLocals, RLocals>[]): void;
 }
