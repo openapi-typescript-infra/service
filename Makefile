@@ -1,3 +1,7 @@
+ifneq ($(MAKEFILE_LIST),$(lastword $(MAKEFILE_LIST)))
+$(error This Makefile is meant to be included, not executed directly)
+endif
+
 # This Makefile is intended to be called by higher level/project Makefiles
 # It bakes in a number of standard practices include the use of the src
 # directory (choose your build dir as appropriate).
