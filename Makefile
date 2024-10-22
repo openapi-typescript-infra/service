@@ -1,4 +1,4 @@
-ifneq ($(MAKEFILE_LIST),$(lastword $(MAKEFILE_LIST)))
+ifneq ($(MAKEFILE_LIST),$(firstword $(MAKEFILE_LIST)))
 $(error This Makefile is meant to be included, not executed directly)
 endif
 
