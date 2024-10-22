@@ -54,26 +54,26 @@ export async function startApp<
   });
   const logger = shouldPrettyPrint
     ? pino(
-        {
-          transport: {
-            target: 'pino-pretty',
-            options: {
-              colorize: true,
-            },
+      {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
           },
         },
-        destination,
-      )
+      },
+      destination,
+    )
     : pino(
-        {
-          formatters: {
-            level(label) {
-              return { level: label };
-            },
+      {
+        formatters: {
+          level(label) {
+            return { level: label };
           },
         },
-        destination,
-      );
+      },
+      destination,
+    );
 
   const serviceImpl = service();
   assert(serviceImpl?.start, 'Service function did not return a conforming object');
@@ -320,13 +320,15 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
       }
       logger.info('Graceful shutdown beginning');
       return new Promise((accept) => {
+        // Per docs https://www.npmjs.com/package/@godaddy/terminus in Kubernetes, wait for readiness threshold
         setTimeout(accept, 10000);
       });
     },
     onShutdown() {
       return Promise.resolve()
         .then(() => service.stop?.(app))
-        .then(shutdownHandler || Promise.resolve)
+        .then(() => { logger.info('Service stop complete'); })
+        .then(shutdownHandler || (() => Promise.resolve()))
         .then(() => logger.info('Graceful shutdown complete'))
         .catch((error) => logger.error(error, 'Error terminating tracing'))
         .then(() => (logger as pino.Logger).flush?.());
