@@ -1,5 +1,5 @@
-ifneq ($(MAKEFILE_LIST),$(firstword $(MAKEFILE_LIST)))
-$(error This Makefile is meant to be included, not executed directly)
+ifeq ($(realpath $(lastword $(MAKEFILE_LIST))), $(realpath $(firstword $(MAKEFILE_LIST))))
+$(error The Makefile in @openapi-typescript-infra/service is meant to be included, not executed directly)
 endif
 
 # This Makefile is intended to be called by higher level/project Makefiles
