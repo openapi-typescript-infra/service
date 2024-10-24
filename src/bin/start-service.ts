@@ -15,6 +15,10 @@ const argv = minimist(process.argv.slice(2), {
   boolean: ['built', 'repl', 'telemetry', 'nobind'],
 });
 
+if (argv.telemetry) {
+  await import('../telemetry/hook-modules.js');
+}
+
 const noTelemetry = (argv.repl || isDev()) && !argv.telemetry;
 bootstrap({
   ...argv,
