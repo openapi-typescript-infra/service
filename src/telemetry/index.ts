@@ -28,6 +28,8 @@ import type { ConfigurationSchema } from '../config/schema.js';
 import { getAutoInstrumentations } from './instrumentations.js';
 import { DummySpanExporter } from './DummyExporter.js';
 
+const baseDefaultOtlpUrl = new URL('http://otlp-exporter:4318/v1').toString();
+
 function getSpanExporter() {
   if (
     !process.env.DISABLE_OLTP_EXPORTER &&
@@ -35,7 +37,7 @@ function getSpanExporter() {
       process.env.OTLP_EXPORTER)
   ) {
     return new OTLPTraceExporter({
-      url: process.env.OTLP_EXPORTER || 'http://otlp-exporter:4318/v1/traces',
+      url: process.env.OTLP_EXPORTER || `${baseDefaultOtlpUrl}/traces`,
     });
   }
   if (process.env.ENABLE_CONSOLE_OLTP_EXPORTER) {
@@ -51,7 +53,7 @@ function getLogExporter() {
       process.env.OTLP_EXPORTER)
   ) {
     return new OTLPLogExporter({
-      url: process.env.OTLP_EXPORTER || 'http://otlp-exporter:4318/v1/logs',
+      url: process.env.OTLP_EXPORTER || `${baseDefaultOtlpUrl}/logs`,
     });
   }
   if (process.env.ENABLE_CONSOLE_OLTP_EXPORTER) {
