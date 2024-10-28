@@ -84,7 +84,7 @@ function serviceTypeFactory(name: string) {
   return function serviceType(v: string) {
     let checkValue = v;
     let matchIsGood = true;
-    if (checkValue[0] === '!') {
+    if (checkValue.startsWith('!')) {
       matchIsGood = false;
       checkValue = checkValue.substring(1);
     }
@@ -114,7 +114,7 @@ export function shortstops(service: { name: string }, sourcedir: string) {
     env,
     // A version of env that can default to false
     env_switch(v: string) {
-      if (v && v[0] === '!') {
+      if (v && v.startsWith('!')) {
         const bval = env(`${v.substring(1)}|b`);
         return !bval;
       }
@@ -122,7 +122,7 @@ export function shortstops(service: { name: string }, sourcedir: string) {
     },
     base64: base64Handler(),
     regex(v: string) {
-      const [, pattern, flags] = v.match(/^\/(.*)\/([a-z]*)$/) || [];
+      const [, pattern, flags] = /^\/(.*)\/([a-z]*)$/.exec(v) || [];
       if (pattern === undefined) {
         throw new Error(`Invalid regular expression in configuration ${v}`);
       }

@@ -29,9 +29,12 @@ import { getAutoInstrumentations } from './instrumentations.js';
 import { DummySpanExporter } from './DummyExporter.js';
 
 /**
- * @SuppressWarning(typescript:S5332) - OTLP exporter requires http it seems.
+ * NOSONAR_BEGIN (typescript:S5332) - OTLP exporter requires http it seems.
  */
 const baseDefaultOtlpUrl = new URL('http://otlp-exporter:4318/v1').toString();
+/**
+ * NOSONAR_END (typescript:S5332)
+ */
 
 function getSpanExporter() {
   if (
