@@ -29,12 +29,10 @@ src_files := $(shell find src -name '*.ts')
 build_files := $(patsubst src/%.ts,$(build_dir)/%.js,$(src_files))
 camel_case_name := $(shell echo $(SERVICE_NAME) | awk -F- '{result=""; for(i=1; i<=NF; i++) result = result toupper(substr($$i,1,1)) substr($$i,2); print result}' | tr -d '\n')
 
-# General utilities
+ts: $(word 1, $(build_files))
+
 clean:
 	yarn dlx rimraf ./$(build_dir) src/generated tsconfig.build.tsbuildinfo
-
-# Typescript items
-ts: $(word 1, $(build_files))
 
 $(word 1, $(build_files)): $(src_files)
 	./node_modules/.bin/tsc -p tsconfig.build.json
