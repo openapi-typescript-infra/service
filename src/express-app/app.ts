@@ -5,7 +5,7 @@ import path from 'path';
 
 import { pino } from 'pino';
 import cookieParser from 'cookie-parser';
-import { metrics } from '@opentelemetry/api';
+import { context, metrics, trace } from '@opentelemetry/api';
 import { setupNodeMetrics } from '@sesamecare-oss/opentelemetry-node-metrics';
 import { createTerminus } from '@godaddy/terminus';
 import type { RequestHandler, Response } from 'express';
@@ -52,6 +52,22 @@ export async function startApp<
     dest: process.env.LOG_TO_FILE || process.stdout.fd,
     minLength: process.env.LOG_BUFFER ? Number(process.env.LOG_BUFFER) : undefined,
   });
+
+  function poorMansOtlp(mergeObject: object) {
+    if (!('trace_id' in mergeObject)) {
+      const activeSpan = trace.getSpan(context.active());
+      if (activeSpan) {
+        const ctx = activeSpan.spanContext();
+        Object.assign(mergeObject, {
+          trace_id: ctx.traceId,
+          span_id: ctx.spanId,
+          trace_flags: ctx.traceFlags
+        });
+      }
+    }
+    return mergeObject;
+  }
+
   const logger = shouldPrettyPrint
     ? pino(
       {
@@ -61,6 +77,7 @@ export async function startApp<
             colorize: true,
           },
         },
+        mixin: poorMansOtlp,
       },
       destination,
     )
@@ -71,6 +88,7 @@ export async function startApp<
             return { level: label };
           },
         },
+        mixin: poorMansOtlp,
       },
       destination,
     );

@@ -1,9 +1,14 @@
+import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-proto';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
 import {
+  Detector,
+  DetectorSync,
   envDetectorSync,
   hostDetectorSync,
+  IResource,
   osDetectorSync,
   processDetectorSync,
+  ResourceDetectionConfig,
 } from '@opentelemetry/resources';
 import { containerDetector } from '@opentelemetry/resource-detector-container';
 import { gcpDetector } from '@opentelemetry/resource-detector-gcp';
@@ -23,14 +28,18 @@ import type { ConfigurationSchema } from '../config/schema.js';
 import { getAutoInstrumentations } from './instrumentations.js';
 import { DummySpanExporter } from './DummyExporter.js';
 
-function getExporter() {
+// OTLP seems to only support http, and this is a default on the local network so I'm keeping it.
+// NOSONAR
+const baseDefaultOtlpUrl = new URL('http://otlp-exporter:4318/v1').toString();
+
+function getSpanExporter() {
   if (
     !process.env.DISABLE_OLTP_EXPORTER &&
     (['production', 'staging'].includes(process.env.APP_ENV || process.env.NODE_ENV || '') ||
       process.env.OTLP_EXPORTER)
   ) {
     return new OTLPTraceExporter({
-      url: process.env.OTLP_EXPORTER || 'http://otlp-exporter:4318/v1/traces',
+      url: process.env.OTLP_EXPORTER || `${baseDefaultOtlpUrl}/traces`,
     });
   }
   if (process.env.ENABLE_CONSOLE_OLTP_EXPORTER) {
@@ -39,8 +48,35 @@ function getExporter() {
   return new DummySpanExporter();
 }
 
+function getLogExporter() {
+  if (
+    !process.env.DISABLE_OLTP_EXPORTER &&
+    (['production', 'staging'].includes(process.env.APP_ENV || process.env.NODE_ENV || '') ||
+      process.env.OTLP_EXPORTER)
+  ) {
+    return new OTLPLogExporter({
+      url: process.env.OTLP_EXPORTER || `${baseDefaultOtlpUrl}/logs`,
+    });
+  }
+  if (process.env.ENABLE_CONSOLE_OLTP_EXPORTER) {
+    return new opentelemetry.logs.ConsoleLogRecordExporter();
+  }
+  return undefined;
+}
+
 let prometheusExporter: PrometheusExporter | undefined;
 let telemetrySdk: opentelemetry.NodeSDK | undefined;
+
+function awaitAttributes(detector: DetectorSync): Detector {
+  return {
+    async detect(config?: ResourceDetectionConfig): Promise<IResource> {
+      const resource = detector.detect(config)
+      await resource.waitForAsyncAttributes?.()
+
+      return resource
+    },
+  }
+}
 
 /**
  * OpenTelemetry is not friendly to the idea of stopping
@@ -52,31 +88,31 @@ let telemetrySdk: opentelemetry.NodeSDK | undefined;
  */
 export async function startGlobalTelemetry(serviceName: string) {
   if (!prometheusExporter) {
-    // For troubleshooting, set the log level to DiagLogLevel.DEBUG
-    opentelemetry.api.diag.setLogger(new (opentelemetry.api.DiagConsoleLogger)(), opentelemetry.api.DiagLogLevel.INFO);
+    const { metrics, logs, NodeSDK } = opentelemetry;
 
     prometheusExporter = new PrometheusExporter({ preventServerStart: true });
     const instrumentations = getAutoInstrumentations();
-    telemetrySdk = new opentelemetry.NodeSDK({
+    const logExporter = getLogExporter();
+    telemetrySdk = new NodeSDK({
       serviceName,
       autoDetectResources: false,
-      traceExporter: getExporter(),
       resourceDetectors: [
-        envDetectorSync,
-        hostDetectorSync,
-        osDetectorSync,
-        processDetectorSync,
-        containerDetector,
-        gcpDetector,
+        awaitAttributes(envDetectorSync),
+        awaitAttributes(hostDetectorSync),
+        awaitAttributes(osDetectorSync),
+        awaitAttributes(processDetectorSync),
+        awaitAttributes(containerDetector),
+        awaitAttributes(gcpDetector),
       ],
+      traceExporter: getSpanExporter(),
       metricReader: prometheusExporter,
       instrumentations,
-      logRecordProcessors: [],
+      logRecordProcessors: logExporter ? [new logs.BatchLogRecordProcessor(logExporter)] : [],
       views: [
-        new opentelemetry.metrics.View({
+        new metrics.View({
           instrumentName: 'http_request_duration_seconds',
-          instrumentType: opentelemetry.metrics.InstrumentType.HISTOGRAM,
-          aggregation: new opentelemetry.metrics.ExplicitBucketHistogramAggregation(
+          instrumentType: metrics.InstrumentType.HISTOGRAM,
+          aggregation: new metrics.ExplicitBucketHistogramAggregation(
             [0.003, 0.03, 0.1, 0.3, 1.5, 10],
             true,
           ),

@@ -16,7 +16,8 @@ export function validateConfiguration<Config extends ConfigurationSchema>(
 ) {
   const result = validator(config);
   if (!result.success) {
+    const errorMessages = result.errors.map((e) => `  - ${e.path}: ${e.message}`).join('\n');
     throw new Error(`Configuration validation failed:
-${result.errors.map((e) => `  - ${e.path}: ${e.message}`).join('\n')}`);
+${errorMessages}`);
   }
 }
