@@ -28,7 +28,10 @@ import type { ConfigurationSchema } from '../config/schema.js';
 import { getAutoInstrumentations } from './instrumentations.js';
 import { DummySpanExporter } from './DummyExporter.js';
 
-const baseDefaultOtlpUrl = new URL('https://otlp-exporter:4318/v1').toString();
+/**
+ * @SuppressWarning(typescript:S5332) - OTLP exporter requires http it seems.
+ */
+const baseDefaultOtlpUrl = new URL('http://otlp-exporter:4318/v1').toString();
 
 function getSpanExporter() {
   if (
