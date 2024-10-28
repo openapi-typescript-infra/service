@@ -28,13 +28,9 @@ import type { ConfigurationSchema } from '../config/schema.js';
 import { getAutoInstrumentations } from './instrumentations.js';
 import { DummySpanExporter } from './DummyExporter.js';
 
-/**
- * NOSONAR_BEGIN (typescript:S5332) - OTLP exporter requires http it seems.
- */
+// OTLP seems to only support http, and this is a default on the local network so I'm keeping it.
+// NOSONAR
 const baseDefaultOtlpUrl = new URL('http://otlp-exporter:4318/v1').toString();
-/**
- * NOSONAR_END (typescript:S5332)
- */
 
 function getSpanExporter() {
   if (
