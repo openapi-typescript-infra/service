@@ -1,3 +1,6 @@
+import { IncomingMessage} from 'http';
+
+import type { Request } from 'express';
 import type { Instrumentation } from '@opentelemetry/instrumentation';
 import { DnsInstrumentation } from '@opentelemetry/instrumentation-dns';
 import { ExpressInstrumentation, ExpressInstrumentationConfig } from '@opentelemetry/instrumentation-express';
@@ -8,9 +11,6 @@ import { IORedisInstrumentation } from '@opentelemetry/instrumentation-ioredis';
 import { NetInstrumentation } from '@opentelemetry/instrumentation-net';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
 import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
-import { Span } from '@opentelemetry/api';
-import { IncomingMessage, ClientRequest } from 'http';
-import { Request } from 'express';
 
 const InstrumentationMap = {
   '@opentelemetry/instrumentation-http': HttpInstrumentation,
@@ -74,7 +74,7 @@ export function getAutoInstrumentations(
         expressConfig.requestHook = (span, req) => {
           const method = req.request?.method || 'UNKNOWN';
           // Use the matched route path instead of raw URL if available
-          const route = (req.request as any).route?.path || req.request?.url?.split('?')[0] || '/';
+          const route = (req.request as Request).route?.path || req.request?.url?.split('?')[0] || '/';
           span.updateName(createSpanName(method, route));
         };
       }
