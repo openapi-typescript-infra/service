@@ -28,6 +28,11 @@ export function serviceRepl<SLocals extends AnyServiceLocals = ServiceLocals<Con
       // eslint-disable-next-line no-console
       console.log(JSON.stringify(o, null, '\t'));
     },
+    // Use iTerm2's escape code to copy to clipboard
+    pbcopy(str: string) {
+      const encoded = Buffer.from(str.toString(), 'utf8').toString('base64');
+      process.stdout.write(`\x1b]52;c;${encoded}\x07`);
+    },
   });
   rl.setupHistory(path.resolve('.node_repl_history'), (err) => {
     if (err) {
