@@ -76,11 +76,22 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
 
   const dur = hrdur[0] + hrdur[1] / 1000000000;
   const [url, preInfo] = getBasicInfo(req);
+
+  let responseType: string = 'finished';
+
+  // ts warning is known and incorrect—`aborted` is a subset of `destroyed`
+  if (req.aborted) {
+    responseType = 'aborted';
+  } else if (req.destroyed) {
+    responseType = 'destroyed';
+  } else if (error) {
+    responseType = 'errored';
+  }
+
   const endLog: Record<string, string | string[] | number | undefined> = {
     ...preInfo,
     t: 'req',
-    // ts warning is known and incorrect—`aborted` is a subset of `destroyed``
-    r: req.aborted ? 'aborted' : req.destroyed ? 'destroyed' : error ? 'errored' : 'finished',
+    r: responseType,
     s: (error as ErrorWithStatus)?.status || res.statusCode || 0,
     dur,
   };
