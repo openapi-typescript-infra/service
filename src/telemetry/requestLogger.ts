@@ -10,6 +10,7 @@ import { ConfigurationSchema } from '../config/schema.js';
 import { getNodeEnv } from '../env.js';
 
 const LOG_PREFS = Symbol('Logging information');
+const LOGGED_SEMAPHORE = Symbol('Logged semaphore');
 
 interface LogPrefs {
   start: [number, number];
@@ -57,9 +58,13 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   app: ServiceExpress<SLocals>,
   error: Error | undefined,
   req: Request,
-  res: Response,
+  res: Response & { [LOGGED_SEMAPHORE]?: boolean },
   histogram: Histogram,
 ) {
+  if (res[LOGGED_SEMAPHORE]) {
+    return;
+  }
+
   const prefs = (res.locals as WithLogPrefs)[LOG_PREFS];
   if (prefs.logged) {
     // This happens when error handler runs, but onEnd hasn't fired yet. We only log the first one.
@@ -74,6 +79,8 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   const endLog: Record<string, string | string[] | number | undefined> = {
     ...preInfo,
     t: 'req',
+    // ts warning is known and incorrect—`aborted` is a subset of `destroyed``
+    r: req.aborted ? 'aborted' : req.destroyed ? 'destroyed' : error ? 'errored' : 'finished',
     s: (error as ErrorWithStatus)?.status || res.statusCode || 0,
     dur,
   };
@@ -124,6 +131,8 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   } else {
     logger.info(endLog, msg);
   }
+
+  res[LOGGED_SEMAPHORE] = true;
 }
 
 export function loggerMiddleware<
@@ -180,8 +189,10 @@ export function loggerMiddleware<
       logger.info(preLog, msg);
     }
 
-    const logWriter = () => finishLog(app, undefined, req, res, histogram);
+    const logWriter = (err?: Error) => finishLog(app, err, req, res, histogram);
     res.on('finish', logWriter);
+    res.on('close', logWriter);
+    res.on('error', logWriter);
     next();
   };
 }
