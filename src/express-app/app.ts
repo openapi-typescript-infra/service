@@ -298,8 +298,8 @@ function httpServer<
 
   return https.createServer(
     {
-      key: config.key ? Buffer.from(config.key) : undefined,
-      cert: config.certificate ? Buffer.from(config.certificate) : undefined,
+      key: config.key ? Buffer.from(config.key as string) : undefined,
+      cert: config.certificate ? Buffer.from(config.certificate as string) : undefined,
     },
     app,
   );
