@@ -188,7 +188,7 @@ export async function startApp<
     );
   }
   if (routing?.bodyParsers?.form) {
-    app.use(express.urlencoded());
+    app.use(express.urlencoded(typeof routing.bodyParsers.form === 'object' ? routing.bodyParsers.form : {}));
   }
 
   if (serviceImpl.authorize) {
