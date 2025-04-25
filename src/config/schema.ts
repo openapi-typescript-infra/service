@@ -1,6 +1,7 @@
 import type { BaseConfitSchema } from '@sesamecare-oss/confit';
 import type { middleware } from 'express-openapi-validator';
 import type { Level } from 'pino';
+import bodyParser from 'body-parser';
 
 export interface ConfigurationItemEnabled {
   enabled?: boolean;
@@ -28,8 +29,8 @@ export interface ConfigurationSchema extends BaseConfitSchema {
     etag?: boolean;
     cookieParser?: boolean;
     bodyParsers?: {
-      json?: boolean;
-      form?: boolean;
+      json?: boolean | Parameters<typeof bodyParser.json>[0];
+      form?: boolean | Parameters<typeof bodyParser.urlencoded>[0];
     };
     // Set static.enabled to true to enable static assets to be served
     static?: ConfigurationItemEnabled & {

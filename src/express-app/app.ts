@@ -174,6 +174,7 @@ export async function startApp<
   }
 
   if (routing?.bodyParsers?.json) {
+    const jsonArgs = typeof routing.bodyParsers.json === 'object' ? routing.bodyParsers.json : {};
     app.use(
       express.json({
         verify(req, res, buf) {
@@ -182,6 +183,7 @@ export async function startApp<
             locals.rawBody = buf;
           }
         },
+        ...jsonArgs,
       }),
     );
   }
