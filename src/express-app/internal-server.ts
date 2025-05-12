@@ -17,12 +17,12 @@ export async function startInternalApp<
     if (mainApp.locals.service?.healthy) {
       try {
         const ok = await mainApp.locals.service.healthy(mainApp);
-        res.sendStatus(ok ? 204 : 500);
+        res.sendStatus(ok ? 200 : 500);
       } catch (error) {
         mainApp.locals.logger.error(error, 'Health check failed');
       }
     } else {
-      res.sendStatus(204);
+      res.sendStatus(200);
     }
   });
 
