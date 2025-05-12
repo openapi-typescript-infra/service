@@ -97,9 +97,13 @@ export async function startApp<
   assert(serviceImpl?.start, 'Service function did not return a conforming object');
 
   const sourceDirectory = path.join(rootDirectory, codepath);
+  const codeExtension = codepath === 'src' ? '.ts' : '.js';
+
   const baseOptions: ServiceOptions = {
     configurationDirectories: [path.resolve(rootDirectory, './config')],
     shortstopHandlers: shortstops({ name }, sourceDirectory),
+    codepath,
+    codeExtension,
   };
   const options = serviceImpl.configure?.(startOptions, baseOptions) || baseOptions;
 

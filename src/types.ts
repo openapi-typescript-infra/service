@@ -143,6 +143,11 @@ export interface DelayLoadServiceStartOptions extends Omit<ServiceStartOptions, 
 
 // Handled by service.configure
 export interface ServiceOptions {
+  // Used to resolve code paths flexibly during dev/prod
+  codepath: string;
+  // Will be either .ts or .js depending on the runtime environment
+  codeExtension: string;
+
   // If you need multiple configuration directories, pass them here
   // in the desired order (later trumps earlier)
   configurationDirectories: string[];
