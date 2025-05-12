@@ -72,9 +72,12 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   }
 
   const { logger, service } = app.locals;
-  const hrdur = process.hrtime(prefs.start);
 
-  const dur = hrdur[0] + hrdur[1] / 1000000000;
+  let dur = 0;
+  if (prefs?.start) {
+    const hrdur = process.hrtime(prefs.start);
+    dur = hrdur[0] + hrdur[1] / 1000000000;
+  }
   const [url, preInfo] = getBasicInfo(req);
 
   let responseType: string = 'finished';
