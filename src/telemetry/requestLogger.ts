@@ -65,8 +65,8 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
     return;
   }
 
-  const prefs = (res.locals as WithLogPrefs)[LOG_PREFS];
-  if (prefs?.logged) {
+  const prefs = (res.locals as WithLogPrefs)[LOG_PREFS] || {};
+  if (prefs.logged) {
     // This happens when error handler runs, but onEnd hasn't fired yet. We only log the first one.
     return;
   }
@@ -74,7 +74,7 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   const { logger, service } = app.locals;
 
   let dur = 0;
-  if (prefs?.start) {
+  if (prefs.start) {
     const hrdur = process.hrtime(prefs.start);
     dur = hrdur[0] + hrdur[1] / 1000000000;
   }
