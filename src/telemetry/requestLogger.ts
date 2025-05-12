@@ -66,7 +66,7 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   }
 
   const prefs = (res.locals as WithLogPrefs)[LOG_PREFS];
-  if (prefs.logged) {
+  if (prefs?.logged) {
     // This happens when error handler runs, but onEnd hasn't fired yet. We only log the first one.
     return;
   }
