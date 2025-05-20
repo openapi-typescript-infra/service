@@ -1,9 +1,9 @@
 import type { Instrumentation } from '@opentelemetry/instrumentation';
 import { DnsInstrumentation } from '@opentelemetry/instrumentation-dns';
-import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
+import { ExpressInstrumentation, SpanNameHook } from '@opentelemetry/instrumentation-express';
 import { UndiciInstrumentation } from '@opentelemetry/instrumentation-undici';
 import { GenericPoolInstrumentation } from '@opentelemetry/instrumentation-generic-pool';
-import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
+import { HttpInstrumentation, IgnoreIncomingRequestFunction } from '@opentelemetry/instrumentation-http';
 import { IORedisInstrumentation } from '@opentelemetry/instrumentation-ioredis';
 import { NetInstrumentation } from '@opentelemetry/instrumentation-net';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
@@ -27,8 +27,45 @@ export type InstrumentationConfigMap = {
   [Name in keyof typeof InstrumentationMap]?: ConfigArg<(typeof InstrumentationMap)[Name]>;
 };
 
+let ignoreIncomingRequestHook: IgnoreIncomingRequestFunction | undefined = (req) => {
+  return req.url === '/health' || req.url === '/metrics';
+};
+
+let spanNameHook: SpanNameHook | undefined;
+
+export function setTelemetryHooks(hooks: {
+  ignoreIncomingRequestHook?: IgnoreIncomingRequestFunction;
+  spanNameHook?: SpanNameHook;
+}) {
+  if ('ignoreIncomingRequestHook' in hooks) {
+    ignoreIncomingRequestHook = hooks.ignoreIncomingRequestHook;
+  }
+  if ('spanNameHook' in hooks) {
+    spanNameHook = hooks.spanNameHook;
+  }
+}
+
+const defaultConfigs: InstrumentationConfigMap = {
+  '@opentelemetry/instrumentation-http': {
+    ignoreIncomingRequestHook(req) {
+      if (ignoreIncomingRequestHook) {
+        return ignoreIncomingRequestHook(req);
+      }
+      return false;
+    },
+  },
+  '@opentelemetry/instrumentation-express': {
+    spanNameHook(info, defaultName) {
+      if (spanNameHook) {
+        return spanNameHook(info, defaultName);
+      }
+      return defaultName;
+    },
+  },
+};
+
 export function getAutoInstrumentations(
-  inputConfigs: InstrumentationConfigMap = {},
+  inputConfigs: InstrumentationConfigMap = defaultConfigs,
 ): Instrumentation[] {
   const keys = Object.keys(InstrumentationMap) as Array<keyof typeof InstrumentationMap>;
   return keys
