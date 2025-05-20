@@ -232,7 +232,7 @@ export async function startApp<
   }
 
   if (routing?.freezeQuery) {
-    app.use((req, res, next) => {
+    app.use(function freezeQuery(req, res, next) {
       // Express 5 re-parses the query string every time. This causes problems with
       // various libraries, namely the express OpenAPI parser. So we "freeze it" in place
       // here, which runs right before the routing validation logic does. Note that this
@@ -259,7 +259,8 @@ export async function startApp<
     );
   }
   if (routing?.openapi) {
-    app.use(await openApi(app, rootDirectory, codepath, codePattern, options.openApiOptions));
+    const openApiMiddleware = await openApi(app, rootDirectory, codepath, codePattern, options.openApiOptions);
+    app.use(openApiMiddleware);
   }
 
   // Putting this here allows more flexible middleware insertion

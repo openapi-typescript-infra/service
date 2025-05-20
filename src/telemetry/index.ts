@@ -1,14 +1,11 @@
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-proto';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
 import {
-  Detector,
-  DetectorSync,
-  envDetectorSync,
-  hostDetectorSync,
-  IResource,
-  osDetectorSync,
-  processDetectorSync,
-  ResourceDetectionConfig,
+  detectResources,
+  envDetector,
+  hostDetector,
+  osDetector,
+  processDetector,
 } from '@opentelemetry/resources';
 import { containerDetector } from '@opentelemetry/resource-detector-container';
 import { gcpDetector } from '@opentelemetry/resource-detector-gcp';
@@ -67,17 +64,6 @@ function getLogExporter() {
 let prometheusExporter: PrometheusExporter | undefined;
 let telemetrySdk: opentelemetry.NodeSDK | undefined;
 
-function awaitAttributes(detector: DetectorSync): Detector {
-  return {
-    async detect(config?: ResourceDetectionConfig): Promise<IResource> {
-      const resource = detector.detect(config)
-      await resource.waitForAsyncAttributes?.()
-
-      return resource
-    },
-  }
-}
-
 /**
  * OpenTelemetry is not friendly to the idea of stopping
  * and starting itself, it seems. So we can only keep a global
@@ -90,33 +76,40 @@ export async function startGlobalTelemetry(serviceName: string) {
   if (!prometheusExporter) {
     const { metrics, logs, NodeSDK } = opentelemetry;
 
+    const resource = await detectResources({
+      detectors: [
+        envDetector,
+        hostDetector,
+        osDetector,
+        processDetector,
+        containerDetector,
+        gcpDetector,
+      ],
+    });
+
     prometheusExporter = new PrometheusExporter({ preventServerStart: true });
     const instrumentations = getAutoInstrumentations();
     const logExporter = getLogExporter();
     telemetrySdk = new NodeSDK({
       serviceName,
       autoDetectResources: false,
-      resourceDetectors: [
-        awaitAttributes(envDetectorSync),
-        awaitAttributes(hostDetectorSync),
-        awaitAttributes(osDetectorSync),
-        awaitAttributes(processDetectorSync),
-        awaitAttributes(containerDetector),
-        awaitAttributes(gcpDetector),
-      ],
+      resource,
       traceExporter: getSpanExporter(),
       metricReader: prometheusExporter,
       instrumentations,
       logRecordProcessors: logExporter ? [new logs.BatchLogRecordProcessor(logExporter)] : [],
       views: [
-        new metrics.View({
+        {
           instrumentName: 'http_request_duration_seconds',
           instrumentType: metrics.InstrumentType.HISTOGRAM,
-          aggregation: new metrics.ExplicitBucketHistogramAggregation(
-            [0.003, 0.03, 0.1, 0.3, 1.5, 10],
-            true,
-          ),
-        }),
+          aggregation: {
+            type: metrics.AggregationType.EXPLICIT_BUCKET_HISTOGRAM,
+            options: {
+              boundaries: [0.003, 0.03, 0.1, 0.3, 1.5, 10],
+              recordMinMax: true,
+            },
+          },
+        },
       ],
     });
     telemetrySdk.start();
@@ -160,3 +153,5 @@ export async function startWithTelemetry<
   });
   return { app, codepath: options.codepath, server };
 }
+
+export { setTelemetryHooks } from './instrumentations.js';
