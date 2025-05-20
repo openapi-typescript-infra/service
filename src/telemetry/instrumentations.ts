@@ -6,6 +6,7 @@ import { GenericPoolInstrumentation } from '@opentelemetry/instrumentation-gener
 import { HttpInstrumentation, IgnoreIncomingRequestFunction } from '@opentelemetry/instrumentation-http';
 import { IORedisInstrumentation } from '@opentelemetry/instrumentation-ioredis';
 import { NetInstrumentation } from '@opentelemetry/instrumentation-net';
+import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
 import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
 
@@ -13,6 +14,7 @@ const InstrumentationMap = {
   '@opentelemetry/instrumentation-http': HttpInstrumentation,
   '@opentelemetry/instrumentation-dns': DnsInstrumentation,
   '@opentelemetry/instrumentation-express': ExpressInstrumentation,
+  '@opentelemetry/instrumentation-graphql': GraphQLInstrumentation,
   '@opentelemetry/instrumentation-undici': UndiciInstrumentation,
   '@opentelemetry/instrumentation-generic-pool': GenericPoolInstrumentation,
   '@opentelemetry/instrumentation-ioredis': IORedisInstrumentation,
