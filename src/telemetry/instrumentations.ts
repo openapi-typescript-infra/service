@@ -63,6 +63,19 @@ const defaultConfigs: InstrumentationConfigMap = {
       }
       return defaultName;
     },
+    ignoreLayers: [
+      'serviceLogger',
+      'jsonParser',
+      'attachServiceLocals',
+      'cookieParser',
+      'corsMiddleware',
+      'addReturnHeaders',
+      'freezeQuery',
+      'pathParamsMiddleware',
+      'metadataMiddleware',
+      'multipartMiddleware',
+      'securityMiddleware',
+    ],
   },
 };
 
