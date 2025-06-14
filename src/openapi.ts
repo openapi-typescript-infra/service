@@ -76,7 +76,7 @@ export async function openApi<
 
   try {
     app.locals.openApiSpecification = await new OpenAPIFramework({ apiDoc: apiSpec })
-      .initialize({ visitApi() { } })
+      .initialize({ visitApi() {} })
       .then((docs) => docs.apiDoc)
       .catch((error) => {
         app.locals.logger.error(error, 'Failed to parse and load OpenAPI spec');
@@ -130,15 +130,15 @@ export async function openApi<
       // by setting validateResponses to false in the config.
       ...(getNodeEnv() === 'test'
         ? {
-          validateResponses: {
-            onError(error: Error, body: unknown, req: Request) {
-              console.log('Response body fails validation: ', error);
-              console.log('Emitted from:', req.originalUrl);
-              console.debug(body);
-              throw error;
+            validateResponses: {
+              onError(error: Error, body: unknown, req: Request) {
+                console.log('Response body fails validation: ', error);
+                console.log('Emitted from:', req.originalUrl);
+                console.debug(body);
+                throw error;
+              },
             },
-          },
-        }
+          }
         : {}),
       ...(typeof routing.openapi === 'object' ? routing.openapi : {}),
       ...openApiOptions,
@@ -148,6 +148,6 @@ export async function openApi<
   } finally {
     if (_window) {
       (global as { window: unknown }).window = _window;
-    };
+    }
   }
 }

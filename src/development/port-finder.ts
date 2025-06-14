@@ -64,5 +64,5 @@ async function getEphemeralPort(): Promise<number> {
 }
 
 export async function getAvailablePort(basePort: number): Promise<number> {
-  return (isTest() || process.env.TEST_RUNNER) ? getEphemeralPort() : findPort(basePort);
+  return isTest() || process.env.TEST_RUNNER ? getEphemeralPort() : findPort(basePort);
 }
