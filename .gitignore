@@ -6,6 +6,7 @@ coverage
 .nyc_output
 *.log
 .tap_output
+.vscode
 
 .yarn/*
 !.yarn/patches

@@ -133,7 +133,7 @@ export async function startWithTelemetry<
   await startGlobalTelemetry(options.name);
 
   // eslint-disable-next-line import/no-unresolved, @typescript-eslint/no-var-requires
-  const { startApp, listen } = await import('../express-app/app.js') as {
+  const { startApp, listen } = (await import('../express-app/app.js')) as {
     startApp: StartAppFn<SLocals, RLocals>;
     listen: ListenFn<SLocals>;
   };

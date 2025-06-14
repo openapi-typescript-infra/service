@@ -19,11 +19,23 @@ export function serviceRepl<SLocals extends AnyServiceLocals = ServiceLocals<Con
   codepath: string | undefined,
   onExit: () => void,
 ) {
+  class FakeReq {
+    locals: { app: ServiceExpress<SLocals> } = { app };
+    headers: Record<string, string | string[] | undefined> = {};
+    query = new URLSearchParams();
+    body: unknown = {};
+
+    constructor(public path: string) {
+      this.locals.app = app;
+    }
+  }
+
   const rl = repl.start({
     prompt: '> ',
   });
   Object.assign(rl.context, app.locals, {
     app,
+    req: new FakeReq('/'),
     dump(o: unknown) {
       // eslint-disable-next-line no-console
       console.log(JSON.stringify(o, null, '\t'));
@@ -47,11 +59,9 @@ export function serviceRepl<SLocals extends AnyServiceLocals = ServiceLocals<Con
   rl.on('exit', onExit);
 }
 
-async function loadReplFunctions<SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>>(
-  app: ServiceExpress<SLocals>,
-  codepath: string | undefined,
-  rl: REPLServer,
-) {
+async function loadReplFunctions<
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
+>(app: ServiceExpress<SLocals>, codepath: string | undefined, rl: REPLServer) {
   if (!codepath) {
     return;
   }
@@ -104,7 +114,7 @@ type ReplAny = any;
  */
 export function repl$<
   S extends ServiceExpress<ReplAny>,
-  T extends (app: S, ...args: ReplAny[]) => ReplAny
+  T extends (app: S, ...args: ReplAny[]) => ReplAny,
 >(fn: T, name?: string) {
   const functionName = name || fn.name;
   if (!functionName) {

@@ -3,7 +3,10 @@ import { DnsInstrumentation } from '@opentelemetry/instrumentation-dns';
 import { ExpressInstrumentation, SpanNameHook } from '@opentelemetry/instrumentation-express';
 import { UndiciInstrumentation } from '@opentelemetry/instrumentation-undici';
 import { GenericPoolInstrumentation } from '@opentelemetry/instrumentation-generic-pool';
-import { HttpInstrumentation, IgnoreIncomingRequestFunction } from '@opentelemetry/instrumentation-http';
+import {
+  HttpInstrumentation,
+  IgnoreIncomingRequestFunction,
+} from '@opentelemetry/instrumentation-http';
 import { IORedisInstrumentation } from '@opentelemetry/instrumentation-ioredis';
 import { NetInstrumentation } from '@opentelemetry/instrumentation-net';
 import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql';

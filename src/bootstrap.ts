@@ -5,7 +5,12 @@ import { config } from 'dotenv';
 import { readPackageUp } from 'read-package-up';
 import type { NormalizedPackageJson } from 'read-package-up';
 
-import type { AnyServiceLocals, RequestLocals, ServiceLocals, ServiceStartOptions } from './types.js';
+import type {
+  AnyServiceLocals,
+  RequestLocals,
+  ServiceLocals,
+  ServiceStartOptions,
+} from './types.js';
 import { isDev } from './env.js';
 import { startWithTelemetry } from './telemetry/index.js';
 import { ConfigurationSchema } from './config/schema.js';

@@ -61,7 +61,7 @@ export async function startApp<
         Object.assign(mergeObject, {
           trace_id: ctx.traceId,
           span_id: ctx.spanId,
-          trace_flags: ctx.traceFlags
+          trace_flags: ctx.traceFlags,
         });
       }
     }
@@ -70,28 +70,28 @@ export async function startApp<
 
   const logger = shouldPrettyPrint
     ? pino(
-      {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            colorize: true,
+        {
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              colorize: true,
+            },
           },
+          mixin: poorMansOtlp,
         },
-        mixin: poorMansOtlp,
-      },
-      destination,
-    )
+        destination,
+      )
     : pino(
-      {
-        formatters: {
-          level(label) {
-            return { level: label };
+        {
+          formatters: {
+            level(label) {
+              return { level: label };
+            },
           },
+          mixin: poorMansOtlp,
         },
-        mixin: poorMansOtlp,
-      },
-      destination,
-    );
+        destination,
+      );
 
   const serviceImpl = service();
   assert(serviceImpl?.start, 'Service function did not return a conforming object');
@@ -192,7 +192,11 @@ export async function startApp<
     );
   }
   if (routing?.bodyParsers?.form) {
-    app.use(express.urlencoded(typeof routing.bodyParsers.form === 'object' ? routing.bodyParsers.form : {}));
+    app.use(
+      express.urlencoded(
+        typeof routing.bodyParsers.form === 'object' ? routing.bodyParsers.form : {},
+      ),
+    );
   }
 
   if (serviceImpl.authorize) {
@@ -259,7 +263,13 @@ export async function startApp<
     );
   }
   if (routing?.openapi) {
-    const openApiMiddleware = await openApi(app, rootDirectory, codepath, codePattern, options.openApiOptions);
+    const openApiMiddleware = await openApi(
+      app,
+      rootDirectory,
+      codepath,
+      codePattern,
+      options.openApiOptions,
+    );
     app.use(openApiMiddleware);
   }
 
@@ -352,7 +362,9 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
     onShutdown() {
       return Promise.resolve()
         .then(() => service.stop?.(app))
-        .then(() => { logger.info('Service stop complete'); })
+        .then(() => {
+          logger.info('Service stop complete');
+        })
         .then(shutdownHandler || (() => Promise.resolve()))
         .then(() => logger.info('Graceful shutdown complete'))
         .catch((error) => logger.error(error, 'Error terminating tracing'))
