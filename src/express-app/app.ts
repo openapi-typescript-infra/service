@@ -429,7 +429,7 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
   });
 
   await listenPromise;
-  await service.onListening?.(app, port);
+  await service.onListening?.(app, { port, protocol: config.certificate ? 'https' : 'http' });
   return server;
 }
 
