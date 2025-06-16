@@ -78,6 +78,8 @@ export interface Service<
 
   // Called after a server is created but before the server starts listening
   attachServer?: (app: ServiceExpress<SLocals>, server: Server) => void | Promise<void>;
+  // Called after the server is listening
+  onListening?: (app: ServiceExpress<SLocals>, port: number) => void | Promise<void>;
 
   start(app: ServiceExpress<SLocals>): void | Promise<void>;
 

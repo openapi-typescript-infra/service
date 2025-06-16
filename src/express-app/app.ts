@@ -429,6 +429,7 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
   });
 
   await listenPromise;
+  await service.onListening?.(app, port);
   return server;
 }
 
