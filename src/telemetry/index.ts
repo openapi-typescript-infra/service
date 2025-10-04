@@ -124,6 +124,10 @@ export async function startGlobalTelemetry(
   }
 }
 
+export function getNodeTelemetrySdk() {
+  return telemetrySdk;
+}
+
 export function getGlobalPrometheusExporter() {
   return prometheusExporter;
 }
