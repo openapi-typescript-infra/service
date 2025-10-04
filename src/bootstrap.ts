@@ -111,7 +111,8 @@ export async function bootstrap<
       | undefined = undefined;
     if (customizer) {
       // Customize OTEL with a dynamic import based on the codePath (so put it in src, generally)
-      otelCustomizer = (await import(`./${codepath}/${customizer}`)).NodeSDKConfiguration;
+      otelCustomizer = (await import(path.resolve(`${codepath}/${customizer}`)))
+        .NodeSDKConfiguration;
       if (typeof otelCustomizer === 'object') {
         otelCustomizer = (v) => ({ ...v, ...(otelCustomizer as Partial<NodeSDKConfiguration>) });
       }
