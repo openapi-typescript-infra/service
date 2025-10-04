@@ -4,6 +4,7 @@ import assert from 'node:assert';
 import { config } from 'dotenv';
 import { readPackageUp } from 'read-package-up';
 import type { NormalizedPackageJson } from 'read-package-up';
+import { NodeSDKConfiguration } from '@opentelemetry/sdk-node';
 
 import type {
   AnyServiceLocals,
@@ -64,6 +65,7 @@ async function getServiceDetails(argv: BootstrapArguments = {}) {
     rootDirectory: path.dirname(pkg.path),
     name: parts[parts.length - 1],
     version: pkg.packageJson.version,
+    customizer: (pkg.packageJson.config?.telemetry as { customizer?: string })?.customizer,
   };
 }
 
@@ -81,7 +83,7 @@ export async function bootstrap<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 >(argv?: BootstrapArguments) {
-  const { main, rootDirectory, name, version } = await getServiceDetails(argv);
+  const { main, rootDirectory, name, version, customizer } = await getServiceDetails(argv);
 
   let entrypoint: string;
   let codepath: 'build' | 'dist' | 'src' = 'build';
@@ -104,12 +106,23 @@ export async function bootstrap<
 
   const absoluteEntrypoint = path.resolve(rootDirectory, entrypoint);
   if (argv?.telemetry) {
+    let otelCustomizer:
+      | ((options: Partial<NodeSDKConfiguration>) => Partial<NodeSDKConfiguration>)
+      | undefined = undefined;
+    if (customizer) {
+      // Customize OTEL with a dynamic import based on the codePath (so put it in src, generally)
+      otelCustomizer = (await import(`$(codePath}/${customizer}`)).NodeSDKConfiguration;
+      if (typeof otelCustomizer === 'object') {
+        otelCustomizer = (v) => ({ ...v, ...(otelCustomizer as Partial<NodeSDKConfiguration>) });
+      }
+    }
     return startWithTelemetry<SLocals, RLocals>({
       name,
       rootDirectory,
       service: absoluteEntrypoint,
       codepath,
       version,
+      customizer: otelCustomizer,
     });
   }
 

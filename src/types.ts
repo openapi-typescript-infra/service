@@ -6,6 +6,7 @@ import type { Request, Response } from 'express';
 import type { Application } from 'express-serve-static-core';
 import type { middleware } from 'express-openapi-validator';
 import type { Meter } from '@opentelemetry/api';
+import type { NodeSDKConfiguration } from '@opentelemetry/sdk-node';
 import { ShortstopHandler } from '@sesamecare-oss/confit';
 
 import { ConfigurationSchema } from './config/schema.js';
@@ -144,6 +145,9 @@ export interface ServiceStartOptions<
 
 export interface DelayLoadServiceStartOptions extends Omit<ServiceStartOptions, 'service'> {
   service: string;
+  customizer?:
+    | ((options: Partial<NodeSDKConfiguration>) => Partial<NodeSDKConfiguration>)
+    | undefined;
 }
 
 // Handled by service.configure

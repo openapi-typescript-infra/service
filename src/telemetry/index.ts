@@ -72,7 +72,14 @@ let telemetrySdk: opentelemetry.NodeSDK | undefined;
  * In addition, since we have to load it right away before configuration
  * is available, we can't use configuration to decide anything.
  */
-export async function startGlobalTelemetry(serviceName: string) {
+export async function startGlobalTelemetry(
+  serviceName: string,
+  customizer?:
+    | ((
+        options: Partial<opentelemetry.NodeSDKConfiguration>,
+      ) => Partial<opentelemetry.NodeSDKConfiguration>)
+    | undefined,
+) {
   if (!prometheusExporter) {
     const { metrics, logs, NodeSDK } = opentelemetry;
 
@@ -90,7 +97,7 @@ export async function startGlobalTelemetry(serviceName: string) {
     prometheusExporter = new PrometheusExporter({ preventServerStart: true });
     const instrumentations = getAutoInstrumentations();
     const logExporter = getLogExporter();
-    telemetrySdk = new NodeSDK({
+    const options: Partial<opentelemetry.NodeSDKConfiguration> = {
       serviceName,
       autoDetectResources: false,
       resource,
@@ -111,7 +118,8 @@ export async function startGlobalTelemetry(serviceName: string) {
           },
         },
       ],
-    });
+    };
+    telemetrySdk = new NodeSDK(customizer ? customizer(options) : options);
     telemetrySdk.start();
   }
 }
@@ -130,7 +138,7 @@ export async function startWithTelemetry<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
   RLocals extends RequestLocals = RequestLocals,
 >(options: DelayLoadServiceStartOptions) {
-  await startGlobalTelemetry(options.name);
+  await startGlobalTelemetry(options.name, options.customizer);
 
   // eslint-disable-next-line import/no-unresolved, @typescript-eslint/no-var-requires
   const { startApp, listen } = (await import('../express-app/app.js')) as {
