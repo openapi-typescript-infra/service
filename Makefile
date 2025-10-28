@@ -35,8 +35,8 @@ clean:
 	yarn dlx rimraf ./$(build_dir) src/generated tsconfig.build.tsbuildinfo
 
 $(word 1, $(build_files)): $(src_files)
-	./node_modules/.bin/tsc -p tsconfig.build.json
-	@if [ -d "node_modules/tsc-alias" ]; then \
+	yarn tsc -p tsconfig.build.json
+	@if yarn info tsc-alias name --silent > /dev/null 2>&1; then \
 		yarn tsc-alias --project tsconfig.build.json; \
 	fi
 
