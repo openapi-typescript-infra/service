@@ -380,7 +380,9 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
       shutdownInProgress = true;
       app.locals.logger.info('Shutdown requested');
       if (app.locals.internalApp) {
-        app.locals.internalApp.locals.server?.close();
+        if (app.locals.internalApp.locals.server?.listening) {
+          app.locals.internalApp.locals.server?.close();
+        }
       }
       shutdownApp(app);
     }

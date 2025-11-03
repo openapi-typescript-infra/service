@@ -7,7 +7,7 @@ import {
   HttpInstrumentation,
   IgnoreIncomingRequestFunction,
 } from '@opentelemetry/instrumentation-http';
-import { IORedisInstrumentation } from '@opentelemetry/instrumentation-ioredis';
+import { RedisInstrumentation } from '@opentelemetry/instrumentation-redis';
 import { NetInstrumentation } from '@opentelemetry/instrumentation-net';
 import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
@@ -20,7 +20,7 @@ const InstrumentationMap = {
   '@opentelemetry/instrumentation-graphql': GraphQLInstrumentation,
   '@opentelemetry/instrumentation-undici': UndiciInstrumentation,
   '@opentelemetry/instrumentation-generic-pool': GenericPoolInstrumentation,
-  '@opentelemetry/instrumentation-ioredis': IORedisInstrumentation,
+  '@opentelemetry/instrumentation-redis': RedisInstrumentation,
   '@opentelemetry/instrumentation-net': NetInstrumentation,
   '@opentelemetry/instrumentation-pg': PgInstrumentation,
   '@opentelemetry/instrumentation-pino': PinoInstrumentation,

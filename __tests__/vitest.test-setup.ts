@@ -1,6 +1,6 @@
 import { afterAll, beforeAll } from 'vitest';
 
-import { shutdownGlobalTelemetry, startGlobalTelemetry } from '../src/telemetry';
+import { shutdownGlobalTelemetry, startGlobalTelemetry } from '../src/telemetry/index.js';
 
 // Even in testing, this needs to run first so that the instrumentation
 // is loaded BEFORE express is loaded.
@@ -11,5 +11,5 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await shutdownGlobalTelemetry();
+  await shutdownGlobalTelemetry().catch(() => undefined);
 });
