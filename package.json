@@ -33,7 +33,7 @@
     "coconfig": "@openapi-typescript-infra/coconfig"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "keywords": [
     "service",
