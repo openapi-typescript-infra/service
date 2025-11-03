@@ -143,3 +143,13 @@ export async function bootstrap<
   const server = argv?.nobind ? undefined : await listen(app);
   return { server, app, codepath };
 }
+
+export function bootstrapCli<
+  SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
+  RLocals extends RequestLocals = RequestLocals,
+>(argv?: BootstrapArguments) {
+  return bootstrap<SLocals, RLocals>({
+    nobind: true,
+    ...argv,
+  });
+}

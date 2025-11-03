@@ -1,7 +1,7 @@
 import type { Server } from 'http';
 import type { REPLServer } from 'repl';
 
-import type { pino } from 'pino';
+import type { BaseLogger, Logger } from 'pino';
 import type { Request, Response } from 'express';
 import type { Application } from 'express-serve-static-core';
 import type { middleware } from 'express-openapi-validator';
@@ -18,7 +18,7 @@ export interface InternalLocals<
   mainApp: ServiceExpress<SLocals>;
 }
 
-export type ServiceLogger = pino.BaseLogger & Pick<pino.Logger, 'isLevelEnabled'>;
+export type ServiceLogger = BaseLogger & Pick<Logger, 'isLevelEnabled'>;
 
 // Vanilla express wants this to extend Record<string, any> but this is a mistake
 // because you lose type checking on it, even though I get that underneath it truly

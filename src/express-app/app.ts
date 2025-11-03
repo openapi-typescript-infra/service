@@ -3,7 +3,7 @@ import http from 'http';
 import https from 'https';
 import path from 'path';
 
-import { pino } from 'pino';
+import { destination, type Logger, pino } from 'pino';
 import cookieParser from 'cookie-parser';
 import { context, metrics, trace } from '@opentelemetry/api';
 import { setupNodeMetrics } from '@sesamecare-oss/opentelemetry-node-metrics';
@@ -47,7 +47,7 @@ export async function startApp<
 >(startOptions: ServiceStartOptions<SLocals, RLocals>): Promise<ServiceExpress<SLocals>> {
   const { service, rootDirectory, codepath = 'build', name, version } = startOptions;
   const shouldPrettyPrint = isDev() && !process.env.NO_PRETTY_LOGS;
-  const destination = pino.destination({
+  const pinoDestination = destination({
     sync: isSyncLogging(),
     dest: process.env.LOG_TO_FILE || process.stdout.fd,
     minLength: process.env.LOG_BUFFER ? Number(process.env.LOG_BUFFER) : undefined,
@@ -79,7 +79,7 @@ export async function startApp<
           },
           mixin: poorMansOtlp,
         },
-        destination,
+        pinoDestination,
       )
     : pino(
         {
@@ -90,7 +90,7 @@ export async function startApp<
           },
           mixin: poorMansOtlp,
         },
-        destination,
+        pinoDestination,
       );
 
   const serviceImpl = service();
@@ -302,7 +302,7 @@ export async function shutdownApp<
   } catch (error) {
     logger.warn(error, 'Shutdown failed');
   }
-  (logger as pino.Logger).flush?.();
+  (logger as Logger).flush?.();
 }
 
 function httpServer<
@@ -368,7 +368,7 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
         .then(shutdownHandler || (() => Promise.resolve()))
         .then(() => logger.info('Graceful shutdown complete'))
         .catch((error) => logger.error(error, 'Error terminating tracing'))
-        .then(() => (logger as pino.Logger).flush?.());
+        .then(() => (logger as Logger).flush?.());
     },
     logger: (msg, e) => {
       logger.error(e, msg);
