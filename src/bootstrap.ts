@@ -1,7 +1,7 @@
 import path from 'node:path';
 import assert from 'node:assert';
 
-import { config } from 'dotenv';
+import { config, DotenvConfigOptions } from 'dotenv';
 import { readPackageUp } from 'read-package-up';
 import type { NormalizedPackageJson } from 'read-package-up';
 import { NodeSDKConfiguration } from '@opentelemetry/sdk-node';
@@ -102,7 +102,7 @@ export async function bootstrap<
     entrypoint = './build/index.js';
   }
 
-  config();
+  config({ quiet: true } as DotenvConfigOptions);
 
   const absoluteEntrypoint = path.resolve(rootDirectory, entrypoint);
   if (argv?.telemetry) {
