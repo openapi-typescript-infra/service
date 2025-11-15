@@ -7,9 +7,9 @@ import type { Application } from 'express-serve-static-core';
 import type { middleware } from 'express-openapi-validator';
 import type { Meter } from '@opentelemetry/api';
 import type { NodeSDKConfiguration } from '@opentelemetry/sdk-node';
-import { ShortstopHandler } from '@sesamecare-oss/confit';
+import type { ShortstopHandler } from '@sesamecare-oss/confit';
 
-import { ConfigurationSchema } from './config/schema.js';
+import type { ConfigurationSchema } from './config/schema.js';
 
 export interface InternalLocals<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
@@ -82,7 +82,7 @@ export interface Service<
   // Called after the server is listening
   onListening?: (
     app: ServiceExpress<SLocals>,
-    info: { port: number; protocol: 'http' | 'https' },
+    info: { port?: number; protocol: 'http' | 'https' },
   ) => void | Promise<void>;
 
   start(app: ServiceExpress<SLocals>): void | Promise<void>;
@@ -110,7 +110,7 @@ export interface Service<
   getLogFields?(
     req: RequestWithApp<SLocals>,
     values: Record<string, string | string[] | number | undefined>,
-  ): string | undefined | void;
+  ): string | undefined;
 
   // The repl is a useful tool for diagnosing issues in non-dev environments.
   // The attachRepl method provides a way to add custom functionality

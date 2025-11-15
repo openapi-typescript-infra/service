@@ -20,7 +20,7 @@ if (argv.telemetry) {
 }
 
 const noTelemetry = (argv.repl || isDev()) && !argv.telemetry;
-bootstrap({
+void bootstrap({
   ...argv,
   telemetry: !noTelemetry,
 }).then(({ app, codepath, server }) => {

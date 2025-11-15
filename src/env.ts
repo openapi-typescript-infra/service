@@ -6,6 +6,7 @@ export function getNodeEnv(): ValidEnv {
     case 'staging':
     case 'test':
       return (process.env.APP_ENV || process.env.NODE_ENV) as ValidEnv;
+    case undefined:
     default:
       return 'development';
   }

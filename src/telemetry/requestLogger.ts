@@ -1,12 +1,12 @@
 import type { RequestHandler, Request, Response, ErrorRequestHandler } from 'express';
 import { getClientIp } from 'request-ip';
-import { Histogram } from '@opentelemetry/api';
+import type { Histogram } from '@opentelemetry/api';
 import cleanStack from 'clean-stack';
 
 import { ServiceError } from '../error.js';
 import type { AnyServiceLocals, RequestWithApp, ServiceExpress, ServiceLocals } from '../types.js';
 import type { ServiceHandler } from '../express-app/types.js';
-import { ConfigurationSchema } from '../config/schema.js';
+import type { ConfigurationSchema } from '../config/schema.js';
 import { getNodeEnv } from '../env.js';
 
 const LOG_PREFS = Symbol('Logging information');
@@ -15,7 +15,7 @@ const LOGGED_SEMAPHORE = Symbol('Logged semaphore');
 interface LogPrefs {
   start: [number, number];
   logRequests?: boolean;
-  chunks?: Array<Buffer>;
+  chunks?: Buffer[];
   logged: boolean;
 }
 
@@ -80,7 +80,7 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   }
   const [url, preInfo] = getBasicInfo(req);
 
-  let responseType: string = 'finished';
+  let responseType = 'finished';
 
   // ts warning is known and incorrect—`aborted` is a subset of `destroyed`
   if (req.aborted) {
@@ -178,13 +178,13 @@ export function loggerMiddleware<
       const oldEnd = res.end;
       res.write = ((...args: Parameters<(typeof res)['write']>) => {
         if (prefs.chunks) {
-          prefs.chunks.push(Buffer.isBuffer(args[0]) ? args[0] : Buffer.from(args[0]));
+          prefs.chunks.push(Buffer.isBuffer(args[0]) ? args[0] : Buffer.from(args[0] as string));
         }
         return (oldWrite as (typeof res)['write']).apply(res, args);
       }) as (typeof res)['write'];
       res.end = ((...args: Parameters<(typeof res)['end']>) => {
         if (args[0] && prefs.chunks) {
-          prefs.chunks.push(Buffer.isBuffer(args[0]) ? args[0] : Buffer.from(args[0]));
+          prefs.chunks.push(Buffer.isBuffer(args[0]) ? args[0] : Buffer.from(args[0] as string));
         }
         return oldEnd.apply(res, args);
       }) as (typeof res)['end'];
@@ -230,7 +230,7 @@ export function errorHandlerMiddleware<
     // Set the status to error, even if we aren't going to render the error.
     res.status(loggable.status || 500);
     if (returnError) {
-      finishLog(app, error, req, res, histogram);
+      finishLog(app, error as Error, req, res, histogram);
       const prefs = (res.locals as WithLogPrefs)[LOG_PREFS];
       prefs.logged = true;
       res.json({

@@ -5,9 +5,10 @@ import { fileURLToPath } from 'url';
 import { describe, expect, test } from 'vitest';
 import request from 'supertest';
 
+import type {
+  ServiceStartOptions} from '../src/index.js';
 import {
   listen,
-  ServiceStartOptions,
   startApp,
 } from '../src/index.js';
 
@@ -45,6 +46,7 @@ describe('fake-serv', () => {
     };
 
     const app = await startApp(options).catch((error) => {
+      // eslint-disable-next-line no-console
       console.error(error);
       throw error;
     });

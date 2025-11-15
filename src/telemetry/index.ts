@@ -83,7 +83,7 @@ export async function startGlobalTelemetry(
   if (!prometheusExporter) {
     const { metrics, logs, NodeSDK } = opentelemetry;
 
-    const resource = await detectResources({
+    const resource = detectResources({
       detectors: [
         envDetector,
         hostDetector,
@@ -144,7 +144,6 @@ export async function startWithTelemetry<
 >(options: DelayLoadServiceStartOptions) {
   await startGlobalTelemetry(options.name, options.customizer);
 
-  // eslint-disable-next-line import/no-unresolved, @typescript-eslint/no-var-requires
   const { startApp, listen } = (await import('../express-app/app.js')) as {
     startApp: StartAppFn<SLocals, RLocals>;
     listen: ListenFn<SLocals>;
@@ -154,7 +153,7 @@ export async function startWithTelemetry<
   const startOptions: ServiceStartOptions<SLocals> = {
     ...options,
     service,
-    locals: { ...options.locals } as Partial<SLocals>,
+    locals: { ...options.locals } as unknown as Partial<SLocals>,
   };
   const app = await startApp(startOptions);
   app.locals.logger.info('OpenTelemetry enabled');

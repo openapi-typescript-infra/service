@@ -21,13 +21,10 @@ coverage
 *.tsbuildinfo
 .eslintcache
 
-# Added by coconfig
-.eslintignore
-.npmignore
-tsconfig.json
-tsconfig.build.json
-jest.config.js
-.commitlintrc.json
-vitest.config.ts
-.eslintrc.cjs
-.prettierrc.cjs
+# Managed by cpconfig
+/.commitlintrc.yaml
+/eslint.config.mts
+/tsconfig.json
+/tsconfig.build.json
+/.prettierrc.yaml
+/vitest.config.ts

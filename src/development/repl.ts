@@ -1,12 +1,13 @@
-import repl, { REPLServer } from 'repl';
+import type { REPLServer } from 'repl';
+import repl from 'repl';
 import fs from 'fs';
 import path from 'path';
 
 import { glob } from 'glob';
 import { set } from 'moderndash';
 
-import { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types.js';
-import { ConfigurationSchema } from '../config/schema.js';
+import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types.js';
+import type { ConfigurationSchema } from '../config/schema.js';
 
 const REPL_PROP = '$$repl$$';
 
@@ -37,7 +38,6 @@ export function serviceRepl<SLocals extends AnyServiceLocals = ServiceLocals<Con
     app,
     req: new FakeReq('/'),
     dump(o: unknown) {
-      // eslint-disable-next-line no-console
       console.log(JSON.stringify(o, null, '\t'));
     },
     // Use iTerm2's escape code to copy to clipboard
@@ -54,7 +54,10 @@ export function serviceRepl<SLocals extends AnyServiceLocals = ServiceLocals<Con
   });
   app.locals.service.attachRepl?.(app, rl);
 
-  loadReplFunctions(app, codepath, rl);
+  loadReplFunctions(app, codepath, rl).catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error('Failed to load REPL functions', error);
+  });
 
   rl.on('exit', onExit);
 }
@@ -78,7 +81,7 @@ async function loadReplFunctions<
         const module = await import(path.resolve(file));
 
         // Look for functions with the REPL_PROP marker
-        Object.values(module).forEach((exported) => {
+        Object.values(module as Record<string, unknown>).forEach((exported) => {
           if (!exported) {
             return;
           }
@@ -91,6 +94,7 @@ async function loadReplFunctions<
         });
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to load REPL functions from ${file}:`, err);
     }
   }
