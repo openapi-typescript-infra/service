@@ -156,22 +156,18 @@ export async function startApp<
   // so that the req can decide whether to save the raw request body or not.
   const attachServiceLocals: RequestHandler = (req, res, next) => {
     res.locals.logger = logger;
-    let maybePromise: Promise<void> | undefined;
     try {
       const result = serviceImpl.onRequest?.(
         req as RequestWithApp<SLocals>,
         res as Response<unknown, RLocals>,
       );
-      if (result) {
-        maybePromise = result;
+      if (result !== undefined && result !== null && typeof result.then === 'function') {
+        void result.catch(next).then(next);
+      } else {
+        next();
       }
     } catch (error) {
       next(error);
-    }
-    if (maybePromise) {
-      void maybePromise.catch(next).then(next);
-    } else {
-      next();
     }
   };
   app.use(attachServiceLocals);

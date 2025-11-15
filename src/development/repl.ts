@@ -1,7 +1,7 @@
-import type { REPLServer } from 'repl';
-import repl from 'repl';
-import fs from 'fs';
-import path from 'path';
+import type { REPLServer } from 'node:repl';
+import repl from 'node:repl';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import { glob } from 'glob';
 import { set } from 'moderndash';
@@ -81,9 +81,9 @@ async function loadReplFunctions<
         const module = await import(path.resolve(file));
 
         // Look for functions with the REPL_PROP marker
-        Object.values(module as Record<string, unknown>).forEach((exported) => {
+        for (const exported of Object.values(module as Record<string, unknown>)) {
           if (!exported) {
-            return;
+            continue;
           }
           if (typeof exported === 'function') {
             const replName = (exported as WithReplProp)[REPL_PROP];
@@ -91,7 +91,7 @@ async function loadReplFunctions<
               set(rl.context, replName, exported.bind(null, app));
             }
           }
-        });
+        }
       }
     } catch (err) {
       // eslint-disable-next-line no-console

@@ -1,5 +1,5 @@
-import type { Server } from 'http';
-import type { REPLServer } from 'repl';
+import type { Server } from 'node:http';
+import type { REPLServer } from 'node:repl';
 
 import type { BaseLogger, Logger } from 'pino';
 import type { Request, Response } from 'express';
