@@ -1,12 +1,11 @@
 import type { Instrumentation } from '@opentelemetry/instrumentation';
 import { DnsInstrumentation } from '@opentelemetry/instrumentation-dns';
-import { ExpressInstrumentation, SpanNameHook } from '@opentelemetry/instrumentation-express';
+import type { SpanNameHook } from '@opentelemetry/instrumentation-express';
+import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { UndiciInstrumentation } from '@opentelemetry/instrumentation-undici';
 import { GenericPoolInstrumentation } from '@opentelemetry/instrumentation-generic-pool';
-import {
-  HttpInstrumentation,
-  IgnoreIncomingRequestFunction,
-} from '@opentelemetry/instrumentation-http';
+import type { IgnoreIncomingRequestFunction } from '@opentelemetry/instrumentation-http';
+import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { RedisInstrumentation } from '@opentelemetry/instrumentation-redis';
 import { NetInstrumentation } from '@opentelemetry/instrumentation-net';
 import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql';
@@ -85,7 +84,7 @@ const defaultConfigs: InstrumentationConfigMap = {
 export function getAutoInstrumentations(
   inputConfigs: InstrumentationConfigMap = defaultConfigs,
 ): Instrumentation[] {
-  const keys = Object.keys(InstrumentationMap) as Array<keyof typeof InstrumentationMap>;
+  const keys = Object.keys(InstrumentationMap) as (keyof typeof InstrumentationMap)[];
   return keys
     .map((name) => {
       const Instance = InstrumentationMap[name];

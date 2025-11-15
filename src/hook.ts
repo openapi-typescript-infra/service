@@ -1,4 +1,4 @@
-import { ConfigurationSchema } from './config/schema.js';
+import type { ConfigurationSchema } from './config/schema.js';
 import type { AnyServiceLocals, RequestLocals, Service, ServiceLocals } from './types.js';
 
 /**

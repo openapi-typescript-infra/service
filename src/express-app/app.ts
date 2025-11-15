@@ -26,7 +26,7 @@ import type {
   ServiceOptions,
   ServiceStartOptions,
 } from '../types.js';
-import { ConfigurationSchema } from '../config/schema.js';
+import type { ConfigurationSchema } from '../config/schema.js';
 import { shortstops } from '../config/shortstops.js';
 import { getNodeEnv, isDev } from '../env.js';
 import { getGlobalPrometheusExporter } from '../telemetry/index.js';
@@ -156,19 +156,18 @@ export async function startApp<
   // so that the req can decide whether to save the raw request body or not.
   const attachServiceLocals: RequestHandler = (req, res, next) => {
     res.locals.logger = logger;
-    let maybePromise: Promise<void> | void | undefined;
     try {
-      maybePromise = serviceImpl.onRequest?.(
+      const result = serviceImpl.onRequest?.(
         req as RequestWithApp<SLocals>,
         res as Response<unknown, RLocals>,
       );
+      if (result !== undefined && result !== null && typeof result.then === 'function') {
+        void result.catch(next).then(next);
+      } else {
+        next();
+      }
     } catch (error) {
       next(error);
-    }
-    if (maybePromise) {
-      maybePromise.catch(next).then(next);
-    } else {
-      next();
     }
   };
   app.use(attachServiceLocals);
@@ -322,7 +321,7 @@ function httpServer<
   );
 }
 
-function url(config: ConfigurationSchema['server'], port: number) {
+function url(config: ConfigurationSchema['server'], port?: number) {
   if (config.certificate) {
     return `https://${config.hostname}${port === 443 ? '' : `:${port}`}`;
   }
@@ -333,7 +332,7 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
   app: ServiceExpress<SLocals>,
   shutdownHandler?: () => Promise<void>,
 ) {
-  const config = app.locals.config.server || {};
+  const config: ConfigurationSchema['server'] = app.locals.config.server || {};
   const { port } = config;
 
   const { service, logger } = app.locals;
@@ -384,7 +383,7 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
           app.locals.internalApp.locals.server?.close();
         }
       }
-      shutdownApp(app);
+      void shutdownApp(app);
     }
   });
 
@@ -401,7 +400,7 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
       const serverConfig = app.locals.config.server;
       // Ok now start the internal port if we have one.
       if (serverConfig?.internalPort || serverConfig?.internalPort === 0) {
-        startInternalApp(app, serverConfig.internalPort)
+        startInternalApp(app, serverConfig.internalPort as number)
           .then((internalApp) => {
             locals.internalApp = internalApp;
             const prometheusExporter = getGlobalPrometheusExporter();

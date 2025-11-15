@@ -1,5 +1,5 @@
 import type { ServiceExpress, ServiceRouter } from '../../../../src/index';
-import { FakeServLocals } from '../index';
+import type { FakeServLocals } from '../index';
 
 export function route(router: ServiceRouter<FakeServLocals>, app: ServiceExpress<FakeServLocals>) {
   const worldRequests = app.locals.meter.createCounter('world_requests', {

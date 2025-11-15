@@ -3,7 +3,7 @@ import path from 'path';
 import { Router } from 'express';
 
 import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from '../types.js';
-import { ConfigurationSchema } from '../config/schema.js';
+import type { ConfigurationSchema } from '../config/schema.js';
 
 import { getFilesInDir } from './modules.js';
 

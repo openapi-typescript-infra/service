@@ -144,12 +144,12 @@ export function shortstops(service: { name: string }, sourcedir: string) {
     servicetype: serviceTypeFactory(service.name),
     servicename: (v: string) => v.replace(/\$\{name\}/g, service.name),
 
-    os(p: keyof typeof osMethods) {
-      return osMethods[p]();
+    os(p: string) {
+      return osMethods[p as keyof typeof osMethods]();
     },
     // No-op in case you have values that start with a shortstop handler name (and colon)
     literal(v: string) {
       return v;
     },
-  } as Record<string, ShortstopHandler<string, unknown>>;
+  } satisfies Record<string, ShortstopHandler<string, unknown>>;
 }

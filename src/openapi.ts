@@ -8,7 +8,7 @@ import type { Handler, Request, RequestHandler } from 'express';
 import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from './types.js';
 import { getNodeEnv } from './env.js';
 import { getFilesInDir } from './express-app/modules.js';
-import { ConfigurationSchema } from './config/schema.js';
+import type { ConfigurationSchema } from './config/schema.js';
 
 const notImplementedHandler: Handler = (req, res) => {
   res.status(501).json({
@@ -55,7 +55,7 @@ export async function openApi<
       });
     }),
   );
-  const modulesByPath = moduleFiles.reduce(
+  const modulesByPath = moduleFiles.reduce<Record<string, Record<string, unknown>>>(
     (acc, file, index) => {
       const m = preloadedModules[index];
       if (m) {
@@ -63,7 +63,7 @@ export async function openApi<
       }
       return acc;
     },
-    {} as Record<string, Record<string, unknown>>,
+    {},
   );
 
   // This is nuts, but there are testing frameworks or some other things
@@ -134,6 +134,7 @@ export async function openApi<
               onError(error: Error, body: unknown, req: Request) {
                 console.log('Response body fails validation: ', error);
                 console.log('Emitted from:', req.originalUrl);
+                // eslint-disable-next-line no-console
                 console.debug(body);
                 throw error;
               },

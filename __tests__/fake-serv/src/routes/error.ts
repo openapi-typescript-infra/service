@@ -1,4 +1,4 @@
-import { ServiceRouter } from '../../../../src/index';
+import type { ServiceRouter } from '../../../../src/index';
 import { ServiceError } from '../../../../src/error';
 
 export function route(router: ServiceRouter) {

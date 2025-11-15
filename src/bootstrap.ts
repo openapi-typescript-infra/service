@@ -1,10 +1,10 @@
 import path from 'node:path';
 import assert from 'node:assert';
 
-import { config, DotenvConfigOptions } from 'dotenv';
+import { config } from 'dotenv';
 import { readPackageUp } from 'read-package-up';
 import type { NormalizedPackageJson } from 'read-package-up';
-import { NodeSDKConfiguration } from '@opentelemetry/sdk-node';
+import type { NodeSDKConfiguration } from '@opentelemetry/sdk-node';
 
 import type {
   AnyServiceLocals,
@@ -14,7 +14,7 @@ import type {
 } from './types.js';
 import { isDev } from './env.js';
 import { startWithTelemetry } from './telemetry/index.js';
-import { ConfigurationSchema } from './config/schema.js';
+import type { ConfigurationSchema } from './config/schema.js';
 
 interface BootstrapArguments {
   // The name of the service, else discovered via read-package-up
@@ -102,7 +102,7 @@ export async function bootstrap<
     entrypoint = './build/index.js';
   }
 
-  config({ quiet: true } as DotenvConfigOptions);
+  config({ quiet: true });
 
   const absoluteEntrypoint = path.resolve(rootDirectory, entrypoint);
   if (argv?.telemetry) {
@@ -128,7 +128,7 @@ export async function bootstrap<
   }
 
   // This needs to be required for TS on-the-fly to work
-  // eslint-disable-next-line global-require, import/no-dynamic-require, @typescript-eslint/no-var-requires
+
   const impl = await import(absoluteEntrypoint);
   const opts: ServiceStartOptions<SLocals, RLocals> = {
     name,
@@ -137,7 +137,7 @@ export async function bootstrap<
     service: impl.default || impl.service,
     codepath,
   };
-  // eslint-disable-next-line import/no-unresolved
+
   const { startApp, listen } = await import('./express-app/app.js');
   const app = await startApp<SLocals, RLocals>(opts);
   const server = argv?.nobind ? undefined : await listen(app);

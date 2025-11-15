@@ -1,4 +1,4 @@
-import { ConfigurationSchema } from './config/schema.js';
+import type { ConfigurationSchema } from './config/schema.js';
 import type { AnyServiceLocals, ServiceLike, ServiceLocals } from './types.js';
 
 export interface ServiceErrorSpec {

@@ -33,7 +33,6 @@ async function isAvailable(port: number) {
 
 async function findPort(start: number) {
   for (let p = start; p < start + 1000; p += 1) {
-    // eslint-disable-next-line no-await-in-loop
     if (await isAvailable(p)) {
       return p;
     }

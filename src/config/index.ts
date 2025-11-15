@@ -2,13 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import {
-  BaseConfitSchema,
-  Confit,
-  Factory,
-  ShortstopHandler,
-  confit,
-} from '@sesamecare-oss/confit';
+import type { BaseConfitSchema, Confit, Factory, ShortstopHandler } from '@sesamecare-oss/confit';
+import { confit } from '@sesamecare-oss/confit';
 
 import { getAvailablePort } from '../development/port-finder.js';
 

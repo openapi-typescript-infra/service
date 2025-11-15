@@ -4,7 +4,8 @@ import { fileURLToPath } from 'url';
 
 import { describe, expect, test } from 'vitest';
 
-import { ConfigurationSchema, insertConfigurationBefore, loadConfiguration } from '../src/config/index.js';
+import type { ConfigurationSchema} from '../src/config/index.js';
+import { insertConfigurationBefore, loadConfiguration } from '../src/config/index.js';
 import { shortstops } from '../src/config/shortstops.js';
 
 interface CustomConfig extends ConfigurationSchema {

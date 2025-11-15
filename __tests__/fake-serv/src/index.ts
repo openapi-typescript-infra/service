@@ -4,7 +4,7 @@ import { useService } from '../../../src/index.js';
 export interface FakeServLocals extends ServiceLocals {
   services: {
     fakeServ: {
-      get_something(): { things: string[] } | Error;
+      get_something(): Promise<{ things: string[] } | Error>;
     };
   };
 }
@@ -17,7 +17,7 @@ export function service(): Service<FakeServLocals> {
       await base.start(app);
       app.locals.services = app.locals.services || {};
       app.locals.services.fakeServ = {
-        get_something() {
+        async get_something() {
           throw new Error('Should not be called.');
         },
       };

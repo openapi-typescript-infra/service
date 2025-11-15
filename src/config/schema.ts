@@ -1,7 +1,7 @@
 import type { BaseConfitSchema } from '@sesamecare-oss/confit';
 import type { middleware } from 'express-openapi-validator';
 import type { Level } from 'pino';
-import bodyParser from 'body-parser';
+import type bodyParser from 'body-parser';
 
 export interface ConfigurationItemEnabled {
   enabled?: boolean;
