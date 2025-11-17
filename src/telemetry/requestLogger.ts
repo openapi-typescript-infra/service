@@ -80,10 +80,11 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   }
   const [url, preInfo] = getBasicInfo(req);
 
-  let responseType = 'finished';
+  let responseType = 'unknown';
 
-  // ts warning is known and incorrect—`aborted` is a subset of `destroyed`
-  if (req.aborted) {
+  if (res.writableFinished) {
+    responseType = 'finished';
+  } else if (req.aborted) {
     responseType = 'aborted';
   } else if (req.destroyed) {
     responseType = 'destroyed';
