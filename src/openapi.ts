@@ -84,6 +84,21 @@ export async function openApi<
 
     const defaultOptions: OAPIOpts = {
       apiSpec: app.locals.openApiSpecification,
+      // We force full dereferencing of the OpenAPI spec so that all `$ref` schemas are
+      // inlined before express-openapi-validator builds its request coercion rules.
+      // Without this, the coercer sees `schema: { $ref: ... }` for query parameters and
+      // cannot resolve the underlying type, so it falls back to treating the parameter
+      // as a potentially repeated value (i.e., an array). That causes AJV to reject
+      // valid requests with “should be array” errors. Dereferencing ensures the
+      // coercer sees the real primitive type/enum and stops misclassifying params.
+      //
+      // The one downside is that circular references are not supported, so if you
+      // need that, you need to be very careful with enums, and override this option.
+      //
+      // See https://github.com/cdimascio/express-openapi-validator/issues/1119
+      $refParser: {
+        mode: 'dereference',
+      },
       ignoreUndocumented: true,
       validateRequests: {
         allowUnknownQueryParameters: true,
