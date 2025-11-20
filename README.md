@@ -21,11 +21,9 @@ The module takes care of configuration-driven:
 - health checks
 - Telemetry and instrumentation
 
-services built with this module use Typescript with Node 18, which involves transpilation.
-This module takes that into account across the development and production experience. It does
-not currently use ESM for the most part, because between OpenTelemetry, eslint and the
-package ecosystem, that is currently a pipe dream, or at least something that requires incredibly
-precise configuration, which is not the intent.
+services built with this module use Typescript with Node 20, which involves transpilation.
+This module takes that into account across the development and production experience. It uses ESM because that
+is the way the winds have blown.
 
 This module has the following core functionality:
 
