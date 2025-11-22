@@ -39,7 +39,7 @@ clean:
 $(word 1, $(build_files)): $(src_files)
 	yarn $(TSC) -p tsconfig.build.json
 	@if yarn info tsc-alias name > /dev/null 2>&1; then \
-		yarn tsc-alias --project tsconfig.build.json; \
+		yarn tsc-alias -f --project tsconfig.build.json; \
 	fi
 
 service: src/generated/service/index.ts
