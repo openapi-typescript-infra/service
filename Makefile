@@ -38,7 +38,7 @@ clean:
 
 $(word 1, $(build_files)): $(src_files)
 	yarn $(TSC) -p tsconfig.build.json
-	@if yarn info tsc-alias name --silent > /dev/null 2>&1; then \
+	@if yarn info tsc-alias name > /dev/null 2>&1; then \
 		yarn tsc-alias --project tsconfig.build.json; \
 	fi
 
