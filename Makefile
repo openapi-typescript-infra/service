@@ -26,18 +26,21 @@ endif
 
 build_dir := $(shell node -e "console.log(require('./package.json').exports.replace(/^.\//, '').split('/')[0])")
 src_files := $(shell find src -name '*.ts')
-build_files := $(patsubst src/%.ts,$(build_dir)/%.js,$(src_files))
+ts_sources := $(shell find src -name '*.ts' -not -name '*.d.ts')
+build_files := $(patsubst src/%.ts,$(build_dir)/%.js,$(ts_sources))
+build_dts := $(patsubst src/%.ts,$(build_dir)/%.d.ts,$(ts_sources))
+build_maps := $(patsubst src/%.ts,$(build_dir)/%.js.map,$(ts_sources))
 camel_case_name := $(shell echo $(SERVICE_NAME) | awk -F- '{result=""; for(i=1; i<=NF; i++) result = result toupper(substr($$i,1,1)) substr($$i,2); print result}' | tr -d '\n')
 # tsgo is pretty cool. Maybe you should try it?
 TSC ?= tsc
 
-ts: $(word 1, $(build_files))
+ts: $(build_files) $(build_dts) $(build_maps)
 
 clean:
 	yarn dlx rimraf ./$(build_dir) src/generated tsconfig.build.tsbuildinfo
 
-$(word 1, $(build_files)): $(src_files)
-	yarn $(TSC) -p tsconfig.build.json
+$(build_files) $(build_dts) $(build_maps): $(src_files) tsconfig.build.json tsconfig.json
+	yarn $(TSC) -p tsconfig.build.json --noEmitOnError
 	@if yarn info tsc-alias name > /dev/null 2>&1; then \
 		yarn tsc-alias -f --project tsconfig.build.json; \
 	fi
