@@ -30,20 +30,30 @@ ts_sources := $(shell find src -name '*.ts' -not -name '*.d.ts')
 build_files := $(patsubst src/%.ts,$(build_dir)/%.js,$(ts_sources))
 build_dts := $(patsubst src/%.ts,$(build_dir)/%.d.ts,$(ts_sources))
 build_maps := $(patsubst src/%.ts,$(build_dir)/%.js.map,$(ts_sources))
+ts_outputs := $(build_files) $(build_dts) $(build_maps)
+ts_build_stamp := $(build_dir)/.tsbuild.stamp
+missing_ts_outputs := $(filter-out $(wildcard $(ts_outputs)), $(ts_outputs))
 camel_case_name := $(shell echo $(SERVICE_NAME) | awk -F- '{result=""; for(i=1; i<=NF; i++) result = result toupper(substr($$i,1,1)) substr($$i,2); print result}' | tr -d '\n')
 # tsgo is pretty cool. Maybe you should try it?
 TSC ?= tsc
 
-ts: $(build_files) $(build_dts) $(build_maps)
+ts: $(ts_build_stamp)
 
 clean:
 	yarn dlx rimraf ./$(build_dir) src/generated tsconfig.build.tsbuildinfo
 
-$(build_files) $(build_dts) $(build_maps): $(src_files) tsconfig.build.json tsconfig.json
+$(ts_build_stamp): $(src_files) tsconfig.build.json tsconfig.json $(if $(missing_ts_outputs),FORCE,)
 	yarn $(TSC) -p tsconfig.build.json --noEmitOnError
 	@if yarn info tsc-alias name > /dev/null 2>&1; then \
 		yarn tsc-alias -f --project tsconfig.build.json; \
 	fi
+	@mkdir -p $(build_dir)
+	@touch $@
+
+$(ts_outputs): $(ts_build_stamp)
+
+.PHONY: FORCE
+FORCE:
 
 service: src/generated/service/index.ts
 
