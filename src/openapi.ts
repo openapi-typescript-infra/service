@@ -6,7 +6,7 @@ import { OpenAPIFramework } from 'express-openapi-validator/dist/framework/index
 import type { Handler, Request, RequestHandler } from 'express';
 
 import type { AnyServiceLocals, ServiceExpress, ServiceLocals } from './types.js';
-import { getNodeEnv } from './env.js';
+import { getNodeEnv, isProd, isStaging } from './env.js';
 import { getFilesInDir } from './express-app/modules.js';
 import type { ConfigurationSchema } from './config/schema.js';
 
@@ -47,6 +47,13 @@ export async function openApi<
     moduleFiles.map((file) => {
       const fullPath = path.join(basePath, file);
       return import(fullPath).catch((error) => {
+        if (isStaging() || isProd()) {
+          app.locals.logger.fatal(
+            { file: fullPath, message: error.message },
+            'Could not load potential API handler',
+          );
+          process.exit(1);
+        }
         app.locals.logger.warn(
           { file: fullPath, message: error.message },
           'Could not load potential API handler',
