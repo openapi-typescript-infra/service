@@ -1045,7 +1045,7 @@ __metadata:
     "@semantic-release/github": ^12.0.6
     "@semantic-release/release-notes-generator": ^14.1.0
     "@sesamecare-oss/confit": ^2.2.1
-    "@sesamecare-oss/opentelemetry-node-metrics": ^2.0.1
+    "@sesamecare-oss/opentelemetry-node-metrics": ^2.0.2
     "@types/cookie-parser": ^1.4.10
     "@types/express": ^5.0.6
     "@types/minimist": ^1.2.5
@@ -2938,13 +2938,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sesamecare-oss/opentelemetry-node-metrics@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@sesamecare-oss/opentelemetry-node-metrics@npm:2.0.1"
+"@sesamecare-oss/opentelemetry-node-metrics@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@sesamecare-oss/opentelemetry-node-metrics@npm:2.0.2"
   dependencies:
     "@opentelemetry/api": ^1.9.0
     "@opentelemetry/sdk-metrics": ^2.5.0
-  checksum: 9467a0ef1847aacf5faf616ab39ac901be5791b31e3eaa63b9810d1436ab4c267de35892674cc5851523188bf065efebe9f40048c48575071c6d853f8d3532fa
+  checksum: aa03eca0344866a0b3d089ca2bb5631aaded7b51806307c9896e39fb172d2a8887108242dbac6ae6b7e83695c7e3a70ea7427eb09cc1743272f5f1ee845ac72a
   languageName: node
   linkType: hard
 
