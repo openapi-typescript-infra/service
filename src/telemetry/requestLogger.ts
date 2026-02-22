@@ -140,11 +140,15 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
       endLog.resBody = bodyString;
     }
   }
-  const msg = service.getLogFields?.(req as RequestWithApp<SLocals>, endLog) || url;
+  const msg = service.getLogFields?.(req as RequestWithApp<SLocals>, endLog);
+  if (msg === false) {
+    res[LOGGED_SEMAPHORE] = true;
+    return;
+  }
   if (unexpectedError) {
-    logger.error(endLog, msg);
+    logger.error(endLog, msg || url);
   } else {
-    logger.info(endLog, msg);
+    logger.info(endLog, msg || url);
   }
 
   res[LOGGED_SEMAPHORE] = true;
@@ -200,8 +204,10 @@ export function loggerMiddleware<
         sid: (req as WithIdentifiedSession).session?.id,
         c: req.headers.correlationid || undefined,
       };
-      const msg = service.getLogFields?.(req as RequestWithApp<SLocals>, preLog) || url;
-      logger.info(preLog, msg);
+      const msg = service.getLogFields?.(req as RequestWithApp<SLocals>, preLog);
+      if (msg !== false) {
+        logger.info(preLog, msg || url);
+      }
     }
 
     const logWriter = (err?: Error) => finishLog(app, err, req, res, histogram);

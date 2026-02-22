@@ -106,11 +106,11 @@ export interface Service<
   // Add or redact any fields for logging. Note this will be called twice per request,
   // once at the start and once at the end. Modify the values directly. Return a
   // string to control the "msg" field of the logs, or return undefined to leave it
-  // as the default, which is the request URL.
+  // as the default, which is the request URL. Return false to suppress the log entirely.
   getLogFields?(
     req: RequestWithApp<SLocals>,
     values: Record<string, string | string[] | number | undefined>,
-  ): string | undefined;
+  ): string | false | undefined;
 
   // The repl is a useful tool for diagnosing issues in non-dev environments.
   // The attachRepl method provides a way to add custom functionality
