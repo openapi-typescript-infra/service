@@ -88,7 +88,7 @@ export async function bootstrap<
   let entrypoint: string;
   let codepath: 'build' | 'dist' | 'src' = 'build';
   if (isDev() && argv?.built !== true) {
-    const handlesTs = parseInt(process.versions.node.split('.')[0], 10);
+    const handlesTs = parseInt(process.versions.node.split('.')[0], 10) >= 24;
     if (!handlesTs) {
       await import('tsx/esm');
     }
