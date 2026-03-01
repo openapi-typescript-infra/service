@@ -33,8 +33,14 @@ export async function openApi<
   pattern: string,
   openApiOptions?: Partial<OAPIOpts>,
 ) {
-  const apiSpec = path.resolve(rootDirectory, `./api/${app.locals.name}.yaml`);
-  app.locals.logger.debug({ apiSpec, codepath }, 'Serving OpenAPI');
+  const apiSpec = openApiOptions?.apiSpec
+    ? undefined
+    : path.resolve(rootDirectory, `./api/${app.locals.name}.yaml`);
+  if (apiSpec) {
+    app.locals.logger.debug({ apiSpec, codepath }, 'Serving OpenAPI');
+  } else if (openApiOptions?.apiSpec) {
+    app.locals.logger.debug({ codepath }, 'Serving OpenAPI');
+  }
 
   const basePath = path.resolve(rootDirectory, `${codepath}/handlers`);
   // Because of the weirdness of ESM/CJS interop, and the synchronous nature of
@@ -82,7 +88,9 @@ export async function openApi<
   }
 
   try {
-    app.locals.openApiSpecification = await new OpenAPIFramework({ apiDoc: apiSpec })
+    app.locals.openApiSpecification = await new OpenAPIFramework({
+      apiDoc: (openApiOptions?.apiSpec ?? apiSpec) as string,
+    })
       .initialize({ visitApi() {} })
       .then((docs) => docs.apiDoc)
       .catch((error) => {
