@@ -88,9 +88,14 @@ export async function bootstrap<
   let entrypoint: string;
   let codepath: 'build' | 'dist' | 'src' = 'build';
   if (isDev() && argv?.built !== true) {
-    await import('tsx/esm');
+    const handlesTs = parseInt(process.versions.node.split('.')[0], 10);
+    if (!handlesTs) {
+      await import('tsx/esm');
+    }
     if (main) {
-      entrypoint = main.replace(/^(\.?\/?)(build|dist)\//, '$1src/').replace(/\.js$/, '.ts');
+      entrypoint = handlesTs
+        ? main
+        : main.replace(/^(\.?\/?)(build|dist)\//, '$1src/').replace(/\.js$/, '.ts');
     } else {
       entrypoint = './src/index.ts';
     }
