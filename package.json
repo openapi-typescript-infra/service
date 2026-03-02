@@ -14,6 +14,12 @@
     "./Makefile": "./Makefile"
   },
   "type": "module",
+  "files": [
+    "build",
+    "config",
+    "Makefile",
+    "README.md"
+  ],
   "scripts": {
     "test": "vitest",
     "lint": "eslint .",
@@ -137,5 +143,5 @@
   "resolutions": {
     "qs": "^6.11.0"
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.8.7"
 }
