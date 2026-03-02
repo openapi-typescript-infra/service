@@ -87,8 +87,8 @@ export async function bootstrap<
 
   let entrypoint: string;
   let codepath: 'build' | 'dist' | 'src' = 'build';
+  const handlesTs = parseInt(process.versions.node.split('.')[0], 10) >= 24;
   if (isDev() && argv?.built !== true) {
-    const handlesTs = parseInt(process.versions.node.split('.')[0], 10) >= 24;
     if (!handlesTs) {
       await import('tsx/esm');
     }
@@ -101,7 +101,9 @@ export async function bootstrap<
     }
     codepath = 'src';
   } else if (main) {
-    codepath = getBuildDir(main);
+    if (!handlesTs) {
+      codepath = getBuildDir(main);
+    }
     entrypoint = main;
   } else {
     entrypoint = './build/index.js';
