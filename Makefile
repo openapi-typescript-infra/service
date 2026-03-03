@@ -116,5 +116,6 @@ src/generated/database.ts: $(wildcard migrations/* migrations/**/*)
 	echo "DATABASE_URL=postgres://$(PGUSER):$(PGPASSWORD)@$(PGHOST)/$(DB_NAME)" > $$envfile && \
 	yarn kysely-codegen \
 		--env-file $$envfile \
-		--dialect postgres --default-schema public \
+		--dialect postgres \
+		--schema public \
 		--out-file src/generated/database.ts
