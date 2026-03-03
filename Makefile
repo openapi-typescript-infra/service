@@ -117,5 +117,5 @@ src/generated/database.ts: $(wildcard migrations/* migrations/**/*)
 	yarn kysely-codegen \
 		--env-file $$envfile \
 		--dialect postgres \
-		--schema public \
+		--default-schema public \
 		--out-file src/generated/database.ts
