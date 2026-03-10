@@ -105,7 +105,7 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   };
 
   const routePath = req.route?.path || req.path || url;
-  histogram.record(dur, { method, status_code: String(status), path: routePath, service: app.locals.name });
+  histogram.record(dur, { status_code: String(status), method, path: routePath, service: app.locals.name });
   counter.add(1, { code: String(status), method });
 
   if (res.locals.user?.id) {
