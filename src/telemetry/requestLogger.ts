@@ -88,7 +88,8 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   } else if (req.aborted) {
     responseType = 'aborted';
   } else if (req.destroyed) {
-    responseType = 'destroyed';
+    const err = req?.errored || req?.socket?.errored;
+    responseType = err && 'code' in err ? `destroyed:${err.code}` : 'destroyed';
   } else if (error) {
     responseType = 'errored';
   }
