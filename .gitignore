@@ -28,3 +28,11 @@ coverage
 /tsconfig.build.json
 /.prettierrc.yaml
 /vitest.config.ts
+
+#configs
+.DS_Store
+.commitlintrc.json
+.eslintignore
+.eslintrc.cjs
+.npmignore
+.prettierrc.cjs
