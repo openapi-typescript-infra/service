@@ -149,8 +149,11 @@ export async function startApp<
   const histogram = app.locals.meter.createHistogram('http_request_duration_seconds', {
     description: 'Duration of HTTP requests in seconds',
   });
+  const requestCounter = app.locals.meter.createCounter('http_requests_total', {
+    description: 'Total number of HTTP requests',
+  });
 
-  app.use(loggerMiddleware(app, histogram, logging));
+  app.use(loggerMiddleware(app, histogram, requestCounter, logging));
 
   // Allow the service to add locals, etc. We put this before the body parsers
   // so that the req can decide whether to save the raw request body or not.
@@ -280,7 +283,7 @@ export async function startApp<
     app.use(notFoundMiddleware());
   }
   if (errors?.enabled) {
-    app.use(errorHandlerMiddleware(app, histogram, errors?.unnest, errors?.render));
+    app.use(errorHandlerMiddleware(app, histogram, requestCounter, errors?.unnest, errors?.render));
   }
 
   return app;

@@ -1,6 +1,6 @@
 import type { RequestHandler, Request, Response, ErrorRequestHandler } from 'express';
 import { getClientIp } from 'request-ip';
-import type { Histogram } from '@opentelemetry/api';
+import type { Counter, Histogram } from '@opentelemetry/api';
 import cleanStack from 'clean-stack';
 
 import { ServiceError } from '../error.js';
@@ -60,6 +60,7 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   req: Request,
   res: Response & { [LOGGED_SEMAPHORE]?: boolean },
   histogram: Histogram,
+  counter: Counter,
 ) {
   if (res[LOGGED_SEMAPHORE]) {
     return;
@@ -92,21 +93,20 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
     responseType = 'errored';
   }
 
+  const status = (error as ErrorWithStatus)?.status || res.statusCode || 0;
+  const method = req.method;
+
   const endLog: Record<string, string | string[] | number | undefined> = {
     ...preInfo,
     t: 'req',
     r: responseType,
-    s: (error as ErrorWithStatus)?.status || res.statusCode || 0,
+    s: status,
     dur,
   };
 
-  const path = req.route ? { path: req.route.path } : undefined;
-  histogram.record(dur, {
-    status_code: endLog.s,
-    method: endLog.m,
-    ...path,
-    service: app.locals.name,
-  });
+  const routePath = req.route?.path || req.path || url;
+  histogram.record(dur, { status_code: String(status), method, path: routePath, service: app.locals.name });
+  counter.add(1, { code: String(status), method });
 
   if (res.locals.user?.id) {
     endLog.u = res.locals.user.id;
@@ -159,6 +159,7 @@ export function loggerMiddleware<
 >(
   app: ServiceExpress<SLocals>,
   histogram: Histogram,
+  counter: Counter,
   config?: ConfigurationSchema['logging'],
 ): RequestHandler {
   const nonProd = getNodeEnv() !== 'production';
@@ -210,7 +211,7 @@ export function loggerMiddleware<
       }
     }
 
-    const logWriter = (err?: Error) => finishLog(app, err, req, res, histogram);
+    const logWriter = (err?: Error) => finishLog(app, err, req, res, histogram, counter);
     res.on('finish', logWriter);
     res.on('close', logWriter);
     res.on('error', logWriter);
@@ -220,7 +221,7 @@ export function loggerMiddleware<
 
 export function errorHandlerMiddleware<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
->(app: ServiceExpress<SLocals>, histogram: Histogram, unnest?: boolean, returnError?: boolean) {
+>(app: ServiceExpress<SLocals>, histogram: Histogram, counter: Counter, unnest?: boolean, returnError?: boolean) {
   const svcErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     let loggable: Partial<ServiceError> = error;
     const body = error.response?.body || error.body;
@@ -237,7 +238,7 @@ export function errorHandlerMiddleware<
     // Set the status to error, even if we aren't going to render the error.
     res.status(loggable.status || 500);
     if (returnError) {
-      finishLog(app, error as Error, req, res, histogram);
+      finishLog(app, error as Error, req, res, histogram, counter);
       const prefs = (res.locals as WithLogPrefs)[LOG_PREFS];
       prefs.logged = true;
       res.json({
