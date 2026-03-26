@@ -67,7 +67,7 @@ ifndef BUNDLE_OUTPUT
 		$(eval GENERATED_DIR := true)
 endif
 	$(MAKE) bundlespec SERVICE_NAME=$(SERVICE_NAME) BUNDLE_OUTPUT=$(BUNDLE_OUTPUT)
-	yarn dlx openapi-typescript-express $(BUNDLE_OUTPUT)/openapi-spec.json \
+	yarn dlx openapi-typescript-express-plugin $(BUNDLE_OUTPUT)/openapi-spec.json \
 		--output ./src/generated/service/index.ts
 	yarn prettier ./src/generated/service/index.ts --write
 ifdef GENERATED_DIR
