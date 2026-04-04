@@ -106,7 +106,12 @@ function finishLog<SLocals extends AnyServiceLocals = ServiceLocals<Configuratio
   };
 
   const routePath = req.route?.path || req.path || url;
-  histogram.record(dur, { status_code: String(status), method, path: routePath, service: app.locals.name });
+  histogram.record(dur, {
+    status_code: String(status),
+    method,
+    path: routePath,
+    service: app.locals.name,
+  });
   counter.add(1, { code: String(status), method });
 
   if (res.locals.user?.id) {
@@ -222,7 +227,13 @@ export function loggerMiddleware<
 
 export function errorHandlerMiddleware<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
->(app: ServiceExpress<SLocals>, histogram: Histogram, counter: Counter, unnest?: boolean, returnError?: boolean) {
+>(
+  app: ServiceExpress<SLocals>,
+  histogram: Histogram,
+  counter: Counter,
+  unnest?: boolean,
+  returnError?: boolean,
+) {
   const svcErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     let loggable: Partial<ServiceError> = error;
     const body = error.response?.body || error.body;

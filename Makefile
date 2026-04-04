@@ -90,6 +90,7 @@ src/generated/config-validator.ts: $(CONFIG_TYPE_SRC)
 export PGUSER ?= postgres
 export PGPASSWORD ?= postgres
 export PGHOST ?= localhost
+export PGPORT ?= 5432
 
 db-ci:
 	yarn run-pg-sql -q postgres ./migrations/setup/ci_setup.sql
@@ -113,7 +114,7 @@ dbi: src/generated/database.ts
 src/generated/database.ts: $(wildcard migrations/* migrations/**/*)
 	echo "Generating database types"
 	envfile=$$(mktemp) && \
-	echo "DATABASE_URL=postgres://$(PGUSER):$(PGPASSWORD)@$(PGHOST)/$(DB_NAME)" > $$envfile && \
+	echo "DATABASE_URL=postgres://$(PGUSER):$(PGPASSWORD)@$(PGHOST):$(PGPORT)/$(DB_NAME)" > $$envfile && \
 	yarn kysely-codegen \
 		--env-file $$envfile \
 		--dialect postgres \
