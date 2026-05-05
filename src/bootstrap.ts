@@ -69,10 +69,10 @@ async function getServiceDetails(argv: BootstrapArguments = {}) {
   };
 }
 
-function getBuildDir(main: string): 'build' | 'dist' {
-  const dir = /^(?:\.?\/?)(build|dist)\//.exec(main);
-  assert(dir, 'Could not determine build directory - should be dist or build');
-  return dir[1] as 'build' | 'dist';
+function getBuildDir(main: string): 'build' | 'dist' | 'src' {
+  const dir = /^(?:\.?\/?)(build|dist|src)\//.exec(main);
+  assert(dir, 'Could not determine build directory - should be dist, build or src');
+  return dir[1] as 'build' | 'dist' | 'src';
 }
 
 // Automagically start your app by using common patterns
@@ -101,9 +101,7 @@ export async function bootstrap<
     }
     codepath = 'src';
   } else if (main) {
-    if (!handlesTs) {
-      codepath = getBuildDir(main);
-    }
+    codepath = getBuildDir(main);
     entrypoint = main;
   } else {
     entrypoint = './build/index.js';
