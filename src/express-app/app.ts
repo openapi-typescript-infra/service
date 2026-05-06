@@ -356,6 +356,9 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
         app.locals.internalApp.locals.server?.close();
       }
       logger.info('Graceful shutdown beginning');
+      if (isDev() || getNodeEnv() === 'test') {
+        return Promise.resolve();
+      }
       return new Promise((accept) => {
         // Per docs https://www.npmjs.com/package/@godaddy/terminus in Kubernetes, wait for readiness threshold
         setTimeout(accept, 10000);
