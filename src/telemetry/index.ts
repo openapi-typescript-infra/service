@@ -104,7 +104,9 @@ export async function startGlobalTelemetry(
       traceExporter: getSpanExporter(),
       metricReader: prometheusExporter,
       instrumentations,
-      logRecordProcessors: logExporter ? [new logs.BatchLogRecordProcessor(logExporter)] : [],
+      logRecordProcessors: logExporter
+        ? [new logs.BatchLogRecordProcessor({ exporter: logExporter })]
+        : [],
       views: [
         {
           instrumentName: 'http_request_duration_seconds',
