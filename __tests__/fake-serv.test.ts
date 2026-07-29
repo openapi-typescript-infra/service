@@ -98,7 +98,7 @@ describe('fake-serv', () => {
       .expect(200)
       .expect((res) => {
         expect(res.text).toMatch(/nodejs_version_info{version/);
-        expect(res.text).toMatch(/# UNIT http_server_duration ms/);
+        expect(res.text).toMatch(/# UNIT http_server_request_duration s/);
         expect(res.text).toMatch(/world_requests_total{method="get".*} 1/);
         expect(res.text).toContain(
           'http_request_duration_seconds_bucket{status_code="200",method="GET",path="/world",service="fake-serv"',

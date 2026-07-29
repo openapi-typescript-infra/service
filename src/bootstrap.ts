@@ -112,8 +112,8 @@ export async function bootstrap<
   const absoluteEntrypoint = path.resolve(rootDirectory, entrypoint);
   if (argv?.telemetry) {
     let otelCustomizer:
-      | ((options: Partial<NodeSDKConfiguration>) => Partial<NodeSDKConfiguration>)
-      | undefined = undefined;
+      ((options: Partial<NodeSDKConfiguration>) => Partial<NodeSDKConfiguration>) | undefined =
+      undefined;
     if (customizer) {
       // Customize OTEL with a dynamic import based on the codePath (so put it in src, generally)
       otelCustomizer = (await import(path.resolve(`${codepath}/${customizer}`)))

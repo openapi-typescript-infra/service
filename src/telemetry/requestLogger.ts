@@ -11,6 +11,7 @@ import { getNodeEnv } from '../env.js';
 
 const LOG_PREFS = Symbol('Logging information');
 const LOGGED_SEMAPHORE = Symbol('Logged semaphore');
+const PUBLIC_SERVICE_NAME_PATTERN = /-(?:api|web)$/;
 
 interface LogPrefs {
   start: [number, number];
@@ -273,6 +274,7 @@ export function notFoundMiddleware() {
       status: 404,
       code: 'NotFound',
       domain: 'http',
+      expected_error: PUBLIC_SERVICE_NAME_PATTERN.test(req.app.locals.name),
     });
     next(error);
   };

@@ -146,8 +146,7 @@ export interface ServiceStartOptions<
 export interface DelayLoadServiceStartOptions extends Omit<ServiceStartOptions, 'service'> {
   service: string;
   customizer?:
-    | ((options: Partial<NodeSDKConfiguration>) => Partial<NodeSDKConfiguration>)
-    | undefined;
+    ((options: Partial<NodeSDKConfiguration>) => Partial<NodeSDKConfiguration>) | undefined;
 }
 
 // Handled by service.configure
