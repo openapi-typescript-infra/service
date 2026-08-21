@@ -41,7 +41,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/cli@npm:^21.2.2":
+"@commitlint/cli@npm:^21.2.1":
   version: 21.2.2
   resolution: "@commitlint/cli@npm:21.2.2"
   dependencies:
@@ -59,7 +59,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/config-conventional@npm:^21.2.2":
+"@commitlint/config-conventional@npm:^21.2.0, @commitlint/config-conventional@npm:^21.2.2":
   version: 21.2.2
   resolution: "@commitlint/config-conventional@npm:21.2.2"
   dependencies:
@@ -877,8 +877,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@openapi-typescript-infra/service@workspace:."
   dependencies:
-    "@commitlint/cli": ^21.2.2
-    "@commitlint/config-conventional": ^21.2.2
+    "@commitlint/cli": ^21.2.1
+    "@commitlint/config-conventional": ^21.2.0
     "@godaddy/terminus": ^4.12.1
     "@openapi-typescript-infra/cpconfig": ^1.1.0
     "@opentelemetry/api": ^1.9.1
@@ -907,11 +907,11 @@ __metadata:
     "@types/cookie-parser": ^1.4.10
     "@types/express": ^5.0.6
     "@types/minimist": ^1.2.5
-    "@types/node": ^26.2.0
+    "@types/node": ^26.1.2
     "@types/request-ip": ^0.0.41
     "@types/supertest": ^7.2.1
-    "@typescript-eslint/eslint-plugin": ^8.67.0
-    "@typescript-eslint/parser": ^8.67.0
+    "@typescript-eslint/eslint-plugin": ^8.65.0
+    "@typescript-eslint/parser": ^8.65.0
     ajv: ^8.20.0
     clean-stack: ^6.0.0
     cookie-parser: ^1.4.7
@@ -936,9 +936,9 @@ __metadata:
     request-ip: ^3.3.0
     supertest: ^7.2.2
     tsconfig-paths: ^4.2.0
-    tsx: ^4.23.12
+    tsx: ^4.23.1
     typescript: ^5.9.3
-    vitest: ^4.1.11
+    vitest: ^4.1.10
   bin:
     start-service: ./build/bin/start-service.js
   languageName: unknown
@@ -2605,7 +2605,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=13.7.0, @types/node@npm:^26.2.0":
+"@types/node@npm:*, @types/node@npm:>=13.7.0, @types/node@npm:^26.1.2":
   version: 26.2.0
   resolution: "@types/node@npm:26.2.0"
   dependencies:
@@ -2751,7 +2751,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^8.46.3, @typescript-eslint/eslint-plugin@npm:^8.67.0":
+"@typescript-eslint/eslint-plugin@npm:^8.46.3, @typescript-eslint/eslint-plugin@npm:^8.65.0":
   version: 8.67.0
   resolution: "@typescript-eslint/eslint-plugin@npm:8.67.0"
   dependencies:
@@ -2787,7 +2787,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^8.46.3, @typescript-eslint/parser@npm:^8.67.0":
+"@typescript-eslint/parser@npm:^8.46.3, @typescript-eslint/parser@npm:^8.65.0":
   version: 8.67.0
   resolution: "@typescript-eslint/parser@npm:8.67.0"
   dependencies:
@@ -8634,7 +8634,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^4.23.12":
+"tsx@npm:^4.23.1":
   version: 4.23.12
   resolution: "tsx@npm:4.23.12"
   dependencies:
@@ -9035,7 +9035,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^4.1.11":
+"vitest@npm:^4.1.10":
   version: 4.1.11
   resolution: "vitest@npm:4.1.11"
   dependencies:
