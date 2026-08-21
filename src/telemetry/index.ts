@@ -32,7 +32,9 @@ const baseDefaultOtlpUrl = new URL('http://otlp-exporter:4318/v1').toString();
 function getSpanExporter() {
   if (
     !process.env.DISABLE_OLTP_EXPORTER &&
-    (['production', 'staging'].includes(process.env.APP_ENV || process.env.NODE_ENV || '') ||
+    (['production', 'staging', 'sandbox'].includes(
+      process.env.APP_ENV || process.env.NODE_ENV || '',
+    ) ||
       process.env.OTLP_EXPORTER)
   ) {
     return new OTLPTraceExporter({
@@ -48,7 +50,9 @@ function getSpanExporter() {
 function getLogExporter() {
   if (
     !process.env.DISABLE_OLTP_EXPORTER &&
-    (['production', 'staging'].includes(process.env.APP_ENV || process.env.NODE_ENV || '') ||
+    (['production', 'staging', 'sandbox'].includes(
+      process.env.APP_ENV || process.env.NODE_ENV || '',
+    ) ||
       process.env.OTLP_EXPORTER)
   ) {
     return new OTLPLogExporter({

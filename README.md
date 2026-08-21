@@ -36,4 +36,13 @@ This module has the following core functionality:
 7. Setup infrastructure for interservice calls with tracing.
 8. Provide a central service runner that handles loading your service and getting to a running state in both development and production environments.
 
+## Environments
+
+Set `APP_ENV` to `development`, `test`, `staging`, `sandbox`, or `production`.
+The configuration loader merges the matching `<environment>.json` file at each
+level of the configuration directory stack. Sandbox is a deployed environment:
+it uses production-style logging, telemetry, startup, and shutdown behavior
+while allowing services to provide isolated credentials and resources in
+`sandbox.json`.
+
 Please see the plop-based [project builder](../create) for an easy way to build an example project.

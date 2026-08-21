@@ -10,7 +10,7 @@ import { getAvailablePort } from '../development/port-finder.js';
 import type { ConfigurationSchema } from './schema.js';
 
 // Order matters here.
-const ENVIRONMENTS = ['production', 'staging', 'test', 'development'] as const;
+const ENVIRONMENTS = ['production', 'staging', 'sandbox', 'test', 'development'] as const;
 
 async function pathExists(f: string) {
   return new Promise((accept, reject) => {

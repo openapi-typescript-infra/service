@@ -343,7 +343,12 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
   await app.locals.service.attachServer?.(app, server);
 
   let shutdownInProgress = false;
+  const shutdownSignals: NodeJS.Signals[] = ['SIGTERM'];
+  const signalListenersBeforeTerminus = new Map(
+    shutdownSignals.map((signal) => [signal, new Set(process.listeners(signal))]),
+  );
   createTerminus(server, {
+    signals: shutdownSignals,
     timeout: 15000,
     useExit0: true,
     // https://github.com/godaddy/terminus#how-to-set-terminus-up-with-kubernetes
@@ -380,7 +385,22 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
     },
   });
 
+  // Terminus owns process-level signal handlers but does not remove them when
+  // callers close the server directly. That is common in tests and embedded
+  // service use; leaving the handler behind makes a later SIGTERM attempt to
+  // stop an already-closed server. Track only the listeners Terminus added so
+  // closing this server cannot disturb unrelated process signal handlers.
+  const terminusSignalListeners = shutdownSignals.flatMap((signal) =>
+    process
+      .listeners(signal)
+      .filter((listener) => !signalListenersBeforeTerminus.get(signal)?.has(listener))
+      .map((listener) => ({ listener, signal })),
+  );
+
   server.on('close', () => {
+    for (const { listener, signal } of terminusSignalListeners) {
+      process.removeListener(signal, listener);
+    }
     if (!shutdownInProgress) {
       shutdownInProgress = true;
       app.locals.logger.info('Shutdown requested');

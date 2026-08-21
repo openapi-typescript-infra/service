@@ -5,12 +5,8 @@ import { fileURLToPath } from 'url';
 import { describe, expect, test } from 'vitest';
 import request from 'supertest';
 
-import type {
-  ServiceStartOptions} from '../src/index.js';
-import {
-  listen,
-  startApp,
-} from '../src/index.js';
+import type { ServiceStartOptions } from '../src/index.js';
+import { listen, startApp } from '../src/index.js';
 
 import { type FakeServLocals, service } from './fake-serv/src/index.js';
 
@@ -85,7 +81,9 @@ describe('fake-serv', () => {
     // Mocking
     await request(app).post('/world').expect(500);
 
+    const sigtermListenerCount = process.listenerCount('SIGTERM');
     const server = await listen(app);
+    expect(process.listenerCount('SIGTERM')).toBe(sigtermListenerCount + 1);
     // Exercise the http module
     await httpRequest({
       hostname: 'localhost',
@@ -115,5 +113,6 @@ describe('fake-serv', () => {
         }
       });
     });
+    expect(process.listenerCount('SIGTERM')).toBe(sigtermListenerCount);
   });
 });
