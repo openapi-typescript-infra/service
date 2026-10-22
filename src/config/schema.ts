@@ -7,6 +7,19 @@ export interface ConfigurationItemEnabled {
   enabled?: boolean;
 }
 
+export interface ShutdownConfiguration {
+  /** Routing withdrawal delay; defaults to 10000ms, or 0 in development/test. */
+  routingDelayMs?: number;
+  /** Budget for Service.beforeHttpDrain; defaults to 5000ms. */
+  beforeHttpDrainTimeoutMs?: number;
+  /** Budget for active HTTP requests before sockets are forced closed; defaults to 15000ms. */
+  httpDrainTimeoutMs?: number;
+  /** Budget for Service.stop after HTTP drains; defaults to 30000ms. */
+  serviceStopTimeoutMs?: number;
+  /** Separate budget for the listen() shutdown callback, normally telemetry; defaults to 10000ms. */
+  shutdownHandlerTimeoutMs?: number;
+}
+
 export interface ConfigurationSchema extends BaseConfitSchema {
   trustProxy?: string[] | boolean;
   logging?: {
@@ -55,6 +68,7 @@ export interface ConfigurationSchema extends BaseConfitSchema {
     };
   };
   server: {
+    shutdown?: ShutdownConfiguration;
     internalPort?: number;
     port?: number;
     // To enable HTTPS on the main service, set the key and cert to the

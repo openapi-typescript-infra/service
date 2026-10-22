@@ -87,6 +87,15 @@ export interface Service<
 
   start(app: ServiceExpress<SLocals>): void | Promise<void>;
 
+  /**
+   * Called on SIGTERM after routing withdrawal, before HTTP socket draining.
+   * Close upgraded connections (e.g. WebSockets) here. Keep HTTP handlers and
+   * their dependencies usable; release those in stop instead.
+   * Not called when a consumer closes the HTTP server directly.
+   */
+  beforeHttpDrain?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
+
+  /** Called after HTTP drains; bounded by server.shutdown.serviceStopTimeoutMs. */
   stop?: (app: ServiceExpress<SLocals>) => void | Promise<void>;
 
   healthy?: (app: ServiceExpress<SLocals>) => boolean | Promise<boolean>;

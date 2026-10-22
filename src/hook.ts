@@ -27,6 +27,7 @@ export function useService<
   RLocals extends RequestLocals = RequestLocals,
 >(baseService?: Service<SLocals, RLocals>): Service<SLocals, RLocals> {
   return {
+    ...baseService,
     async start(app) {
       await baseService?.start(app);
       // Do nothing. This hook exists mainly to reduce change required

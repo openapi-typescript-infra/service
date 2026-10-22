@@ -9,7 +9,11 @@ import {
 } from '@opentelemetry/resources';
 import { containerDetector } from '@opentelemetry/resource-detector-container';
 import { gcpDetector } from '@opentelemetry/resource-detector-gcp';
-import * as opentelemetry from '@opentelemetry/sdk-node';
+import { BatchLogRecordProcessor, ConsoleLogRecordExporter } from '@opentelemetry/sdk-logs';
+import { AggregationType, InstrumentType } from '@opentelemetry/sdk-metrics';
+import type { NodeSDKConfiguration } from '@opentelemetry/sdk-node';
+import { NodeSDK } from '@opentelemetry/sdk-node';
+import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 
 import type {
@@ -42,7 +46,7 @@ function getSpanExporter() {
     });
   }
   if (process.env.ENABLE_CONSOLE_OLTP_EXPORTER) {
-    return new opentelemetry.tracing.ConsoleSpanExporter();
+    return new ConsoleSpanExporter();
   }
   return new DummySpanExporter();
 }
@@ -60,13 +64,13 @@ function getLogExporter() {
     });
   }
   if (process.env.ENABLE_CONSOLE_OLTP_EXPORTER) {
-    return new opentelemetry.logs.ConsoleLogRecordExporter();
+    return new ConsoleLogRecordExporter();
   }
   return undefined;
 }
 
 let prometheusExporter: PrometheusExporter | undefined;
-let telemetrySdk: opentelemetry.NodeSDK | undefined;
+let telemetrySdk: NodeSDK | undefined;
 
 /**
  * OpenTelemetry is not friendly to the idea of stopping
@@ -79,14 +83,9 @@ let telemetrySdk: opentelemetry.NodeSDK | undefined;
 export async function startGlobalTelemetry(
   serviceName: string,
   customizer?:
-    | ((
-        options: Partial<opentelemetry.NodeSDKConfiguration>,
-      ) => Partial<opentelemetry.NodeSDKConfiguration>)
-    | undefined,
+    ((options: Partial<NodeSDKConfiguration>) => Partial<NodeSDKConfiguration>) | undefined,
 ) {
   if (!prometheusExporter) {
-    const { metrics, logs, NodeSDK } = opentelemetry;
-
     const resource = detectResources({
       detectors: [
         envDetector,
@@ -101,22 +100,22 @@ export async function startGlobalTelemetry(
     prometheusExporter = new PrometheusExporter({ preventServerStart: true });
     const instrumentations = getAutoInstrumentations();
     const logExporter = getLogExporter();
-    const options: Partial<opentelemetry.NodeSDKConfiguration> = {
+    const options: Partial<NodeSDKConfiguration> = {
       serviceName,
       autoDetectResources: false,
       resource,
       traceExporter: getSpanExporter(),
-      metricReader: prometheusExporter,
+      metricReaders: [prometheusExporter],
       instrumentations,
       logRecordProcessors: logExporter
-        ? [new logs.BatchLogRecordProcessor({ exporter: logExporter })]
+        ? [new BatchLogRecordProcessor({ exporter: logExporter })]
         : [],
       views: [
         {
           instrumentName: 'http_request_duration_seconds',
-          instrumentType: metrics.InstrumentType.HISTOGRAM,
+          instrumentType: InstrumentType.HISTOGRAM,
           aggregation: {
-            type: metrics.AggregationType.EXPLICIT_BUCKET_HISTOGRAM,
+            type: AggregationType.EXPLICIT_BUCKET_HISTOGRAM,
             options: {
               boundaries: [0.003, 0.03, 0.1, 0.3, 1.5, 10],
               recordMinMax: true,

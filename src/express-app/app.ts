@@ -33,6 +33,7 @@ import { getGlobalPrometheusExporter } from '../telemetry/index.js';
 
 import { loadRoutes } from './route-loader.js';
 import { startInternalApp } from './internal-server.js';
+import { runShutdownPhase, shutdownConfiguration } from './shutdown.js';
 
 function isSyncLogging() {
   if (process.env.LOG_SYNC) {
@@ -298,8 +299,14 @@ export async function shutdownApp<
   SLocals extends AnyServiceLocals = ServiceLocals<ConfigurationSchema>,
 >(app: ServiceExpress<SLocals>) {
   const { logger } = app.locals;
+  const config: ConfigurationSchema['server'] = app.locals.config.server || {};
   try {
-    await app.locals.service.stop?.(app);
+    await runShutdownPhase(
+      logger,
+      'service.stop',
+      shutdownConfiguration(config.shutdown).serviceStopTimeoutMs,
+      () => app.locals.service.stop?.(app),
+    );
     logger.info('App shutdown complete');
   } catch (error) {
     logger.warn(error, 'Shutdown failed');
@@ -337,51 +344,80 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
 ) {
   const config: ConfigurationSchema['server'] = app.locals.config.server || {};
   const { port } = config;
+  const shutdown = shutdownConfiguration(config.shutdown);
 
   const { service, logger } = app.locals;
   const server = httpServer(app, config);
   await app.locals.service.attachServer?.(app, server);
 
   let shutdownInProgress = false;
+  const shutdownErrors: unknown[] = [];
   const shutdownSignals: NodeJS.Signals[] = ['SIGTERM'];
   const signalListenersBeforeTerminus = new Map(
     shutdownSignals.map((signal) => [signal, new Set(process.listeners(signal))]),
   );
   createTerminus(server, {
     signals: shutdownSignals,
-    timeout: 15000,
+    timeout: shutdown.httpDrainTimeoutMs,
     useExit0: true,
     // https://github.com/godaddy/terminus#how-to-set-terminus-up-with-kubernetes
-    beforeShutdown() {
+    async beforeShutdown() {
       if (shutdownInProgress) {
-        return Promise.resolve();
+        return;
       }
       shutdownInProgress = true;
       if (app.locals.internalApp) {
         app.locals.internalApp.locals.server?.close();
       }
-      logger.info('Graceful shutdown beginning');
-      if (isDev() || getNodeEnv() === 'test') {
-        return Promise.resolve();
+      logger.info({ shutdown }, 'Graceful shutdown beginning');
+      // Keep serving requests while endpoint/proxy routing catches up.
+      if (shutdown.routingDelayMs > 0) {
+        await new Promise<void>((resolve) => setTimeout(resolve, shutdown.routingDelayMs));
       }
-      return new Promise((accept) => {
-        // Per docs https://www.npmjs.com/package/@godaddy/terminus in Kubernetes, wait for readiness threshold
-        setTimeout(accept, 10000);
-      });
+      if (service.beforeHttpDrain) {
+        try {
+          await runShutdownPhase(
+            logger,
+            'service.beforeHttpDrain',
+            shutdown.beforeHttpDrainTimeoutMs,
+            () => service.beforeHttpDrain?.(app),
+          );
+        } catch (error) {
+          // Even a broken connection drainer must not skip HTTP/resource cleanup.
+          shutdownErrors.push(error);
+        }
+      }
     },
-    onShutdown() {
-      return Promise.resolve()
-        .then(() => service.stop?.(app))
-        .then(() => {
-          logger.info('Service stop complete');
-        })
-        .then(shutdownHandler || (() => Promise.resolve()))
-        .then(() => logger.info('Graceful shutdown complete'))
-        .catch((error) => logger.error(error, 'Error terminating tracing'))
-        .then(() => (logger as Logger).flush?.());
+    async onShutdown() {
+      try {
+        await runShutdownPhase(logger, 'service.stop', shutdown.serviceStopTimeoutMs, () =>
+          service.stop?.(app),
+        );
+      } catch (error) {
+        shutdownErrors.push(error);
+      }
+      if (shutdownHandler) {
+        try {
+          await runShutdownPhase(
+            logger,
+            'shutdownHandler',
+            shutdown.shutdownHandlerTimeoutMs,
+            shutdownHandler,
+          );
+        } catch (error) {
+          shutdownErrors.push(error);
+        }
+      }
+      if (shutdownErrors.length) {
+        // Terminus exits nonzero. Do not report partial/failed shutdown as success.
+        throw new AggregateError(shutdownErrors, 'Graceful shutdown failed');
+      }
+      logger.info('Graceful shutdown complete');
+      (logger as Logger).flush?.();
     },
     logger: (msg, e) => {
       logger.error(e, msg);
+      (logger as Logger).flush?.();
     },
   });
 
@@ -398,10 +434,12 @@ export async function listen<SLocals extends AnyServiceLocals = ServiceLocals<Co
   );
 
   server.on('close', () => {
-    for (const { listener, signal } of terminusSignalListeners) {
-      process.removeListener(signal, listener);
-    }
     if (!shutdownInProgress) {
+      // During SIGTERM retain the handlers through asynchronous cleanup so a
+      // repeated signal cannot bypass its time budget. Terminus exits afterward.
+      for (const { listener, signal } of terminusSignalListeners) {
+        process.removeListener(signal, listener);
+      }
       shutdownInProgress = true;
       app.locals.logger.info('Shutdown requested');
       if (app.locals.internalApp) {
