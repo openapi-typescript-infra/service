@@ -21,7 +21,7 @@ export interface ShutdownConfiguration {
 }
 
 export interface ConfigurationSchema extends BaseConfitSchema {
-  trustProxy?: string[] | boolean;
+  trustProxy?: string | string[] | number | boolean;
   logging?: {
     level?: Level;
     logRequestBody?: boolean;

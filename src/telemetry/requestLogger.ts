@@ -1,5 +1,4 @@
 import type { RequestHandler, Request, Response, ErrorRequestHandler } from 'express';
-import { getClientIp } from 'request-ip';
 import type { Counter, Histogram } from '@opentelemetry/api';
 import cleanStack from 'clean-stack';
 
@@ -39,7 +38,7 @@ function getBasicInfo(req: Request): [string, Record<string, string | number>] {
   const url = req.originalUrl || req.url;
 
   const preInfo: Record<string, string> = {
-    ip: getClientIp(req) || '',
+    ip: req.ip || '',
     m: req.method,
   };
 

@@ -81,6 +81,28 @@ describe('fake-serv', () => {
     // Mocking
     await request(app).post('/world').expect(500);
 
+    // req.ip (and the `ip` request-log field) follows config.trustProxy, so a caller cannot
+    // choose its own address: the fixture trusts loopback (supertest's peer) and the
+    // 198.51.100.0/24 "proxy", nothing else.
+    ({ body } = await request(app)
+      .get('/ip')
+      .set('X-Forwarded-For', '203.0.113.9, 198.51.100.7')
+      .expect(200));
+    expect(body.ip).toEqual('203.0.113.9');
+
+    ({ body } = await request(app)
+      .get('/ip')
+      .set('X-Forwarded-For', '127.0.0.1, 203.0.113.9, 198.51.100.7')
+      .expect(200));
+    expect(body.ip).toEqual('203.0.113.9');
+
+    ({ body } = await request(app)
+      .get('/ip')
+      .set('X-Client-IP', '127.0.0.1')
+      .set('X-Forwarded-For', '203.0.113.9')
+      .expect(200));
+    expect(body.ip).toEqual('203.0.113.9');
+
     const sigtermListenerCount = process.listenerCount('SIGTERM');
     const server = await listen(app);
     expect(process.listenerCount('SIGTERM')).toBe(sigtermListenerCount + 1);
