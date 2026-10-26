@@ -9,5 +9,9 @@
   "servicetype": "servicetype:serv",
   "oservicetype": "servicetype:internal",
   "notservicetype": "servicetype:api",
-  "server": {}
+  "server": {},
+  "trustProxy": [
+    "loopback",
+    "198.51.100.0/24"
+  ]
 }
