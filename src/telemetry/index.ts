@@ -153,20 +153,23 @@ export async function startWithTelemetry<
     startApp: StartAppFn<SLocals, RLocals>;
     listen: ListenFn<SLocals>;
   };
+  const { nobind, ...rest } = options;
   const serviceModule = await import(options.service);
   const service = serviceModule.default || serviceModule.service;
   const startOptions: ServiceStartOptions<SLocals> = {
-    ...options,
+    ...rest,
     service,
     locals: { ...options.locals } as unknown as Partial<SLocals>,
   };
   const app = await startApp(startOptions);
   app.locals.logger.info('OpenTelemetry enabled');
 
-  const server = await listen(app, async () => {
-    await shutdownGlobalTelemetry();
-    app.locals.logger.info('OpenTelemetry shut down');
-  });
+  const server = nobind
+    ? undefined
+    : await listen(app, async () => {
+        await shutdownGlobalTelemetry();
+        app.locals.logger.info('OpenTelemetry shut down');
+      });
   return { app, codepath: options.codepath, server };
 }
 

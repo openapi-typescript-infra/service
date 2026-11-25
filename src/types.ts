@@ -167,6 +167,9 @@ export interface DelayLoadServiceStartOptions extends Omit<ServiceStartOptions, 
   service: string;
   customizer?:
     ((options: Partial<NodeSDKConfiguration>) => Partial<NodeSDKConfiguration>) | undefined;
+  // Don't bind to http port or expose metrics. The caller then owns shutdown, including
+  // shutdownGlobalTelemetry() to flush telemetry.
+  nobind?: boolean;
 }
 
 // Handled by service.configure

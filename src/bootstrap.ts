@@ -131,6 +131,7 @@ export async function bootstrap<
       codepath,
       version,
       repl: argv.repl === true,
+      nobind: argv.nobind === true,
       customizer: otelCustomizer,
     });
   }
