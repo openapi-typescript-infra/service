@@ -137,4 +137,41 @@ describe('fake-serv', () => {
     });
     expect(process.listenerCount('SIGTERM')).toBe(sigtermListenerCount);
   });
+
+  test.each([
+    { repl: true, expected: true },
+    { repl: false, expected: false },
+    { repl: undefined, expected: false },
+  ])('exposes repl=$repl to the service start as $expected', async ({ repl, expected }) => {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    let seenInConfigure: boolean | undefined;
+    let seenInStart: boolean | undefined;
+    const app = await startApp<FakeServLocals>({
+      service() {
+        const base = service();
+        return {
+          ...base,
+          configure(startOptions, options) {
+            seenInConfigure = startOptions.repl;
+            return options;
+          },
+          async start(a) {
+            seenInStart = a.locals.repl;
+            await base.start(a);
+          },
+        };
+      },
+      name: 'fake-serv',
+      rootDirectory: path.resolve(__dirname, './fake-serv'),
+      codepath: 'src',
+      version: '1.0.0',
+      repl,
+    });
+
+    expect(seenInConfigure).toBe(repl);
+    expect(seenInStart).toBe(expected);
+    expect(app.locals.repl).toBe(expected);
+  });
 });

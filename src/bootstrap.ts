@@ -31,6 +31,8 @@ interface BootstrapArguments {
   telemetry?: boolean;
   // Don't bind to http port or expose metrics
   nobind?: boolean;
+  // The process will host an interactive REPL (exposed to the service as app.locals.repl)
+  repl?: boolean;
   // The version of the app, else discovered via read-package-up
   version?: string;
 }
@@ -128,6 +130,7 @@ export async function bootstrap<
       service: absoluteEntrypoint,
       codepath,
       version,
+      repl: argv.repl === true,
       customizer: otelCustomizer,
     });
   }
@@ -141,6 +144,7 @@ export async function bootstrap<
     rootDirectory,
     service: impl.default || impl.service,
     codepath,
+    repl: argv?.repl === true,
   };
 
   const { startApp, listen } = await import('./express-app/app.js');
