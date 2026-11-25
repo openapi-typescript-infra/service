@@ -35,6 +35,11 @@ export interface ServiceLocals<Config extends ConfigurationSchema = Configuratio
    * This is the parsed OpenAPI spec we are hosting (if openapi is enabled)
    */
   openApiSpecification?: ReturnType<typeof JSON.parse>;
+  /**
+   * True when the process is hosting an interactive REPL (see ServiceStartOptions.repl).
+   * startApp always sets it; it is optional only so hand-built locals keep compiling.
+   */
+  repl?: boolean;
 }
 
 export interface RequestLocals {
@@ -143,6 +148,12 @@ export interface ServiceStartOptions<
   // Defaults to "build", but can be set to "src" to run off non-built source
   codepath?: 'build' | 'src' | 'dist';
 
+  // True when the process is started to host an interactive REPL (start-service --repl).
+  // The REPL runs the full service start, so services should check app.locals.repl and
+  // skip anything that takes work from shared infrastructure: queue and pub/sub
+  // subscribers, background workers, schedulers.
+  repl?: boolean;
+
   // NOTE: if you use this, you need to cast it because of a Typescript error:
   // https://github.com/microsoft/TypeScript/issues/22229
   // locals: { stuff } as Partial<MyLocals>
@@ -156,6 +167,9 @@ export interface DelayLoadServiceStartOptions extends Omit<ServiceStartOptions, 
   service: string;
   customizer?:
     ((options: Partial<NodeSDKConfiguration>) => Partial<NodeSDKConfiguration>) | undefined;
+  // Don't bind to http port or expose metrics. The caller then owns shutdown, including
+  // shutdownGlobalTelemetry() to flush telemetry.
+  nobind?: boolean;
 }
 
 // Handled by service.configure

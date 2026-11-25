@@ -132,6 +132,7 @@ export async function startApp<
     config,
     name,
     version,
+    repl: startOptions.repl === true,
   });
 
   if (serviceImpl.attach) {
